@@ -1,0 +1,1064 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CIDR_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/extra/shewchuk_predicates.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/extra/shewchuk_predicates.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/extra/triangle_intersection.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/extra/triangle_intersection.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/aabb.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/aabb.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/aabb_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/aabb_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/carve.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/carve.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/cbrt.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/cbrt.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/classification.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/classification.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/boost_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/boost_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/fallback_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/fallback_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/libstdcpp_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/libstdcpp_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/std_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/std_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/tr1_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/tr1_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/vcpp_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection/unordered/vcpp_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection_types.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/collection_types.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/colour.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/colour.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/config.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/config.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/convex_hull.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/convex_hull.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/csg.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/csg.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/csg_triangulator.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/csg_triangulator.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/debug_hooks.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/debug_hooks.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/djset.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/djset.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/edge_decl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/edge_decl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/edge_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/edge_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/exact.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/exact.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/external/boost/random.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/external/boost/random.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/face_decl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/face_decl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/face_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/face_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/faceloop.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/faceloop.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/geom.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/geom.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/geom2d.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/geom2d.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/geom3d.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/geom3d.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/geom_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/geom_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/gnu_cxx.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/gnu_cxx.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/heap.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/heap.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/input.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/input.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/interpolator.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/interpolator.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/intersection.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/intersection.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/iobj.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/iobj.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/kd_node.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/kd_node.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/math.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/math.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/math_constants.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/math_constants.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/matrix.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/matrix.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/mesh.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/mesh.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/mesh_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/mesh_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/mesh_ops.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/mesh_ops.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/mesh_simplify.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/mesh_simplify.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/octree_decl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/octree_decl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/octree_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/octree_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/pointset.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/pointset.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/pointset_decl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/pointset_decl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/pointset_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/pointset_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/pointset_iter.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/pointset_iter.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/poly.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/poly.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/poly_decl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/poly_decl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/poly_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/poly_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyhedron_base.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyhedron_base.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyhedron_decl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyhedron_decl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyhedron_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyhedron_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyline.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyline.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyline_decl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyline_decl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyline_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyline_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyline_iter.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/polyline_iter.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/rescale.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/rescale.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/rtree.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/rtree.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/shewchuk_predicates.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/shewchuk_predicates.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/spacetree.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/spacetree.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/tag.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/tag.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/timing.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/timing.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/tree.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/tree.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/triangle_intersection.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/triangle_intersection.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/triangulator.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/triangulator.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/triangulator_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/triangulator_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/util.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/util.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/vcpp_config.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/vcpp_config.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/vector.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/vector.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/vertex_decl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/vertex_decl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/vertex_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/vertex_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/win32.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/win32.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/write_ply.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/include/carve/write_ply.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/aabb.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/aabb.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/carve.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/carve.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/convex_hull.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/convex_hull.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg_collector.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg_collector.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg_collector.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg_collector.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg_data.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg_data.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg_detail.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/csg_detail.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/edge.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/edge.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/face.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/face.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/geom2d.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/geom2d.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/geom3d.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/geom3d.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_classify_common.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_classify_common.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_classify_common_impl.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_classify_common_impl.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_classify_edge.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_classify_edge.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_classify_group.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_classify_group.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_common.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_common.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_debug.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_debug.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_debug.hpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_debug.hpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_face_division.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_face_division.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_group.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_group.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_half_classify_group.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersect_half_classify_group.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersection.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/intersection.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/math.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/math.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/mesh.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/mesh.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/octree.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/octree.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/pointset.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/pointset.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/polyhedron.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/polyhedron.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/polyline.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/polyline.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/tag.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/tag.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/timing.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/timing.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/triangulator.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/lib/triangulator.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxCarve/src/ofxCarve.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxCarve/src/ofxCarve.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxDelaunay/libs/Delaunay/Delaunay.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxDelaunay/libs/Delaunay/Delaunay.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxDelaunay/libs/Delaunay/Delaunay.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxDelaunay/libs/Delaunay/Delaunay.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxDelaunay/src/ofxDelaunay.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxDelaunay/src/ofxDelaunay.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxDelaunay/src/ofxDelaunay.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxDelaunay/src/ofxDelaunay.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/APACHE20">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/APACHE20" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/CONTRIB">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/CONTRIB" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/GPL2">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/GPL2" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/cameras.c">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/cameras.c" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/cameras.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/cameras.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/core.c">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/core.c" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/freenect_internal.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/freenect_internal.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/libfreenect-registration.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/libfreenect-registration.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/libfreenect.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/libfreenect.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/libfreenect.pc.in">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/libfreenect.pc.in" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/registration.c">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/registration.c" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/registration.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/registration.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/tilt.c">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/tilt.c" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/usb_libusb10.c">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/usb_libusb10.c" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/usb_libusb10.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libfreenect/usb_libusb10.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/osx/include/libusb-1.0/libusb.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/osx/include/libusb-1.0/libusb.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui audio/Xbox_NUI_Audio.inf">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui audio/Xbox_NUI_Audio.inf" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui audio/libusb-win32-bin-README.txt">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui audio/libusb-win32-bin-README.txt" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui audio/license/libusb-win32/installer_license.txt">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui audio/license/libusb-win32/installer_license.txt" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui camera/Xbox_NUI_Camera.inf">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui camera/Xbox_NUI_Camera.inf" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui camera/libusb-win32-bin-README.txt">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui camera/libusb-win32-bin-README.txt" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui camera/license/libusb-win32/installer_license.txt">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui camera/license/libusb-win32/installer_license.txt" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui motor/Xbox_NUI_Motor.inf">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui motor/Xbox_NUI_Motor.inf" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui motor/libusb-win32-bin-README.txt">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui motor/libusb-win32-bin-README.txt" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui motor/license/libusb-win32/installer_license.txt">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/libs/libusb/win/inf/xbox nui motor/license/libusb-win32/installer_license.txt" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/src/ofxBase3DVideo.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/src/ofxBase3DVideo.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/src/ofxKinect.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/src/ofxKinect.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxKinect/src/ofxKinect.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxKinect/src/ofxKinect.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvBlob.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvBlob.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvColorImage.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvColorImage.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvColorImage.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvColorImage.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvConstants.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvConstants.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvContourFinder.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvContourFinder.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvContourFinder.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvContourFinder.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvFloatImage.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvFloatImage.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvFloatImage.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvFloatImage.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvGrayscaleImage.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvGrayscaleImage.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvGrayscaleImage.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvGrayscaleImage.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvHaarFinder.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvHaarFinder.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvHaarFinder.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvHaarFinder.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvImage.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvImage.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvImage.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvImage.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvMain.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvMain.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvShortImage.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvShortImage.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvShortImage.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxCvShortImage.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxOpenCv.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOpenCv/src/ofxOpenCv.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOsc.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOsc.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscArg.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscArg.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscBundle.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscBundle.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscBundle.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscBundle.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscMessage.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscMessage.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscMessage.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscMessage.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscReceiver.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscReceiver.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscReceiver.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscReceiver.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscSender.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscSender.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscSender.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxOsc/src/ofxOscSender.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTL.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTL.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLBase.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLBase.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLExporter.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLExporter.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLExporter.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLExporter.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLFacet.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLFacet.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLImporter.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLImporter.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLImporter.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/ofxSTLImporter.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLASCIIReader.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLASCIIReader.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLASCIIWriter.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLASCIIWriter.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLBinaryReader.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLBinaryReader.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLBinaryWriter.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLBinaryWriter.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLReaderBase.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLReaderBase.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLWriterBase.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxSTL/src/utils/ofxSTLWriterBase.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxTuioWrapper/src/ofxTuioClient.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxTuioWrapper/src/ofxTuioClient.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxTuioWrapper/src/ofxTuioClient.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxTuioWrapper/src/ofxTuioClient.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxTuioWrapper/src/ofxTuioServer.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxTuioWrapper/src/ofxTuioServer.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxTuioWrapper/src/ofxTuioServer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxTuioWrapper/src/ofxTuioServer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUI.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUI.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUI2DPad.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUI2DPad.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIBiLabelSlider.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIBiLabelSlider.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIButton.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIButton.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUICanvas.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUICanvas.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUICircleSlider.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUICircleSlider.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIDropDownList.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIDropDownList.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIEventArgs.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIEventArgs.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIFPS.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIFPS.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIFPSSlider.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIFPSSlider.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIImage.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIImage.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIImageButton.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIImageButton.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIImageSampler.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIImageSampler.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIImageToggle.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIImageToggle.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUILabel.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUILabel.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUILabelButton.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUILabelButton.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUILabelToggle.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUILabelToggle.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIMinimalSlider.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIMinimalSlider.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIMovingGraph.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIMovingGraph.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUINumberDialer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUINumberDialer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIRadio.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIRadio.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIRangeSlider.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIRangeSlider.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIRectangle.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIRectangle.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIRotarySlider.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIRotarySlider.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIScrollableCanvas.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIScrollableCanvas.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUISlider.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUISlider.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUISpacer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUISpacer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUISpectrum.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUISpectrum.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUITextInput.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUITextInput.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIToggle.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIToggle.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIToggleMatrix.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIToggleMatrix.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIWaveform.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIWaveform.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIWidget.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIWidget.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIWidgetWithLabel.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxUI/src/ofxUIWidgetWithLabel.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/libs/tinyxml.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/libs/tinyxml.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/libs/tinyxml.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/libs/tinyxml.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/libs/tinyxmlerror.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/libs/tinyxmlerror.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/libs/tinyxmlparser.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/libs/tinyxmlparser.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/src/ofxXmlSettings.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/src/ofxXmlSettings.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/src/ofxXmlSettings.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../addons/ofxXmlSettings/src/ofxXmlSettings.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/of3dUtils.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/of3dUtils.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/of3dUtils.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/of3dUtils.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofCamera.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofCamera.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofCamera.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofCamera.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofEasyCam.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofEasyCam.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofEasyCam.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofEasyCam.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofMesh.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofMesh.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofMesh.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofMesh.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofNode.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofNode.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofNode.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/3d/ofNode.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppBaseWindow.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppBaseWindow.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppGlutWindow.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppGlutWindow.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppGlutWindow.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppGlutWindow.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppRunner.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppRunner.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppRunner.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofAppRunner.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofBaseApp.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/app/ofBaseApp.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/communication/ofArduino.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/communication/ofArduino.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/communication/ofArduino.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/communication/ofArduino.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/communication/ofSerial.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/communication/ofSerial.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/communication/ofSerial.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/communication/ofSerial.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/events/ofEventUtils.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/events/ofEventUtils.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/events/ofEvents.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/events/ofEvents.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/events/ofEvents.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/events/ofEvents.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofFbo.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofFbo.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofFbo.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofFbo.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofGLRenderer.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofGLRenderer.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofGLRenderer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofGLRenderer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofGLUtils.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofGLUtils.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofLight.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofLight.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofLight.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofLight.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofMaterial.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofMaterial.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofMaterial.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofMaterial.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofShader.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofShader.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofShader.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofShader.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofTexture.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofTexture.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofTexture.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofTexture.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofVbo.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofVbo.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofVbo.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofVbo.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofVboMesh.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofVboMesh.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofVboMesh.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/gl/ofVboMesh.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofBitmapFont.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofBitmapFont.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofBitmapFont.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofBitmapFont.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofCairoRenderer.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofCairoRenderer.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofCairoRenderer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofCairoRenderer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofGraphics.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofGraphics.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofGraphics.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofGraphics.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofImage.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofImage.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofImage.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofImage.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPath.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPath.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPath.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPath.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPixels.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPixels.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPixels.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPixels.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPolyline.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPolyline.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPolyline.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofPolyline.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofRendererCollection.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofRendererCollection.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofTessellator.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofTessellator.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofTessellator.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofTessellator.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofTrueTypeFont.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofTrueTypeFont.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofTrueTypeFont.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/graphics/ofTrueTypeFont.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMath.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMath.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMath.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMath.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMatrix3x3.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMatrix3x3.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMatrix3x3.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMatrix3x3.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMatrix4x4.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMatrix4x4.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMatrix4x4.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofMatrix4x4.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofQuaternion.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofQuaternion.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofQuaternion.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofQuaternion.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec2f.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec2f.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec2f.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec2f.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec3f.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec3f.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec4f.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec4f.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec4f.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVec4f.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVectorMath.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/math/ofVectorMath.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/ofMain.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/ofMain.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofBaseSoundPlayer.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofBaseSoundPlayer.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofBaseSoundPlayer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofBaseSoundPlayer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofBaseSoundStream.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofBaseSoundStream.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofFmodSoundPlayer.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofFmodSoundPlayer.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofFmodSoundPlayer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofFmodSoundPlayer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofRtAudioSoundStream.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofRtAudioSoundStream.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofRtAudioSoundStream.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofRtAudioSoundStream.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofSoundPlayer.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofSoundPlayer.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofSoundPlayer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofSoundPlayer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofSoundStream.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofSoundStream.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofSoundStream.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/sound/ofSoundStream.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofBaseTypes.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofBaseTypes.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofBaseTypes.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofBaseTypes.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofColor.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofColor.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofColor.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofColor.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofPoint.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofPoint.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofPoint.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofPoint.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofRectangle.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofRectangle.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofRectangle.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofRectangle.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofTypes.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/types/ofTypes.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofConstants.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofConstants.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofFileUtils.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofFileUtils.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofFileUtils.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofFileUtils.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofLog.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofLog.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofLog.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofLog.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofNoise.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofNoise.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofSystemUtils.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofSystemUtils.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofSystemUtils.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofSystemUtils.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofThread.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofThread.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofThread.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofThread.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofURLFileLoader.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofURLFileLoader.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofURLFileLoader.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofURLFileLoader.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofUtils.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofUtils.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofUtils.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/utils/ofUtils.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQtUtils.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQtUtils.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQtUtils.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQtUtils.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQuickTimeGrabber.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQuickTimeGrabber.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQuickTimeGrabber.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQuickTimeGrabber.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQuickTimePlayer.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQuickTimePlayer.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQuickTimePlayer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofQuickTimePlayer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofVideoGrabber.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofVideoGrabber.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofVideoGrabber.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofVideoGrabber.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofVideoPlayer.cpp">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofVideoPlayer.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofVideoPlayer.h">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworks/video/ofVideoPlayer.h" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../libs/openFrameworksCompiled/project/osx">
+      <sourceFolder url="file://$MODULE_DIR$/../../../libs/openFrameworksCompiled/project/osx" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
+
