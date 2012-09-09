@@ -1,0 +1,29 @@
+<PLANE>
+    <NORMALX>0.051006</NORMALX>
+    <NORMALY>-0.154028</NORMALY>
+    <NORMALZ>-0.986749</NORMALZ>
+    <ADDNORMALX>0.000000</ADDNORMALX>
+    <ADDNORMALY>0.000000</ADDNORMALY>
+    <ADDNORMALZ>0.000000</ADDNORMALZ>
+    <DISTANCEPLANE>832.817688</DISTANCEPLANE>
+    <distanceForPlaneAboveSurface>35.564819</distanceForPlaneAboveSurface>
+    <distanceForPlaneAboveObjects>60.669495</distanceForPlaneAboveObjects>
+</PLANE>
+<CORNERS>
+    <LTCORNER>
+        <X>63</X>
+        <Y>424</Y>
+    </LTCORNER>
+    <RTCORNER>
+        <X>628</X>
+        <Y>411</Y>
+    </RTCORNER>
+    <LBCORNER>
+        <X>79</X>
+        <Y>0</Y>
+    </LBCORNER>
+    <RBCORNER>
+        <X>597</X>
+        <Y>0</Y>
+    </RBCORNER>
+</CORNERS>

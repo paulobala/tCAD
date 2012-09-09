@@ -1,0 +1,22 @@
+<controls>
+    <SliderInt_Radius>
+        <name>Radius</name>
+        <value>50</value>
+    </SliderInt_Radius>
+    <SliderFloat_Suggested_distance>
+        <name>Suggested distance</name>
+        <value>50.000000</value>
+    </SliderFloat_Suggested_distance>
+    <Toggle_lock_Plane>
+        <name>lock Plane</name>
+        <value>0</value>
+    </Toggle_lock_Plane>
+    <Toggle_Lock_Corners>
+        <name>Lock Corners</name>
+        <value>0</value>
+    </Toggle_Lock_Corners>
+    <Toggle_recalibrate>
+        <name>recalibrate</name>
+        <value>1</value>
+    </Toggle_recalibrate>
+</controls>

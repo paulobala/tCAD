@@ -1,0 +1,14 @@
+<controls>
+    <SliderInt_Min>
+        <name>Min</name>
+        <value>2140</value>
+    </SliderInt_Min>
+    <SliderInt_max>
+        <name>max</name>
+        <value>5000</value>
+    </SliderInt_max>
+    <SliderInt_numBlobs>
+        <name>numBlobs</name>
+        <value>20</value>
+    </SliderInt_numBlobs>
+</controls>
