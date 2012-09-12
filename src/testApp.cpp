@@ -976,7 +976,7 @@ void testApp::guiKinectEvent(ofxUIEventArgs &e)
     {
         ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
         kinectDraw_Variables.useSmoothing = toggle->getValue();
-        unsetGUI();
+        unsetGUI();//reload GUI so smoothing options will appear
         showKinectGUI = true;
         kinectScan->changeColor(new ofColor(255,255,255));
     }
@@ -991,6 +991,7 @@ void testApp::unsetGUI()
         guiChoice = NOGUI;
     }
 }
+
 //--------------------------------------------------------------
 //Lines
 void testApp::resetLines()
@@ -1032,17 +1033,18 @@ void testApp::resetLines()
     centerTabletop->x=320;
     centerTabletop->y=240;
 }
+
 void testApp::findLines(IplImage* asrc)
 {
     //receives Kinect depth image
-    IplImage* src = new IplImage(*asrc);
+    IplImage* src = new IplImage(*asrc);//copy depth image
     IplImage* dst = cvCreateImage( cvGetSize(src), 8, 1 );
     IplImage* color_dst = cvCreateImage( cvGetSize(src), 8, 3 );
     CvMemStorage* storage = cvCreateMemStorage(0);
     CvSeq* lines = 0;
     
     cvCanny( src, dst, 50, 200, 3 );//canny filter
-    cvCvtColor( dst, color_dst, CV_GRAY2BGR );
+    cvCvtColor( dst, color_dst, CV_GRAY2BGR );//color space change
     
     lines = cvHoughLines2( dst,
                           storage,
@@ -1194,6 +1196,8 @@ void testApp::updateCorners()
         //updated right top corner
         *rbCorner = rbCornerKalman->correct(*rbCorner);
     }
+    
+    //Update center
     ofVec2f pta = ofVec2f(ltCorner->x,ltCorner->y);
     ofVec2f ptb = ofVec2f(rbCorner->x, rbCorner->y);
     ofVec2f ptc = ofVec2f(rtCorner->x,rtCorner->y);
@@ -1201,6 +1205,7 @@ void testApp::updateCorners()
     LineSegment cross1 = LineSegment(pta,ptb);
     LineSegment cross2 = LineSegment(ptc,ptd);
     ofVec2f intersect;
+    
     if( cross1.Intersect(cross2, intersect)==LineSegment::INTERESECTING)
     {
         centerTabletop->x=intersect.x;
@@ -1212,7 +1217,7 @@ void testApp::showCorners(int offsetX, int offsetY)
     ofPushStyle();
     ofSetColor(255, 0, 0);
     ofSetLineWidth(3);
-    ofLine(ltCorner->x/2+ offsetX,ltCorner->y/2+ offsetY, rtCorner->x/2+ offsetX,  rtCorner->y/2+ offsetY);
+    ofLine(ltCorner->x/2+ offsetX, ltCorner->y/2+ offsetY, rtCorner->x/2+ offsetX,  rtCorner->y/2+ offsetY);
     ofLine(rtCorner->x/2+ offsetX, rtCorner->y/2+ offsetY, rbCorner->x/2+ offsetX, rbCorner->y/2+ offsetY);
     ofLine(rbCorner->x/2+ offsetX, rbCorner->y/2+ offsetY, lbCorner->x/2+ offsetX, lbCorner->y/2+ offsetY);
     ofLine(lbCorner->x/2+ offsetX, lbCorner->y/2+ offsetY, ltCorner->x/2+ offsetX, ltCorner->y/2+ offsetY);
@@ -1717,11 +1722,15 @@ void testApp::setupKalmanPlane()
 
 vector<DetectedFinger *> testApp::detectFingers()
 {
-    //TABLE
-    ofxCvGrayscaleImage temp = perspectiveDepthImgForPlaneAboveObjects;
-    temp.invert();
+    //Find fingers in plane above surface
+    ofxCvGrayscaleImage temp = perspectiveDepthImgForPlaneAboveObjects;//copy depth image
+    temp.invert();//invert colors
+    
+    //convert image into matrix
     unsigned char * pixels = temp.getPixels();
+    
     cv::Mat hand(cv::Size(640,480),CV_8UC1);
+    
     for (int i = 0; i < kinect.getHeight(); i++)
     {
         for (int j = 0; j < kinect.getWidth(); j++)
@@ -1730,44 +1739,59 @@ vector<DetectedFinger *> testApp::detectFingers()
             hand.at<uchar>(i,j)= pixels[pix];
         }
     }
+    
     vector<DetectedFinger *> detectedFingers;
-    hand = hand < 225;
+    hand = hand < 225;//mask for this value
+    
     IplImage * ip = new IplImage(hand);
+    
     maskedDepthImgForSurfacePlane = ip;
     std::vector<std::vector<cv::Point > > contours;
+    
     cv::findContours(hand, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     // we are cloning here since method will destruct the image
+    
     if (contours.size())
     {
-        for (int i=0; i<contours.size(); i++)
+        for (int i=0; i<contours.size(); i++)//iterate over found contours
         {
             vector<cv::Point> contour = contours[i];
             vector<ofPoint> contourforPoly = vector<ofPoint>();
+            
+            //change contour points (to native openframeworks type)
             for(int i = 0; i< contour.size(); i++)
             {
                 contourforPoly.push_back(ofVec2f(contour[i].x, contour[i].y));
             }
-            ofPolyline poly = ofPolyline(contourforPoly);
+            
+            ofPolyline poly = ofPolyline(contourforPoly);//change contour into polyline
+            
             cv::Mat contourMat = cv::Mat(contour);
-            double area = contourArea(contourMat);
+            double area = contourArea(contourMat);//calculate area of contour
+            
             if (area > 400)    // possible hand
             {
-                cv::Scalar center = mean(contourMat);
+                cv::Scalar center = mean(contourMat);//center of contour
+                
                 cv::Point centerPoint = cv::Point(center.val[0], center.val[1]);
+                
                 vector<cv::Point> approxCurve;
-                approxPolyDP(contourMat, approxCurve, 20, true);
+                approxPolyDP(contourMat, approxCurve, 20, true);//get approximate contour
+                
                 vector<int> hull;
                 convexHull(cv::Mat(approxCurve), hull);
                 // find upper and lower bounds of the hand and define cutoff threshold (don't consider upper vertices as fingers)
                 int upper = 640, lower = 0;
-                for (int j=0; j<hull.size(); j++)
+                for (int j=0; j< hull.size(); j++)
                 {
                     int idx = hull[j]; // corner index
                     if (approxCurve[idx].y < upper) upper = approxCurve[idx].y;
                     if (approxCurve[idx].y > lower) lower = approxCurve[idx].y;
                 }
+                
                 float cutoff = upper - (upper - lower) * 0.1f;
                 float cutoff2 = lower - (lower - upper) * 0.1f;
+                
                 // find interior angles of hull corners
                 for (int j=0; j<hull.size(); j++)
                 {
@@ -1777,13 +1801,14 @@ vector<DetectedFinger *> testApp::detectFingers()
                     cv::Point v1 = approxCurve[sdx] - approxCurve[idx];
                     cv::Point v2 = approxCurve[pdx] - approxCurve[idx];
                     float angle = acos( (v1.x*v2.x + v1.y*v2.y) / (normCV(v1) * normCV(v2) ) );
-                    if(approxCurve[idx].y > 10 && approxCurve[idx].x > 0 && approxCurve[idx].x < 630 && approxCurve[idx].y < 470)
+                    if(approxCurve[idx].y > 10 && approxCurve[idx].x > 0 && approxCurve[idx].x < 630 && approxCurve[idx].y < 470)//not on edges of image (these correspon to the arm
                     {
                         // low interior angle + within upper 90% of region -> we got a finger
                         if (angle < 1 && approxCurve[idx].y > cutoff)
                         {
                             int u = approxCurve[idx].x;
                             int v = approxCurve[idx].y;
+                            //New Detected finger; get attributes
                             DetectedFinger * temp = new DetectedFinger();
                             temp->setExtremeity(cv::Point2i(u,v));
                             temp->getLimb()->setCenterLimb(centerPoint);
@@ -1792,13 +1817,15 @@ vector<DetectedFinger *> testApp::detectFingers()
                             int radius = 20;
                             std::vector<float> pts;
                             std::vector<float> pts2;
+                            
+                            //get depth of finger in both planes
                             for(int x =  temp->getExtremity().x - radius/2; x <  temp->getExtremity().x + radius/2; x++)
                             {
                                 for(int y = temp->getExtremity().y - radius/2; y <  temp->getExtremity().y + radius/2; y++)
                                 {
-                                    if( (x< kinect.width && x >= 0) && (y< kinect.height && y >= 0))
+                                    if( (x< kinect.width && x >= 0) && (y< kinect.height && y >= 0))//inside image
                                     {
-                                        if(inside(x, y, poly))
+                                        if(inside(x, y, poly))//inside contour
                                         {
                                             unsigned char * pixels = maskedDepthImgForSurfacePlane.getPixels();
                                             int pix = (y*kinect.getWidth()) + x;
@@ -1816,21 +1843,26 @@ vector<DetectedFinger *> testApp::detectFingers()
                                     }
                                 }
                             }
+                            //average depth points
                             RollingAverage avg = RollingAverage(pts.size());
                             RollingAverage avg2 = RollingAverage(pts2.size());
+                            
                             for(int i= 0; i< pts.size(); i++)
                             {
                                 avg.addSample(pts[i]);
                                 avg2.addSample(pts[i]);
                             }
+                            
                             temp->setFingerDepthForSurfacePLane(avg.Average());
                             temp->setFingerDepthForObjectPlane(avg2.Average());
+                            
                             detectedFingers.push_back(temp);
                         }
-                        else if (angle < 1 && approxCurve[idx].y < cutoff2)
+                        else if (angle < 1 && approxCurve[idx].y < cutoff2)//test other cutoff
                         {
                             int u = approxCurve[idx].x;
                             int v = approxCurve[idx].y;
+                            //New finger; get attribute 
                             DetectedFinger * temp = new DetectedFinger();
                             temp->setExtremeity(cv::Point2i(u,v));
                             temp->getLimb()->setCenterLimb(centerPoint);
@@ -1839,13 +1871,15 @@ vector<DetectedFinger *> testApp::detectFingers()
                             int radius = 20;
                             std::vector<float> pts;
                             std::vector<float> pts2;
+                            
+                            //get finger depth in both planes
                             for(int x =  temp->getExtremity().x - radius/2; x <  temp->getExtremity().x + radius/2; x++)
                             {
                                 for(int y = temp->getExtremity().y - radius/2; y <  temp->getExtremity().y + radius/2; y++)
                                 {
-                                    if( (x< kinect.width && x >= 0) && (y< kinect.height && y >= 0))
+                                    if( (x< kinect.width && x >= 0) && (y< kinect.height && y >= 0))//inside image
                                     {
-                                        if(inside(x, y, poly))
+                                        if(inside(x, y, poly))//inside contour
                                         {
                                             unsigned char * pixels = maskedDepthImgForSurfacePlane.getPixels();
                                             int pix = (y*kinect.getWidth()) + x;
@@ -1863,13 +1897,16 @@ vector<DetectedFinger *> testApp::detectFingers()
                                     }
                                 }
                             }
+                            //average depth values
                             RollingAverage avg = RollingAverage(pts.size());
                             RollingAverage avg2 = RollingAverage(pts2.size());
+                            
                             for(int i= 0; i< pts.size(); i++)
                             {
                                 avg.addSample(pts[i]);
                                 avg2.addSample(pts[i]);
                             }
+                            
                             temp->setFingerDepthForSurfacePLane(avg.Average());
                             temp->setFingerDepthForObjectPlane(avg2.Average());
                             detectedFingers.push_back(temp);
@@ -1879,9 +1916,11 @@ vector<DetectedFinger *> testApp::detectFingers()
             }
         }
     }
-    //AIR
-    ofxCvGrayscaleImage temp2 = perspectiveDepthImgForSurfacePlane;
-    temp2.invert();
+    
+    //Find fingers in plane above objects; same procedure as before; see comments above for more info
+    ofxCvGrayscaleImage temp2 = perspectiveDepthImgForSurfacePlane;//copy depth image
+    temp2.invert();//invert colors
+    
     unsigned char * pixels2 = temp2.getPixels();
     cv::Mat hand2(cv::Size(640,480),CV_8UC1);
     for (int i = 0; i < kinect.getHeight(); i++)
@@ -1896,9 +1935,9 @@ vector<DetectedFinger *> testApp::detectFingers()
     hand2 = hand2 < 225;
     IplImage * ip2 = new IplImage(hand2);
     maskedDepthImgForPlaneAboveObjects = ip2;
-    //
     std::vector<std::vector<cv::Point> > contours2;
-    cv::findContours(hand2, contours2, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE); // we are cloning here since method will destruct the image
+    cv::findContours(hand2, contours2, CV_RETR_EXTERNAL , CV_CHAIN_APPROX_SIMPLE);
+    // we are cloning here since method will destruct the image
     if (contours2.size())
     {
         for (int i=0; i<contours2.size(); i++)
@@ -2041,8 +2080,10 @@ vector<DetectedFinger *> testApp::detectFingers()
             }
         }
     }
-    //MIX TABLE AND AIR
+    
+    //Mix detected fingers to find duplicates
     vector<DetectedFinger *> detectedFingersFinal = vector<DetectedFinger *>();
+    
     for(std::vector<DetectedFinger*>::iterator it = detectedFingers2.begin() ; it < detectedFingers2.end() ; it++)
     {
         DetectedFinger * temp = (*it);
@@ -2052,7 +2093,7 @@ vector<DetectedFinger *> testApp::detectFingers()
         {
             DetectedFinger * temp2 = (*it2);
             ofVec2f centertemp2 = ofVec2f(temp2->getExtremity().x,temp2->getExtremity().y);
-            if(centertemp.distance(centertemp2) <= 50)
+            if(centertemp.distance(centertemp2) <= 50)//are duplicates?
             {
                 detectedFingers.erase(it2);
                 detectedFingersFinal.push_back(temp2);
@@ -2062,9 +2103,10 @@ vector<DetectedFinger *> testApp::detectFingers()
         }
         if(!found)
         {
-            detectedFingersFinal.push_back(temp);//fingertip above object
+            detectedFingersFinal.push_back(temp);
         }
     }
+    
     for(std::vector<DetectedFinger*>::iterator it = detectedFingers.begin() ; it < detectedFingers.end() ; it++)
     {
         detectedFingersFinal.push_back((*it));
@@ -2139,20 +2181,25 @@ void testApp::setuptCAD()
 void testApp::drawtCAD()
 {
     ofPushStyle();
-    cameraScene.begin(viewport);
-    drawScene();
+    cameraScene.begin(viewport);//open camera
+    drawScene();//draw 3D Scene
+    
     cameraScene.checkSelectable();
-    if(kinectScanning)
+    
+    if(kinectScanning)//If Kinect Mode is active
     {
-        kinectScan->update();
-        kinectScan->draw();
+        kinectScan->update();//Update textured depth map
+        kinectScan->draw();//and draw it on screen
     }
-    cameraScene.end();
+    cameraScene.end();//close camera
     ofPopStyle();
+    
     ofPushStyle();
-    shapeEntryPoint = cameraScene.cursor;
+    shapeEntryPoint = cameraScene.cursor;//get cursor = "Entry point"
     ofPopStyle();
+    
     ofPushStyle();
+    //Draw containers
     vector<ContainerToken*> temp = containers.getObjects();
     containers.lockVector();
     bool found = false;
@@ -2162,7 +2209,9 @@ void testApp::drawtCAD()
     }
     containers.unlockVector();
     ofPopStyle();
+    
     ofPushStyle();
+    //Draw any ongoing Selection Movements
     vector<SelectionMovement*> temp3 = selectionMovements.getObjects();
     selectionMovements.lockVector();
     for (std::vector<SelectionMovement*>::iterator it=temp3.begin() ; it < temp3.end(); it++ )
@@ -2171,7 +2220,9 @@ void testApp::drawtCAD()
     }
     selectionMovements.unlockVector();
     ofPopStyle();
+    
     ofPushStyle();
+    //Draw Shredder tokens
     if(hasShredder1 && hasShredder2)
     {
         vector<ofPoint> verts;
@@ -2188,10 +2239,13 @@ void testApp::drawtCAD()
         p.simplify();
         p.draw();
     }
+    ofPopStyle();
+    ofPushStyle();
+    //Draw Contour area if Contour mode is active
     if(drawAreaForContour.active)
     {
         drawAreaForContour.draw();
-        if(hasShredder1)
+        if(hasShredder1)//shredders work as erasers in contour Mode
         {
             ofSetColor(COLORSCHEME_LIGHTGREY);
             ofCircle(shredder1->getToken()->getX()*ofGetWidth(), shredder1->getToken()->getY()*ofGetHeight(),100);
@@ -2205,6 +2259,7 @@ void testApp::drawtCAD()
     ofPopStyle();
     ofPushStyle();
     
+    //Draw Content Creation tokens
     if(onTableCCToken != NULL)
     {
         if(onTableCCToken->getIsOnTable())
@@ -2226,6 +2281,8 @@ void testApp::drawtCAD()
             inAirCCToken->draw();
         }
     }
+    
+    //Draw Save token
     if(saveToken != NULL)
     {
         if(saveToken->getIsOnTable())
@@ -2234,12 +2291,14 @@ void testApp::drawtCAD()
         }
     }
     
+    //Draw Limb shadows and fingers circles
     std::vector<Finger *> copyfingers = fingers.getObjects();
     for (std::vector<Finger *>::iterator it = copyfingers.begin() ; it < copyfingers.end(); it++)
     {
         ofPushStyle();
         ofSetColor(0, 0, 0);
         vector<cv::Point> approxCurve = (*it)->limbApproxCountour;
+        //contours need to be converted to openframeworks paths, simplfied and translated
         if( approxCurve.size() >0)
         {
             ofPolyline p2;
@@ -2270,23 +2329,28 @@ void testApp::drawtCAD()
         }
         ofPopStyle();
         ofPushStyle();
-        (*it)->draw();
+        (*it)->draw();//draw circles
         ofPopStyle();
     }
     ofPopStyle();
-    if(showKinectGUI)
+    
+    if(showKinectGUI)//if entering in Kinect Mode
     {
         setGUIKINECT();
         showKinectGUI = false;
     }
+    
     ofPushStyle();
-    calibrationMarker->drawBox(COLORSCHEME_LIGHTGREY);
+    calibrationMarker->drawBox(COLORSCHEME_LIGHTGREY);//frame around the screen, showing recognition frontiers for markers
     ofPopStyle();
+    
     ofPushStyle();
-    logo.draw(ofGetWidth()-90, 10, 80, 52);
+    logo.draw(ofGetWidth()-90, 10, 80, 52);//draw Logo; logo changes according to plane
     ofPopStyle();
+    
     ofPushStyle();
     ofSetColor(COLORSCHEME_TEXT_BLACK);
+    //Draw feedback messages for camera control
     switch (cameraScene.currentState)
     {
         case ofEasyFingerCam::ROTATING:
@@ -2336,45 +2400,49 @@ void testApp::drawtCAD()
         default:
             break;
     }
+    
+    //Draw orbiter token
     if(hasOrbiter)
     {
         orbiter->update();
         orbiter->draw();
     }
     ofPopStyle();
-    //kinect.drawDepth(0, 0, kinect.width , kinect.height);
 }
 
 void testApp::stitchFingers()
 {
     std::vector<Finger *> copyfingers = fingers.getObjects();
+    
     for(vector<DetectedFinger *>::iterator it = detectedFingers.begin(); it != detectedFingers.end(); it++)
     {
-        cv::Point2i p = (*it)->getExtremity();
-        cv::Point p2 = (*it)->getLimb()->getCenterLimb();
-        cv::Point2i p3 = (*it)->getFingerBase();
+        cv::Point2i pointextremity = (*it)->getExtremity();
+        cv::Point pointlimb = (*it)->getLimb()->getCenterLimb();
+        cv::Point2i pointbase = (*it)->getFingerBase();
         Finger* closest;
         float distanceclosest = 9999;
         bool found = false;
         std::vector<Finger *>::iterator tempit;
+        
         for (std::vector<Finger *>::iterator it2 = copyfingers.begin() ; it2 < copyfingers.end(); it2++ )
         {
             float distancetemp;
-            if( !calibratingFingers)
+            if( !calibratingFingers)//if not calibrating fingers, then apoly calibration
             {
-                ofVec2f calib1 = calibrationFinger->applyCalibration(kinect.width-p.x, kinect.height-p.y);
-                if(calib1.x == 0 && calib1.y == 0)
+                ofVec2f calib1 = calibrationFinger->applyCalibration(kinect.width-pointextremity.x, kinect.height-pointextremity.y);
+                if(calib1.x == 0 && calib1.y == 0)//out of calibration area
                 {
                     break;
                 }
                 distancetemp = ofVec2f(calib1.x*ofGetWidth(), calib1.y*ofGetHeight()).distance(ofVec2f((*it2)->getX()*ofGetWidth(), (*it2)->getY() *ofGetHeight()));
                 
             }
-            else
+            else// if calibrating fingers then get raw distance
             {
-                distancetemp = ofVec2f(p.x,p.y).distance(ofVec2f((1-(*it2)->getX())*kinect.width,  (1-(*it2)->getY()) *kinect.height));
+                distancetemp = ofVec2f(pointextremity.x,pointextremity.y).distance(ofVec2f((1-(*it2)->getX())*kinect.width,  (1-(*it2)->getY()) *kinect.height));
             }
-            if(distancetemp < distanceclosest)
+            
+            if(distancetemp < distanceclosest)//always find closer points
             {
                 closest = (*it2);
                 tempit = it2;
@@ -2384,41 +2452,40 @@ void testApp::stitchFingers()
         }
         if(found)
         {
-            // cout << "closest " << distanceclosest << endl;
-            if(distanceclosest < 250)
+            if(distanceclosest < 250)//if new point corresponds to old point then we need to stich it
             {
-                if(! calibratingFingers)
+                if(! calibratingFingers)//if not calibrating, apply calibration, else use raw values
                 {
-                    ofVec2f calib1 = calibrationFinger->applyCalibration(kinect.width-p.x, kinect.height-p.y);
-                    ofVec2f calib2 = calibrationFinger->applyCalibration(kinect.width-p2.x, kinect.height- p2.y);
-                    ofVec2f calib3 = calibrationFinger->applyCalibration(kinect.width-p3.x, kinect.height- p3.y);
-                    //   cout << "calib1" << calib1.x << endl;
-                    //what if if(calib1.x != 0 && calib1.y != 0){ //MISSING
+                    ofVec2f calib1 = calibrationFinger->applyCalibration(kinect.width-pointextremity.x, kinect.height-pointextremity.y);
+                    ofVec2f calib2 = calibrationFinger->applyCalibration(kinect.width-pointlimb.x, kinect.height- pointlimb.y);
+                    ofVec2f calib3 = calibrationFinger->applyCalibration(kinect.width-pointbase.x, kinect.height- pointbase.y);
+                    
                     closest->checkFinger(calib1.x,calib1.y,  (*it)->getFingerDepthForSurfacePLane(), (*it)->getFingerDepthForObjectPlane() , calib2.x, calib2.y, calib3.x, calib3.y, (*it)->getLimb()->getApproxCountour());
                 }
                 else
                 {
-                    ofVec2f calib1 = ofVec2f(p.x/(float)kinect.width, p.y/(float)kinect.height);
-                    ofVec2f calib2 = ofVec2f(p2.x/(float)kinect.width, p2.y/(float)kinect.height);
-                    ofVec2f calib3 = ofVec2f(p3.x/(float)kinect.width, p3.y/(float)kinect.height);
+                    ofVec2f calib1 = ofVec2f(pointextremity.x/(float)kinect.width, pointextremity.y/(float)kinect.height);
+                    ofVec2f calib2 = ofVec2f(pointlimb.x/(float)kinect.width, pointlimb.y/(float)kinect.height);
+                    ofVec2f calib3 = ofVec2f(pointbase.x/(float)kinect.width, pointbase.y/(float)kinect.height);
                     closest->checkFinger(1-calib1.x,1-calib1.y,  (*it)->getFingerDepthForSurfacePLane(), (*it)->getFingerDepthForObjectPlane(), 1-calib2.x, 1-calib2.y,1-calib3.x, 1-calib3.y, (*it)->getLimb()->getApproxCountour());
                 }
+                
                 closest->updateMoved();
                 copyfingers.erase(tempit);
             }
             else
             {
-                //drop fingertip
+                //ignore finger
             }
         }
         else
-        {
+        { // the finger is new
             fingers.lockVector();
-            if( !calibratingFingers)
+            if( !calibratingFingers)//if not calibrating, apply calibration, else use raw values
             {
-                ofVec2f calib1 = calibrationFinger->applyCalibration(kinect.width-p.x, kinect.height-p.y);
-                ofVec2f calib2 = calibrationFinger->applyCalibration(kinect.width-p2.x, kinect.height- p2.y);
-                ofVec2f calib3 = calibrationFinger->applyCalibration(kinect.width-p3.x, kinect.height- p3.y);
+                ofVec2f calib1 = calibrationFinger->applyCalibration(kinect.width-pointextremity.x, kinect.height-pointextremity.y);
+                ofVec2f calib2 = calibrationFinger->applyCalibration(kinect.width-pointlimb.x, kinect.height- pointlimb.y);
+                ofVec2f calib3 = calibrationFinger->applyCalibration(kinect.width-pointbase.x, kinect.height- pointbase.y);
                 if(calib1.x != 0 && calib1.y != 0)
                 {
                     fingers.addElement(new Finger( calib1.x, calib1.y, (*it)->getFingerDepthForSurfacePLane(), (*it)->getFingerDepthForObjectPlane() , newFingerIDCounter,  calib2.x, calib2.y, calib3.x, calib3.y, (*it)->getLimb()->getApproxCountour()));
@@ -2426,18 +2493,18 @@ void testApp::stitchFingers()
             }
             else
             {
-                ofVec2f calib1 = ofVec2f(p.x/(float)kinect.width, p.y/(float)kinect.height);
-                ofVec2f calib2 = ofVec2f(p2.x/(float)kinect.width, p2.y/(float)kinect.height);
-                ofVec2f calib3 = ofVec2f(p3.x/(float)kinect.width, p3.y/(float)kinect.height);
+                ofVec2f calib1 = ofVec2f(pointextremity.x/(float)kinect.width, pointextremity.y/(float)kinect.height);
+                ofVec2f calib2 = ofVec2f(pointlimb.x/(float)kinect.width, pointlimb.y/(float)kinect.height);
+                ofVec2f calib3 = ofVec2f(pointbase.x/(float)kinect.width, pointbase.y/(float)kinect.height);
                 fingers.addElement(new Finger( 1-calib1.x, 1-calib1.y,  (*it)->getFingerDepthForSurfacePLane(), (*it)->getFingerDepthForObjectPlane(), newFingerIDCounter,  1-calib2.x, 1-calib2.y,1-calib3.x, 1-calib3.y,  (*it)->getLimb()->getApproxCountour()));
             }
-            newFingerIDCounter++;
+            newFingerIDCounter++;//increment finger id
             fingers.unlockVector();
         }
     }
+    
     for (std::vector<Finger *>::iterator it = copyfingers.begin() ; it < copyfingers.end(); it++)
     {
-        //if(!(*it)->fake){//erase this
         if(!(*it)->hasBeenAdded)
         {
             (*it)->markForRemoval = true;
@@ -2446,54 +2513,59 @@ void testApp::stitchFingers()
         {
             (*it)->hasBeenRemoved = true;
         }
-        //}
     }
 }
 
 void testApp::updateLevel(Finger * finger)
 {
-    if( finger->getZForSurfacePlane() > 260)
+    if( finger->getZForSurfacePlane() > 260)// camera control layer/ interaction ceiling
     {
         finger->previousTypeLevel = finger->typeLevel;
-        finger->typeLevel = Finger::CEILING;
+        finger->typeLevel = Finger::CEILING;//new level is CEILING
         return;
     }
-    //check to see if it hits a container
+    
+  
+    //Over or touching container?
     vector<ContainerToken*> temp = containers.getObjects();
+
     bool hitcontainer = false;
     for (std::vector<ContainerToken*>::iterator it2=temp.begin() ; it2 < temp.end() && !hitcontainer; it2++ )
     {
-        if((*it2)->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight(),finger->getZForObjectPlane(),false))
+        if((*it2)->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight(),finger->getZForObjectPlane(),false))  //check to see if it hits a container
         {
             hitcontainer = true;
         };
     }
+    
     if(hitcontainer)
     {
-        if( finger->getZForObjectPlane() > 34)
+        if( finger->getZForObjectPlane() > 34)//Above the container?
         {
             finger->previousTypeLevel = finger->typeLevel;
             finger->typeLevel = Finger::ABOVEOBJECT;
             return;
         }
-        else
+        else //Touching the object?
         {
             finger->previousTypeLevel = finger->typeLevel;
             finger->typeLevel = Finger::OBJECT;
             return;
         }
     }
+    
+    //Over or touching Shredder1?
     if(hasShredder1)
     {
         if(shredder1->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
         {
-            if( finger->getZForObjectPlane() > 34)
+            if( finger->getZForObjectPlane() > 34)//Above the shredder?
             {
                 finger->previousTypeLevel = finger->typeLevel;
                 finger->typeLevel = Finger::ABOVEOBJECT;
                 return;
             }
-            else
+            else //touching the shredder
             {
                 finger->previousTypeLevel = finger->typeLevel;
                 finger->typeLevel = Finger::OBJECT;
@@ -2505,17 +2577,19 @@ void testApp::updateLevel(Finger * finger)
             //carry on
         }
     }
+    
+    //Over or touching Shredder2?
     if(hasShredder2)
     {
         if(shredder2->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
         {
-            if( finger->getZForObjectPlane() > 34)
+            if( finger->getZForObjectPlane() > 34)//Above the shredder?
             {
                 finger->previousTypeLevel = finger->typeLevel;
                 finger->typeLevel = Finger::ABOVEOBJECT;
                 return;
             }
-            else
+            else//touching the shredder
             {
                 finger->previousTypeLevel = finger->typeLevel;
                 finger->typeLevel = Finger::OBJECT;
@@ -2527,27 +2601,31 @@ void testApp::updateLevel(Finger * finger)
             //carry on
         }
     }
+    
+    //Over orbit token
     if(hasOrbiter)
     {
-        if(orbiter->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
+        if(orbiter->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight())) //over orbit token?
         {
             if(finger->getFingerBaseX()*ofGetWidth() !=0 &&
-               finger->getFingerBaseY()*ofGetHeight()!=0)
+               finger->getFingerBaseY()*ofGetHeight()!=0)//is base valid?
             {
                 orbiter->store(ofVec2f(
                                        finger->getFingerBaseX()*ofGetWidth(),
                                        finger->getFingerBaseY()*ofGetHeight()),
                                ofVec2f(finger->getX()*ofGetWidth(),
                                        finger->getY()*ofGetHeight())
-                               );
+                               );//send value to token for averaging
+                
                 orbiter->action();
-                if( finger->getZForObjectPlane() > 34)
+                
+                if( finger->getZForObjectPlane() > 34)//over the object?
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::ABOVEOBJECT;
                     return;
                 }
-                else
+                else//touch the object
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::OBJECT;
@@ -2555,22 +2633,23 @@ void testApp::updateLevel(Finger * finger)
                 }
             }
             else if(finger->getLimbCenterX()*ofGetWidth() !=0 &&
-                    finger->getLimbCenterY()*ofGetHeight()!=0)
+                    finger->getLimbCenterY()*ofGetHeight()!=0)//is center valid?
             {
                 orbiter->store(ofVec2f(
                                        finger->getLimbCenterX()*ofGetWidth(),
                                        finger->getLimbCenterY()*ofGetHeight()),
                                ofVec2f(finger->getX()*ofGetWidth(),
                                        finger->getY()*ofGetHeight())
-                               );
+                               );//send value to token for averaging
                 orbiter->action();
-                if( finger->getZForObjectPlane() > 34)
+                
+                if( finger->getZForObjectPlane() > 34)//over the object
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::ABOVEOBJECT;
                     return;
                 }
-                else
+                else//touching the object
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::OBJECT;
@@ -2583,19 +2662,21 @@ void testApp::updateLevel(Finger * finger)
             //carry on
         }
     }
+    
+    //over or touching On-token Content Creation token
     if(onTokenCCToken != NULL)
     {
         if(onTokenCCToken->getIsOnTable())
         {
             if(onTokenCCToken->insideToken(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
             {
-                if( finger->getZForObjectPlane() > 34)
+                if( finger->getZForObjectPlane() > 34)//above the token?
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::ABOVEOBJECT;
                     return;
                 }
-                else
+                else//touching the token
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::OBJECT;
@@ -2604,19 +2685,21 @@ void testApp::updateLevel(Finger * finger)
             }
         }
     }
+    
+    //over or touching the save token
     if(saveToken != NULL)
     {
         if(saveToken->getIsOnTable())
         {
             if(saveToken->insideToken(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
             {
-                if( finger->getZForObjectPlane() > 34)
+                if( finger->getZForObjectPlane() > 34)//above the token?
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::ABOVEOBJECT;
                     return;
                 }
-                else
+                else//touching the token
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::OBJECT;
@@ -2625,19 +2708,21 @@ void testApp::updateLevel(Finger * finger)
             }
         }
     }
+    
+    //over or touching the In-air Content Creation token
     if(inAirCCToken != NULL)
     {
         if(inAirCCToken->getIsOnTable())
         {
             if(inAirCCToken->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
             {
-                if( finger->getZForObjectPlane() > 34)
+                if( finger->getZForObjectPlane() > 34)//above the token?
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::ABOVEOBJECT;
                     return;
                 }
-                else
+                else//touching the token
                 {
                     finger->previousTypeLevel = finger->typeLevel;
                     finger->typeLevel = Finger::OBJECT;
@@ -2646,6 +2731,8 @@ void testApp::updateLevel(Finger * finger)
             }
         }
     }
+    
+    //just above or on the surface (no tokens)
     if(finger->getZForSurfacePlane() > 32)
     {
         finger->previousTypeLevel = finger->typeLevel;
@@ -2662,39 +2749,44 @@ void testApp::updateLevel(Finger * finger)
 
 void testApp::onSurface(Finger * finger)
 {
-    bool hitcircle = false;
+    bool hitOnTableCCToken = false;
+    
+    //check to see if finger is pressing an option on screen that is connected to the On-table Content Creation token
+
     if(onTableCCToken != NULL)
     {
         if(onTableCCToken->getIsOnTable())
         {
             std::pair<bool, OnScreenOption *> temppair = onTableCCToken->checkHit(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight());
-            if(temppair.first)
+            
+            if(temppair.first)// its a hit; finf out which option was pressed
             {
-                hitcircle = true;
+                hitOnTableCCToken = true;
                 finger->typeFinger = Finger::ONTABLEOPTION;
+                
                 if(temppair.second != NULL)
                 {
                     KinectOption *d1 = dynamic_cast<KinectOption*>(temppair.second);
-                    if((bool)d1)
+                    if((bool)d1)//Kinect option was hit
                     {
                         unsetGUI();
-                        showKinectGUI = true;
-                        kinectScanning = true;
+                        showKinectGUI = true;//show Kinect GUI
+                        kinectScanning = true;//show Kinect textured depth map
                         kinectScan->changeColor(new ofColor(255,255,255));
                     }
                     else
                     {
                         ContourOption *d2 = dynamic_cast<ContourOption*>(temppair.second);
-                        if((bool)d2)
+                        if((bool)d2)//Contour option was hit
                         {
-                            drawAreaForContour.active = true;
+                            drawAreaForContour.active = true;//show black screen
                             drawAreaForContour.width = ofGetWidth();
                             drawAreaForContour.height = ofGetHeight();
                         }
                         else
                         {
                             BackOption *d3 = dynamic_cast<BackOption*>(temppair.second);
-                            if((bool)d3)
+                            if((bool)d3)//back option during Kinect Mode or Contour Mode was hit
                             {
                                 if(kinectScanning)
                                 {
@@ -2710,7 +2802,7 @@ void testApp::onSurface(Finger * finger)
                             else
                             {
                                 SaveKinectOption *d4 = dynamic_cast<SaveKinectOption*>(temppair.second);
-                                if((bool)d4)
+                                if((bool)d4)//Save Kinect option was hit; save textured depth map to shapes
                                 {
                                     unsetGUI();
                                     Basic3DObjectFromCopy * temp = new Basic3DObjectFromCopy(shapeEntryPoint, kinectScan->mesh) ;
@@ -2727,11 +2819,11 @@ void testApp::onSurface(Finger * finger)
                                 else
                                 {
                                     SaveContourOption *d5 = dynamic_cast<SaveContourOption*>(temppair.second);
-                                    if((bool)d5)
+                                    if((bool)d5)//Save Contour option was hit
                                     {
-                                        //drawAreaForContour.active = false;
-                                        drawAreaForContour.save();
-                                        ///MAKE SAVE FUNCTION
+                                        
+                                        drawAreaForContour.save();//converts contour into shape  and adds it to shapes vector
+                                       
                                     }
                                     else
                                     {
@@ -2744,22 +2836,24 @@ void testApp::onSurface(Finger * finger)
             }
         }
     }
-    if(!hitcircle)
+    
+    if(!hitOnTableCCToken)
     {
-        bool hitmenu = false;
+        //check to see if finger is pressing an option on the screen that is connected to the On-token Content Creation token
+        bool hitOnTokenCCToken = false;
         if(onTokenCCToken != NULL)
         {
             if(onTokenCCToken->getIsOnTable())
             {
                 std::pair<bool, OnScreenOption *> temppair = onTokenCCToken->checkHit(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight());
-                if(temppair.first)
+                if(temppair.first)//if pressed an option
                 {
-                    hitmenu = true;
+                    hitOnTokenCCToken = true;
                     finger->typeFinger = Finger::ONTABLEOPTION;
-                    if(temppair.second != NULL)
+                    if(temppair.second != NULL)//what type of option was 
                     {
                         SaveKinectOption *d1 = dynamic_cast<SaveKinectOption*>(temppair.second);
-                        if((bool)d1)
+                        if((bool)d1)//Save Kinect option was hit; save textured depth map to shapes
                         {
                             unsetGUI();
                             Basic3DObjectFromCopy * temp = new Basic3DObjectFromCopy(shapeEntryPoint, kinectScan->mesh) ;
@@ -2776,16 +2870,16 @@ void testApp::onSurface(Finger * finger)
                         else
                         {
                             SaveContourOption *d2 = dynamic_cast<SaveContourOption*>(temppair.second);
-                            if((bool)d2)
+                            if((bool)d2)//Save Contour option was hit
                             {
-                                //drawAreaForContour.active = false;
-                                drawAreaForContour.save();
-                                ///MAKE SAVE FUNCTION
+                               
+                                drawAreaForContour.save();//converts contour into shape  and adds it to shapes vector
+                                
                             }
                             else
                             {
                                 BackOption *d3 = dynamic_cast<BackOption*>(temppair.second);
-                                if((bool)d3)
+                                if((bool)d3)//back option during Kinect Mode or Contour Mode was hit
                                 {
                                     if(kinectScanning)
                                     {
@@ -2804,18 +2898,18 @@ void testApp::onSurface(Finger * finger)
                 }
             }
         }
-        if(!hitmenu)
+        if(!hitOnTokenCCToken)
         {
             if(drawAreaForContour.active)
             {
-                bool inMenuCircle = false;
+                bool dontAddToContour = false;
                 if(onTableCCToken != NULL)
                 {
                     if(onTableCCToken->getIsOnTable())
                     {
-                        if(onTableCCToken->insideProtectedOptions(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
+                        if(onTableCCToken->insideProtectedOptions(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))//is the finger in the protected area
                         {
-                            inMenuCircle = true;
+                            dontAddToContour = true;
                         }
                     }
                 }
@@ -2823,9 +2917,9 @@ void testApp::onSurface(Finger * finger)
                 {
                     if(onTokenCCToken->getIsOnTable())
                     {
-                        if(onTokenCCToken->insideProtectedOptions(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
+                        if(onTokenCCToken->insideProtectedOptions(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))//is the finger in the protected area
                         {
-                            inMenuCircle = true;
+                            dontAddToContour = true;
                         }
                     }
                 }
@@ -2833,53 +2927,56 @@ void testApp::onSurface(Finger * finger)
                 {
                     if(inAirCCToken->getIsOnTable())
                     {
-                        inMenuCircle = false;
+                        dontAddToContour = false;
                     }
                 }
-                if(!inMenuCircle)
+                if(!dontAddToContour)
                 {
-                    drawAreaForContour.addVert(finger);
+                    drawAreaForContour.addVert(finger);//add vertex to contour
                     finger->typeFinger = Finger::CONTOUR;
                 }
             }
             else
             {
-                // vector<ContainerToken*> temp2 = containers.getObjects();
-                
+                //Check to see if an onscreen drag circle (Scale control) is being pressed
                 vector<ContainerToken*> temp3 = containers.getObjects();
-                bool hitrightcontainer = false;
-                for (std::vector<ContainerToken*>::iterator it3=temp3.begin() ; it3 < temp3.end() && !hitrightcontainer; it3++ )
+                
+                bool hitsouthcontainer = false;
+                
+                //Check south scale
+                for (std::vector<ContainerToken*>::iterator it3=temp3.begin() ; it3 < temp3.end() && !hitsouthcontainer; it3++ )
                 {
                     if((*it3)->checkSouthScale(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
                     {
-                        hitrightcontainer = true;
+                        hitsouthcontainer = true;
                         (*it3)->setHasSouthScale(true);
                         (*it3)->fingerOnSouthScale = finger;
                     };
                 }
-                if(hitrightcontainer)
+                if(hitsouthcontainer)
                 {
                     finger->typeFinger = Finger::SCALECONTAINERSOUTH;
                 }
                 else
                 {
                     vector<ContainerToken*> temp4 = containers.getObjects();
-                    bool hitleftcontainer = false;
-                    for (std::vector<ContainerToken*>::iterator it4=temp4.begin() ; it4 < temp4.end() && !hitleftcontainer; it4++ )
+                    bool hiteastcontainer = false;
+                    //Check east scale
+                    for (std::vector<ContainerToken*>::iterator it4=temp4.begin() ; it4 < temp4.end() && !hiteastcontainer; it4++ )
                     {
                         if((*it4)->checkEastScale(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
                         {
-                            hitleftcontainer = true;
+                            hiteastcontainer = true;
                             (*it4)->setHasEastScale(true);
                             (*it4)->fingerOnEastScale = finger;
                         };
                     }
-                    if(hitleftcontainer)
+                    if(hiteastcontainer)
                     {
-                        finger->typeFinger = Finger::SCALECONTAINERNORTH;
+                        finger->typeFinger = Finger::SCALECONTAINEREAST;
                     }
                     else
-                    {
+                    {//if everthing else fails, then is picker
                         finger->typeFinger = Finger::PICKER;
                         cameraScene.fingerPickerIn(finger);
                     }
@@ -2892,6 +2989,7 @@ void testApp::onSurface(Finger * finger)
 
 void testApp::changeLevel(Finger * finger)
 {
+    //given a transition between levels, decide what action should be taken
     switch (finger->previousTypeLevel)
     {
         case Finger::SURFACE:
@@ -2900,15 +2998,15 @@ void testApp::changeLevel(Finger * finger)
             {
                 case Finger::SURFACE:
                 {
-                    //NO CHANGE
+                    //No level change
                     break;
                 }
                 case Finger::ABOVESURFACE:
                 {
-                    if(!(finger->typeFinger == Finger::SHAPESELECTION || finger->typeFinger  == Finger::SCALECONTAINERNORTH || finger->typeFinger  == Finger::SCALECONTAINERSOUTH))
+                    if(!(finger->typeFinger == Finger::SHAPESELECTION || finger->typeFinger  == Finger::SCALECONTAINEREAST || finger->typeFinger  == Finger::SCALECONTAINERSOUTH))//these types of fingers mantain their function
                     {
                         changeFingerType(finger);
-                        finger->typeFinger = Finger::NOTYPE;
+                        finger->typeFinger = Finger::NOTYPE;//lose function
                     }
                     break;
                 }
@@ -2916,12 +3014,12 @@ void testApp::changeLevel(Finger * finger)
                 {
                     changeFingerType(finger);
                     finger->typeFinger = Finger::CAMERA;
-                    cameraScene.fingerIn(finger);
+                    cameraScene.fingerIn(finger);//send finger to camera object for camera control
                     break;
                 }
                 case Finger::OBJECT:
                 {
-                    if(finger->typeFinger == Finger::SCALECONTAINERNORTH || finger->typeFinger  == Finger::SCALECONTAINERSOUTH)
+                    if(finger->typeFinger == Finger::SCALECONTAINEREAST || finger->typeFinger  == Finger::SCALECONTAINERSOUTH)
                     {
                         changeFingerType(finger);
                         finger->typeFinger = Finger::NOTYPE;
@@ -2931,7 +3029,7 @@ void testApp::changeLevel(Finger * finger)
                 }
                 case Finger::ABOVEOBJECT:
                 {
-                    if(finger->typeFinger == Finger::SCALECONTAINERNORTH || finger->typeFinger  == Finger::SCALECONTAINERSOUTH)
+                    if(finger->typeFinger == Finger::SCALECONTAINEREAST || finger->typeFinger  == Finger::SCALECONTAINERSOUTH)
                     {
                         changeFingerType(finger);
                         finger->typeFinger = Finger::NOTYPE;
@@ -2947,55 +3045,58 @@ void testApp::changeLevel(Finger * finger)
         {
             switch (finger->typeLevel)
             {
-                case Finger::SURFACE:
+                case Finger::SURFACE://user is pressing on the screen
                 {
-                    //CHECK FOR PROBLEMS
                     changeFingerType(finger);
                     finger->typeFinger == Finger::NOTYPE;
-                    onSurface(finger);
+                    onSurface(finger);//check where the finger is pressing
                     break;
                 }
                 case Finger::ABOVESURFACE:
-                {
+                { //no change
                     break;
                 }
                 case Finger::CEILING:
                 {
                     changeFingerType(finger);
                     finger->typeFinger = Finger::CAMERA;
-                    cameraScene.fingerIn(finger);
+                    cameraScene.fingerIn(finger);//send finger to camera object for camera control
                     break;
                 }
                 case Finger::OBJECT:
                 {
+                    //surface to object -> may be a touch on token
+                    
                     vector<ContainerToken*> temp = containers.getObjects();
                     bool hitcontainer = false;
+                    //find if the token is a container
                     for (std::vector<ContainerToken*>::iterator it2=temp.begin() ; it2 < temp.end() && !hitcontainer; it2++ )
                     {
                         if((*it2)->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight(),finger->getZForObjectPlane(), false))
                         {
                             hitcontainer = true;
                             finger->typeFinger = Finger::NOTYPE;
-                            (*it2)->click(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight(),finger->getZForObjectPlane() );
+                            (*it2)->click(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight(),finger->getZForObjectPlane() );//user pressed object
                         };
                     }
                     if(!hitcontainer)
-                    {
+                    {//not a container, go trough the other tokens
                         bool hitonTokenCCToken = false;
                         if(onTokenCCToken != NULL)
                         {
                             if(onTokenCCToken->getIsOnTable())
                             {
-                                if(onTokenCCToken->insideToken(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
+                                if(onTokenCCToken->insideToken(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))//check to see if the on-table content creation token was hit
                                 {
                                     finger->typeFinger = Finger::NOTYPE;
                                     hitonTokenCCToken = true;
                                     OnTokenContentCreationUI::RETURNTYPE rt = onTokenCCToken->action(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight());
-                                    switch(rt)
+                                    
+                                    switch(rt)//which option was pressed
                                     {
                                         case OnTokenContentCreationUI::RETURNCONTOUR:
                                         {
-                                            drawAreaForContour.active = true;
+                                            drawAreaForContour.active = true;//activate contour mode
                                             drawAreaForContour.width = ofGetWidth();
                                             drawAreaForContour.height = ofGetHeight();
                                             break;
@@ -3005,7 +3106,7 @@ void testApp::changeLevel(Finger * finger)
                                             break;
                                         }
                                         case OnTokenContentCreationUI::RETURNKINECT:
-                                        {
+                                        {//activate Kinect Mode
                                             unsetGUI();
                                             showKinectGUI = true;
                                             kinectScanning = true;
@@ -3033,16 +3134,16 @@ void testApp::changeLevel(Finger * finger)
                             {
                                 if(inAirCCToken->getIsOnTable())
                                 {
-                                    if(inAirCCToken->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
+                                    if(inAirCCToken->inside(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))//pressed In-air Content Creation token
                                     {
-                                        hitonTokenCCToken = true;
+                                        hitInAirCCToken = true;
                                         finger->typeFinger = Finger::NOTYPE;
                                         InAirContentCreationUI::RETURNTYPE rt = inAirCCToken->action(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight());
-                                        switch(rt)
+                                        switch(rt)//check where it it hit
                                         {
                                             case InAirContentCreationUI::RETURNCONTOUR:
                                             {
-                                                drawAreaForContour.active = true;
+                                                drawAreaForContour.active = true;//activate contour mode
                                                 drawAreaForContour.width = ofGetWidth();
                                                 drawAreaForContour.height = ofGetHeight();
                                                 break;
@@ -3052,7 +3153,7 @@ void testApp::changeLevel(Finger * finger)
                                                 break;
                                             }
                                             case InAirContentCreationUI::RETURNKINECT:
-                                            {
+                                            {//activate Kinect Mode
                                                 unsetGUI();
                                                 showKinectGUI = true;
                                                 kinectScan->changeColor(new ofColor(255,255,255));
@@ -3069,12 +3170,14 @@ void testApp::changeLevel(Finger * finger)
                                             }
                                             case InAirContentCreationUI::RETURNDISCARDCONTOUR:
                                             {
+                                                //deactivate Contour Mode
                                                 drawAreaForContour.active = false;
                                                 drawAreaForContour.clearDrawArea();
                                                 break;
                                             }
                                             case InAirContentCreationUI::RETURNDISCARDKINECT:
                                             {
+                                                //deactivate Kinect Mode
                                                 unsetGUI();
                                                 showKinectGUI = false;
                                                 kinectScanning = false;
@@ -3082,12 +3185,12 @@ void testApp::changeLevel(Finger * finger)
                                             }
                                             case InAirContentCreationUI::RETURNSAVECONTOUR:
                                             {
-                                                drawAreaForContour.save();
-                                                //MISSING FUNCTION
+                                                drawAreaForContour.save();//convert contour into shape and add it to scene
                                                 break;
                                             }
                                             case InAirContentCreationUI::RETURNSAVEKINECT:
                                             {
+                                                //convert depth textured map to shape and add it to scene
                                                 unsetGUI();
                                                 Basic3DObjectFromCopy * temp = new Basic3DObjectFromCopy(shapeEntryPoint, kinectScan->mesh) ;
                                                 ofColor * tempColor = new ofColor(0,0,0);
@@ -3107,9 +3210,9 @@ void testApp::changeLevel(Finger * finger)
                                     }
                                 }
                             }
-                            //LAST ADD
                             if(!hitInAirCCToken)
                             {
+                                //check to see if user pressed save token
                                 if(saveToken != NULL)
                                 {
                                     if(saveToken->getIsOnTable())
@@ -3117,7 +3220,7 @@ void testApp::changeLevel(Finger * finger)
                                         if(saveToken->insideToken(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
                                         {
                                             finger->typeFinger = Finger::NOTYPE;
-                                            saveToken->action();
+                                            saveToken->action();//save scene to STL file
                                         }
                                     }
                                 }
@@ -3143,7 +3246,7 @@ void testApp::changeLevel(Finger * finger)
                 {
                     changeFingerType(finger);
                     finger->typeFinger == Finger::NOTYPE;
-                    onSurface(finger);
+                    onSurface(finger);//check to see where user pressed 
                     break;
                 }
                 case Finger::ABOVESURFACE:
@@ -3181,7 +3284,7 @@ void testApp::changeLevel(Finger * finger)
                 {
                     changeFingerType(finger);
                     finger->typeFinger == Finger::NOTYPE;
-                    onSurface(finger);
+                    onSurface(finger);//check to see where user pressed 
                     break;
                 }
                 case Finger::ABOVESURFACE:
@@ -3192,11 +3295,13 @@ void testApp::changeLevel(Finger * finger)
                 {
                     changeFingerType(finger);
                     finger->typeFinger = Finger::CAMERA;
-                    cameraScene.fingerIn(finger);
+                    cameraScene.fingerIn(finger);//add finger to camera control layer
                     break;
                 }
                 case Finger::OBJECT:
                 {
+                    //object to object -> may be a touch on token
+                    //see comments above, since its the same procedure
                     if(inAirCCToken != NULL)
                     {
                         if(inAirCCToken->getIsOnTable())
@@ -3250,7 +3355,6 @@ void testApp::changeLevel(Finger * finger)
                                     case InAirContentCreationUI::RETURNSAVECONTOUR:
                                     {
                                         drawAreaForContour.save();
-                                        //MISSING FUNCTION
                                         break;
                                     }
                                     case InAirContentCreationUI::RETURNSAVEKINECT:
@@ -3278,6 +3382,8 @@ void testApp::changeLevel(Finger * finger)
                 }
                 case Finger::ABOVEOBJECT:
                 {
+                    //object to above object -> may be a hover on token
+                    //see comments above, since its the same procedure
                     if(inAirCCToken != NULL)
                     {
                         if(inAirCCToken->getIsOnTable())
@@ -3330,7 +3436,6 @@ void testApp::changeLevel(Finger * finger)
                                     }
                                     case InAirContentCreationUI::RETURNSAVECONTOUR:
                                     {
-                                        //MISSING FUNCTION
                                         drawAreaForContour.save();
                                         break;
                                     }
@@ -3370,7 +3475,7 @@ void testApp::changeLevel(Finger * finger)
                 {
                     changeFingerType(finger);
                     finger->typeFinger == Finger::NOTYPE;
-                    onSurface(finger);
+                    onSurface(finger);//user pressed on the surface
                     break;
                 }
                 case Finger::ABOVESURFACE:
@@ -3381,11 +3486,14 @@ void testApp::changeLevel(Finger * finger)
                 {
                     changeFingerType(finger);
                     finger->typeFinger = Finger::CAMERA;
-                    cameraScene.fingerIn(finger);
+                    cameraScene.fingerIn(finger);//add finger to camera control layer
                     break;
                 }
                 case Finger::OBJECT:
                 {
+                    //above object to object -> may be a touch on token
+                    //see comments above, since its the same procedure
+                    
                     vector<ContainerToken*> temp = containers.getObjects();
                     bool hitcontainer = false;
                     for (std::vector<ContainerToken*>::iterator it2=temp.begin() ; it2 < temp.end() && !hitcontainer; it2++ )
@@ -3500,7 +3608,6 @@ void testApp::changeLevel(Finger * finger)
                                             }
                                             case InAirContentCreationUI::RETURNSAVECONTOUR:
                                             {
-                                                //MISSING FUNCTION
                                                 drawAreaForContour.save();
                                                 break;
                                             }
@@ -3525,7 +3632,6 @@ void testApp::changeLevel(Finger * finger)
                                     }
                                 }
                             }
-                            //LAST ADD
                             if(!hitInAirCCToken)
                             {
                                 if(saveToken != NULL)
@@ -3546,6 +3652,8 @@ void testApp::changeLevel(Finger * finger)
                 }
                 case Finger::ABOVEOBJECT:
                 {
+                    //object to above object -> may be a hover on token
+                    //see comments above, since its the same procedure
                     vector<ContainerToken*> temp = containers.getObjects();
                     bool hitcontainer = false;
                     for (std::vector<ContainerToken*>::iterator it2=temp.begin() ; it2 < temp.end() && !hitcontainer; it2++ )
@@ -3612,7 +3720,6 @@ void testApp::changeLevel(Finger * finger)
                                         case InAirContentCreationUI::RETURNSAVECONTOUR:
                                         {
                                             drawAreaForContour.save();
-                                            //MISSING FUNCTION
                                             break;
                                         }
                                         case InAirContentCreationUI::RETURNSAVEKINECT:
@@ -3651,32 +3758,32 @@ void testApp::changeLevel(Finger * finger)
 
 void testApp::updatetCAD()
 {
-    stitchFingers();
+    stitchFingers();//join new finger detections with path finger detections
+    
     vector<Finger *> tempfingers = fingers.getObjects();
-    if(tempfingers.size() == 0)
+    if(tempfingers.size() == 0)//no finger on scene, clean everthing justo make sure nothing is left behind because of a glitch
     {
         cameraScene.clearFingersPickers();
         cameraScene.clearFingers();
     }
+    //Update fingers
     for (std::vector<Finger*>::iterator it=tempfingers.begin() ; it < tempfingers.end(); it++ )
     {
         (*it)->update();
         updateLevel((*it));
-        //updateLevel
-        if((*it)->markForAdd)
+      
+        if((*it)->markForAdd)//new finger; stayed long enough to be considered as valid
         {
             if((*it)->typeLevel == Finger::ABOVESURFACE)
             {
-                //NOACTION
             }
             else if((*it)->typeLevel == Finger::CEILING)
-            {
+            {   //all fingers at this level belong to the camera
                 (*it)->typeFinger = Finger::CAMERA;
                 cameraScene.fingerIn((*it));
             }
             else if((*it)->typeLevel == Finger::OBJECT)
             {
-                //MISSING
                 if(inAirCCToken != NULL)
                 {
                     if(inAirCCToken->getIsOnTable())
@@ -3723,7 +3830,7 @@ void testApp::updatetCAD()
             }
             else if((*it)->typeLevel == Finger::ABOVEOBJECT)
             {
-                //MISSING
+                
                 if(inAirCCToken != NULL)
                 {
                     if(inAirCCToken->getIsOnTable())
@@ -3770,28 +3877,30 @@ void testApp::updatetCAD()
             }
             if((*it)->typeLevel == Finger::SURFACE)
             {
-                onSurface((*it));
+                onSurface((*it));//find where its being pressed
             }
-            (*it)->markForAdd = false;
+            (*it)->markForAdd = false;//was already add
         }
-        else if((*it)->markForMoved)
+        else if((*it)->markForMoved)//finger was changed
         {
             if((*it)->typeFinger == Finger::PICKER)
             {
-                if((*it)->pickedShapes3D.size() > 0)
+                if((*it)->pickedShapes3D.size() > 0)//if finger was pressed above any 3D shapes
                 {
                     selectionMovements.lockVector();
-                    selectionMovements.addElement(new SelectionMovement((*it)->pickedShapes3D , (*it), &cameraScene, viewport ));
+                    selectionMovements.addElement(new SelectionMovement((*it)->pickedShapes3D , (*it), &cameraScene, viewport ));//start a new linking/selection movement
                     selectionMovements.unlockVector();
                     changeFingerType((*it));
                     (*it)->typeFinger = Finger::SHAPESELECTION;
                 }
             }
             changeLevel((*it));
+            
             switch ((*it)->typeFinger)
             {
                 case Finger::PICKER:
                 {
+                    //check to see if finger is trying to cut a link
                     vector<ContainerToken*> temp2 = containers.getObjects();
                     for (std::vector<ContainerToken*>::iterator it2=temp2.begin() ; it2 < temp2.end(); it2++ )
                     {
@@ -3805,14 +3914,14 @@ void testApp::updatetCAD()
                     break;
                 case Finger::CONTOUR:
                 {
-                    bool inMenuCircle = false;
+                    bool invalidFingerForContour = false;
                     if(onTableCCToken != NULL)
                     {
                         if(onTableCCToken->getIsOnTable())
                         {
                             if(onTableCCToken->insideProtectedOptions((*it)->getX()*ofGetWidth(), (*it)->getY()*ofGetHeight()))
                             {
-                                inMenuCircle = true;
+                                invalidFingerForContour = true;
                             }
                         }
                     }
@@ -3822,7 +3931,7 @@ void testApp::updatetCAD()
                         {
                             if(onTokenCCToken->insideProtectedOptions((*it)->getX()*ofGetWidth(), (*it)->getY()*ofGetHeight()))
                             {
-                                inMenuCircle = true;
+                                invalidFingerForContour = true;
                             }
                         }
                     }
@@ -3830,30 +3939,28 @@ void testApp::updatetCAD()
                     {
                         if(inAirCCToken->getIsOnTable())
                         {
-                            inMenuCircle = false;
+                            invalidFingerForContour = false;
                         }
                     }
-                    if(!inMenuCircle)
+                    if(!invalidFingerForContour)
                     {
                         drawAreaForContour.addVert((*it));
                     }
                 }
                     break;
-                    //                case Finger::BOOLEANCONTAINER:
-                    //
-                    //                    break;
-                case Finger::SCALECONTAINERNORTH:
+                case Finger::SCALECONTAINEREAST:
                     break;
                 case Finger::SCALECONTAINERSOUTH:
                     break;
                 case Finger::SHAPESELECTION:
                 {
+                    //finger is doing a selection/linking movement; it already has shapes; it finishes the movement if it its over a container
                     vector<SelectionMovement*> temp = selectionMovements.getObjects();
                     for (std::vector<SelectionMovement*>::iterator it2=temp.begin() ; it2 < temp.end(); it2++ )
                     {
                         if((*it2)->finger->getFingerID() == (*it)->getFingerID())
                         {
-                            //(*it2)->vert = ofVec2f((*it)->getX()*ofGetWidth(),(*it)->getY()*ofGetHeight());
+                           
                             vector<ContainerToken*> temp2 = containers.getObjects();
                             containers.lockVector();
                             bool found = false;
@@ -3861,12 +3968,12 @@ void testApp::updatetCAD()
                             {
                                 ofVec2f fingerCenter = ofVec2f(((*it)->getX())*ofGetWidth(), (*it)->getY()*ofGetHeight());
                                 ofVec2f containerCenter = ofVec2f((*it3)->getToken()->getX() *ofGetWidth(), ((*it3)->getToken()->getY()) * ofGetHeight());
-                                if(fingerCenter.distance(containerCenter) < 100)
+                                if(fingerCenter.distance(containerCenter) < 100)//is finger close enough to container
                                 {
                                     found = true;
                                     for( int i = 0; i < (*it2)->selectedShapes.size() ; i++)
                                     {
-                                        (*it3)->addLink((*it2)->selectedShapes[i]);
+                                        (*it3)->addLink((*it2)->selectedShapes[i]);//link shapes (in the finger) with the container)
                                     }
                                 }
                             }
@@ -3874,7 +3981,7 @@ void testApp::updatetCAD()
                             if(found)
                             {
                                 changeFingerType((*it));
-                                (*it)->typeFinger = Finger::UNUSABLE;
+                                (*it)->typeFinger = Finger::UNUSABLE;//marked as unsuable because it has already done its task
                             }
                         }
                     }
@@ -3885,27 +3992,27 @@ void testApp::updatetCAD()
                 default:
                     break;
             }
-            (*it)->markForMoved = false;
+            (*it)->markForMoved = false;//already processed
         }
-        else if((*it)->markForRemoval)
+        else if((*it)->markForRemoval)//marked for removal, token was taken from the surface
         {
             changeFingerType((*it));
             fingers.removeElement((*it));
         }
     }
+    //Update tokens
     vector<Token *> temptokens = tokens.getObjects();
     for (std::vector<Token*>::iterator it=temptokens.begin() ; it < temptokens.end(); it++ )
     {
         (*it)->update();
-        if((*it)->markForAdd)
+        if((*it)->markForAdd)//token was added and stayed long enough to be valid
         {
-            if((*it)->getSymbolID() == MARKER_ID_SAVE) //shredder
+            if((*it)->getSymbolID() == MARKER_ID_SAVE)//Is it a save token?
             {
                 
                 if(saveToken==NULL)
                 {
                     saveToken = new SaveToken((*it), &shapes);
-                    
                     saveToken->setIsOnTable(true);
                 }
                 else
@@ -3914,51 +4021,48 @@ void testApp::updatetCAD()
                     saveToken->setIsOnTable(true);
                 }
                 saveToken->update();
-                
-                
-                
                 (*it)->typeobject = Token::SAVE;
             }
-            else if((*it)->getSymbolID() == MARKER_ID_ORBIT) //shredder
+            else if((*it)->getSymbolID() == MARKER_ID_ORBIT) //Is it a orbit token?
             {
                 orbiter = new OrbitToken((*it), &containers, axis);
                 hasOrbiter = true;
                 (*it)->typeobject = Token::ORBITER;
             }
-            else if((*it)->getSymbolID() == MARKER_ID_SHREDDER1) //shredder
+            else if((*it)->getSymbolID() == MARKER_ID_SHREDDER1)  //Is it a Shredder token?
             {
                 shredder1 = new ShredderToken((*it));
                 hasShredder1 = true;
                 (*it)->typeobject = Token::SHREDDER1;
             }
-            else if((*it)->getSymbolID()== MARKER_ID_SHREDDER2)
+            else if((*it)->getSymbolID()== MARKER_ID_SHREDDER2)  //Is it a Shredder token?
             {
                 shredder2 = new ShredderToken((*it));
                 hasShredder2 = true;
                 (*it)->typeobject = Token::SHREDDER2;
             }
-            else if((*it)->getSymbolID()==MARKER_ID_X_Z)
+            else if((*it)->getSymbolID()==MARKER_ID_X_Z) //Is it a Cube token?
             {
-                cameraScene.addRotationTween(0,45,0,1);
+                cameraScene.addRotationTween(0,45,0,1);//rotate camera
                 axis->changeAxis(AxisPlane::X_Z);
-                logo.loadImage("images/magentalogo.png");
+                logo.loadImage("images/magentalogo.png");//change logo
                 (*it)->typeobject = Token::MARKERXZ;
             }
-            else if((*it)->getSymbolID()==MARKER_ID_X_Y)
+            else if((*it)->getSymbolID()==MARKER_ID_X_Y)//Is it a Cube token?
             {
-                cameraScene.addRotationTween(0, -45, 0,1);
+                cameraScene.addRotationTween(0, -45, 0,1);//rotate camera
                 axis->changeAxis(AxisPlane::X_Y);
-                logo.loadImage("images/yellowlogo.png");
+                logo.loadImage("images/yellowlogo.png");//change logo
                 (*it)->typeobject = Token::MARKERXY;
             }
-            else if((*it)->getSymbolID()==MARKER_ID_Y_Z)
+            else if((*it)->getSymbolID()==MARKER_ID_Y_Z)//Is it a Cube token?
             {
-                cameraScene.addRotationTween(90,-45,0,1);
+                cameraScene.addRotationTween(90,-45,0,1);//rotate camera
                 axis->changeAxis(AxisPlane::Y_Z);
-                logo.loadImage("images/cyanlogo.png");
+                logo.loadImage("images/cyanlogo.png");//change logo
                 (*it)->typeobject = Token::MARKERYZ;
             }
-            else if((*it)->getSymbolID()==MARKER_ID_ONTABLECCTOKEN)
+            else if((*it)->getSymbolID()==MARKER_ID_ONTABLECCTOKEN) //Is it a On-table Content Creation token?
             {
                 if(onTableCCToken==NULL)
                 {
@@ -3972,7 +4076,7 @@ void testApp::updatetCAD()
                 onTableCCToken->update();
                 (*it)->typeobject = Token::ONTABLECC;
             }
-            else if((*it)->getSymbolID()==MARKER_ID_ONTOKENCCTOKEN)
+            else if((*it)->getSymbolID()==MARKER_ID_ONTOKENCCTOKEN) //Is it a On-token Content Creation token?
             {
                 if(onTokenCCToken==NULL)
                 {
@@ -3986,7 +4090,7 @@ void testApp::updatetCAD()
                 onTokenCCToken->update();
                 (*it)->typeobject = Token::ONTOKENCC;
             }
-            else if((*it)->getSymbolID()==MARKER_ID_INAIRCCTOKEN)
+            else if((*it)->getSymbolID()==MARKER_ID_INAIRCCTOKEN)//Is it a In-air Content Creation token?
             {
                 if(inAirCCToken==NULL)
                 {
@@ -4000,8 +4104,10 @@ void testApp::updatetCAD()
                 inAirCCToken->update();
                 (*it)->typeobject = Token::INAIRCC;
             }
-            else
+            else//everthing else failed, must be a container
             {
+                
+                //the container might already be in the list of containers
                 vector<ContainerToken*> temp = containers.getObjects();
                 containers.lockVector();
                 bool found = false;
@@ -4014,10 +4120,10 @@ void testApp::updatetCAD()
                         tempCont = (*it2);
                     }
                 }
-                if(!found)
+                if(!found)//new container
                 {
                     tempCont = new ContainerToken((*it), viewport, axis, &cameraScene, useAlternativeManipulationUI, &shapes);
-                    containers.addElement(tempCont);
+                    containers.addElement(tempCont);//add to our list
                 }
                 else
                 {
@@ -4029,12 +4135,13 @@ void testApp::updatetCAD()
             }
             (*it)->markForAdd = false;
         }
-        else if((*it)->markForMoved)
+        else if((*it)->markForMoved)//token was moved
         {
             switch ( (*it)->typeobject)
             {
                 case Token::CONTAINER:
                 {
+                    //find Container
                     vector<ContainerToken*> temp = containers.getObjects();
                     containers.lockVector();
                     bool found = false;
@@ -4049,8 +4156,8 @@ void testApp::updatetCAD()
                     }
                     if(found)
                     {
-                        tempCont->update();
-                        if(hasShredder1 && hasShredder2)
+                        tempCont->update();//update values for token
+                        if(hasShredder1 && hasShredder2)//check to see if user is erasing the container
                         {
                             vector<ofPoint> verts;
                             verts.push_back(ofPoint(shredder1->getToken()->getX()*ofGetWidth(), shredder1->getToken()->getY()*ofGetHeight()+20));
@@ -4060,6 +4167,7 @@ void testApp::updatetCAD()
                             ofPolyline p;
                             p.addVertexes(verts);
                             p.close();
+                            
                             if(inside((*it)->getX()*ofGetWidth(), (*it)->getY()*ofGetHeight(), p))
                             {
                                 shapes.lockVector();
@@ -4086,19 +4194,19 @@ void testApp::updatetCAD()
                 case Token::MARKERYZ:
                     break;
                 case Token::ONTABLECC:
-                    onTableCCToken->update();
+                    onTableCCToken->update();//update values for token
                     break;
                 case Token::ONTOKENCC:
-                    onTokenCCToken->update();
+                    onTokenCCToken->update();//update values for token
                     break;
                 case Token::INAIRCC:
-                    inAirCCToken->update();
+                    inAirCCToken->update();//update values for token
                     break;
                 case Token::NOTYPE:
                     break;
                 case Token::SHREDDER1:
                 {
-                    if(drawAreaForContour.active)
+                    if(drawAreaForContour.active)//shredders work as erasers during Contour Mode
                     {
                         drawAreaForContour.erase(shredder1->getToken()->getX()*ofGetWidth(), shredder1->getToken()->getY()*ofGetHeight(), 100);
                     }
@@ -4106,7 +4214,7 @@ void testApp::updatetCAD()
                 }
                 case Token::SHREDDER2:
                 {
-                    if(drawAreaForContour.active)
+                    if(drawAreaForContour.active)//shredders work as erasers during Contour Mode
                     {
                         drawAreaForContour.erase(shredder2->getToken()->getX()*ofGetWidth(), shredder2->getToken()->getY()*ofGetHeight(), 100);
                     }
@@ -4118,56 +4226,53 @@ void testApp::updatetCAD()
                 }
                 case Token::SAVE:
                 {
-                    saveToken->update();
+                    saveToken->update();//update values for token
                     break;
                 }
                 default:
                     break;
             }
-            (*it)->markForMoved = false;
+            (*it)->markForMoved = false;//token was processed
         }
-        else if((*it)->markForRemoval)
+        else if((*it)->markForRemoval)//token was removed
         {
             changeMarkerType((*it));
             tokens.removeElement((*it));
         }
     }
+    
+    //Update containers
     vector<ContainerToken*> temp = containers.getObjects();
     for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ )
     {
         if((*it)->getIsOnTable())
         {
+            //update hovering behaviour
             vector< TokenData*> temp = tokensData.getObjects();
-            for(vector< TokenData *>::iterator ito=temp.begin() ; ito < temp.end(); ito++ )
+            for(vector< TokenData *>::iterator it2=temp.begin() ; it2 < temp.end(); it2++ )
             {
-                if((*ito)->getID()==(*it)->getID())
+                if((*it2)->getID()==(*it)->getID())
                 {
-                    //                    cout << (*ito)->zmax << "  ---> " << (*ito)->zcurrent<<endl;
-                    //                    cout << (*ito)->zcurrent + 2 << endl;
-                    //                    cout << (*ito)->zcurrent - 2 << endl;
                     if(!(
-                         (*ito)->zmax < (*ito)->zcurrent + 2 && (*ito)->zmax > (*ito)->zcurrent  - 2 ))
+                         (*it2)->zmax < (*it2)->zcurrent + 2 && (*it2)->zmax > (*it2)->zcurrent  - 2 ))
                     {
-                        //cout << "hover" << endl;
                         (*it)->hovering();
                     }
                     else
                     {
                         (*it)->noHovering();
-                        // cout << "nohover" << endl;
                     }
-                    // tempCont->boolLock->markerdata = (*ito);
                 }
             }
-            (*it)->update();
-            (*it)->updateScale();
+            (*it)->update();//update translation and rotation of linked 3D Content
+            (*it)->updateScale();//update scaling of linked 3D Content
         }
     }
 }
 
-void testApp::changeMarkerType(Token * marker)
+void testApp::changeMarkerType(Token * token)
 {
-    switch (marker->typeobject)
+    switch (token->typeobject)
     {
         case Token::CONTAINER:
         {
@@ -4177,7 +4282,7 @@ void testApp::changeMarkerType(Token * marker)
             ContainerToken * tempCont;
             for (std::vector<ContainerToken*>::iterator it2=temp.begin() ; it2 < temp.end(); it2++ )
             {
-                if((*it2)->getToken()->getSymbolID()==marker->getSymbolID())
+                if((*it2)->getToken()->getSymbolID()==token->getSymbolID())
                 {
                     found = true;
                     tempCont =(*it2);
@@ -4218,7 +4323,7 @@ void testApp::changeMarkerType(Token * marker)
             hasShredder2 = false;
             break;
         case Token::CALIBRATION:
-            calibrationMarker->objectRemoved(marker);
+            calibrationMarker->objectRemoved(token);
             break;
         case Token::ORBITER:
             hasOrbiter = false;
@@ -4281,7 +4386,7 @@ void testApp::changeFingerType(Finger * finger)
             }
         }
             break;
-        case Finger::SCALECONTAINERNORTH:
+        case Finger::SCALECONTAINEREAST:
         {
             vector<ContainerToken*> temp2 = containers.getObjects();
             for (std::vector<ContainerToken*>::iterator it2=temp2.begin() ; it2 < temp2.end(); it2++ )
@@ -4384,18 +4489,6 @@ void testApp::drawScene()
     Grids tempgrid = Grids();
     switch (axis->axis)
     {
-            //        case AxisPlane::NOAXIS:
-            //            tempgrid.ofDrawGrid(gridsize,ticks,false,true,true,true);
-            //            break;
-            //        case AxisPlane::XY:
-            //            tempgrid.ofDrawGrid(gridsize,ticks,false,true,true,true);
-            //            break;
-            //        case AxisPlane::YZ:
-            //            tempgrid.ofDrawGrid(gridsize,ticks,false,true,true,true);
-            //            break;
-            //        case AxisPlane::ZX:
-            //            tempgrid.ofDrawGrid(gridsize,ticks,false,true,true,true);
-            //            break;
         case AxisPlane::NOAXIS:
             tempgrid.ofDrawGrid(gridsize,ticks,false,true,true,true);
             break;
