@@ -1,13 +1,5 @@
-//
-//  CompositeDraw.h
-//  Modeller
-//
-//  Created by paulobala on 17/04/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Modeller_CompositeDraw_h
-#define Modeller_CompositeDraw_h
+#ifndef tCAD_CompositeDraw_h
+#define tCAD_CompositeDraw_h
 
 #include "Shape3D.h"
 #include "ParentDraw.h"

@@ -4,28 +4,15 @@
    version = "1.0">
    <FileBreakpoints>
       <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "src/SaveToken.h"
-         timestampString = "368443437.835582"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "164"
-         endingLineNumber = "164"
-         landmarkName = "draw()"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "src/testApp.cpp"
-         timestampString = "369138771.757373"
+         filePath = "src/ofEasyFingerCam.h"
+         timestampString = "369168988.505388"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "3759"
-         endingLineNumber = "3759">
+         startingLineNumber = "1"
+         endingLineNumber = "1">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

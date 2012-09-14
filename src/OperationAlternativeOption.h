@@ -1,13 +1,5 @@
-//
-//  TranslateAlternative.h
-//  Carver
-//
-//  Created by paulobala on 11/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_TranslateAlternative_h
-#define Carver_TranslateAlternative_h
+#ifndef tCAD_TranslateAlternative_h
+#define tCAD_TranslateAlternative_h
 #include "lineIntersection.h"
 
 class OperationAlternativeOption {
@@ -20,13 +12,15 @@ public:
   
     enum SHAPETYPE{
     SQUARE, HALFCIRCLEUP, HALFCIRCLELEFT
-    };
+    };//shape of area
    
     ofColor color;
     SHAPETYPE shape;
     float limitTime;
     float referenceValue;
-    
+    /*
+     Constructor
+     */
     OperationAlternativeOption(ofVec2f nw_, ofVec2f ne_, ofVec2f sw_, ofVec2f se_){
         nw = nw_; ne = ne_; sw = sw_; se = se_;
         color = ofColor(ofColor::gray);
@@ -52,7 +46,9 @@ public:
         }
     }
     
-    
+    /*
+     Update edges
+     */
     void update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_){
         nw = nw_; ne = ne_; sw = sw_; se = se_;
         path.clear();

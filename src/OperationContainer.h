@@ -1,5 +1,5 @@
-#ifndef Carver_OperationContainer_h
-#define Carver_OperationContainer_h
+#ifndef tCAD_OperationContainer_h
+#define tCAD_OperationContainer_h
 #include "Shape3D.h"
 #include "AxisPlane.h"
 #include "EastContainer.h"
@@ -10,25 +10,29 @@
 #include "Composite3DObject.h"
 #include "lineIntersection.h"
 
-
+/*
+ Manipulation UI with dwell time
+ */
 class OperationContainer {
-    std::vector<Shape3D*> * links;
-    LockableVector<Shape3D* > * shapes;
+    std::vector<Shape3D*> * links;//connections between 3D shapes and container
+    LockableVector<Shape3D* > * shapes;//3D shapes in 3D scene
     
-    AxisPlane * selectedPlane;  
+    AxisPlane * selectedPlane;  //plane of 3D scene
+    //GUI images
     ofImage translateImg, scaleImg, rotateImg, minusImg, plusImg, rightscaleImg, leftscaleImg, leftArrowImg, rightArrowImg, unionImg, noBoolImg, symDifImg, diffABImg, diffBAImg, intersectImg, scaledown, scaleup,rotateleft,rotateright,rotatedown,rotateup,godown,goup;
     ofVec2f nw, ne, sw, se;
+    
     void makePreviews(Shape3D* objA, Shape3D * obj);
     
-    unsigned long leftArrowTime;
-    unsigned long rightArrowTime;
+    unsigned long leftArrowTime;//timer for left arrow
+    unsigned long rightArrowTime;//timer for right arrow
   
     ofTrueTypeFont font;
 public:
     
     enum OPERATIONTYPE{
         SCALE, TRANSLATE, ROTATE, BOOLEANS, NOOPERATION
-    };
+    };//Manipulation Mode
     
     enum BOOLEANOPERATION {
 		BOOLEAN_INTERSECTION, 
@@ -42,13 +46,14 @@ public:
     BOOLEANOPERATION chosen;
     OPERATIONTYPE opType;
     
+    //GUI elements
     EastContainer * east;
     WestContainer * west;
     NorthContainer * north;
     SouthContainer * south;
     CenterContainer * center;
     
-    Composite3DObject * newComposite;
+    Composite3DObject * newComposite;//boolean object
     
         
     OperationContainer(std::vector<Shape3D*> * links_,  AxisPlane * selectedPlane_, LockableVector<Shape3D*> * shapes_);

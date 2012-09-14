@@ -1,6 +1,9 @@
-#ifndef Carver_Dash_h
-#define Carver_Dash_h
+#ifndef tCAD_Dash_h
+#define tCAD_Dash_h
 
+/*
+Visual element. Dash anything by putting it between the begin and end method invocation
+ */
 class Dash {
 public:
     Dash(){}

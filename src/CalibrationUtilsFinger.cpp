@@ -1,12 +1,3 @@
-/*
-*  CalibrationUtils.cpp
-*
-*
-*  Created on 2/2/09.
-*  Copyright 2009 NUI Group. All rights reserved.
-*
-*/
-
 #include "CalibrationUtilsFinger.h"
 #include <cmath>
 CalibrationUtilsFinger::CalibrationUtilsFinger()
@@ -104,7 +95,7 @@ void CalibrationUtilsFinger::loadXMLSettings(string afilename)
 
 	//Set the camera calibated box.
 	calculateBox();
-//	computeCameraToScreenMap();
+
 }
 
 
@@ -208,7 +199,6 @@ void CalibrationUtilsFinger::initScreenPoints()
 		for(int i = 0; i <= GRID_X; i++)
 		{
 			screenPoints[p] = screenBB.upperLeftCorner + xd*i + yd*j;
-			//printf("(%d, %d) = (%f, %f)\n", i, j, screenPoints[p].X, screenPoints[p].Y);
 			p++;
 		}
 	}
@@ -248,17 +238,6 @@ float CalibrationUtilsFinger::getScreenScale()
 std::pair<ofVec2f, bool >  CalibrationUtilsFinger::cameraToScreenPosition(float x, float y)
 {
 	return cameraToScreenSpace(x, y);
-
-//is this right to avoid boundingbox overflow? this overflow occurs due to new angle box
-// 	if(y > _camHeight) y = _camHeight;
-// 	if(y < 0) y = 0;
-// 	if(x > _camWidth) x = _camWidth;
-// 	if(x < 0) x = 0;
-// 
-// 	int pos = (int)y * (int)_camWidth + (int)x;
-// 
-// 	x = cameraToScreenMap[pos].X;
-// 	y = cameraToScreenMap[pos].Y;
 }
 
 void CalibrationUtilsFinger::transformDimension(float &width, float &height)
@@ -379,8 +358,6 @@ void CalibrationUtilsFinger::nextCalibrationStep()
 			calibrationStep = 0;
 			saveCalibration();
 			calculateBox();
-// 			computeCameraToScreenMap();
-
             saveCalibration();
 		}
 	}

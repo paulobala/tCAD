@@ -1,13 +1,5 @@
-//
-//  DownContainer.h
-//  Carver
-//
-//  Created by paulobala on 03/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_DownContainer_h
-#define Carver_DownContainer_h
+#ifndef tCAD_DownContainer_h
+#define tCAD_DownContainer_h
 #include "ofMain.h"
 
 class SouthContainer {

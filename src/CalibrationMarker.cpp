@@ -1,12 +1,3 @@
-/*
- *  Calibration.cpp
- *  
- *
- *  Created on 2/1/09.
- *  Copyright 2009 NUI Group. All rights reserved.
- *
- */
-
 #include "CalibrationMarker.h"
 
 /******************************************************************************
@@ -17,8 +8,6 @@ void CalibrationMarker::setup(int _camWidth, int _camHeight)//, BlobTracker *tra
 	/********************
 	 * Initalize Variables
 	 *********************/
-//	calibrationParticle.loadImage("images/particle.png");
-//	calibrationParticle.setUseTexture(true);
     
     //Fonts - Is there a way to dynamically change font size?
 	font.loadFont("verdana.ttf", 8, true, true);	   //Font used for small images

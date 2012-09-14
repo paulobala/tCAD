@@ -6,7 +6,9 @@
 //Used other calibration
 #include "rect2d.h"
 #include "vector2d.h"
-
+/*
+ Calibration process. Based on http://ccv.nuigroup.com/
+ */
 class CalibrationUtilsFinger
 {
 	public:

@@ -1,21 +1,16 @@
-//
-//  Line.cpp
-//  DemoLab
-//
-//  Created by paulobala on 27/02/12.
-//  Copyright 2012 __MyCompanyName__. All rights reserved.
-//
 #include "ofxOpenCv.h"
 #include "lineGeom.h"
 #include <iostream>
 using namespace std;
 
+/*
+Intersect line with line l1; r stores intersection point; return false if no intersection is found 
+ */
 bool lineGeom::intersection(lineGeom *l1, cv::Point *r) {
-        //cout << "intersection" << endl;
         
         if(l1->gettheta() == this->gettheta() ){
-            //cout << "parallel"<< endl;
-            return false;}
+            return false;}// no interection; parallel lines
+    
         float ct1=cos(this->gettheta());     
         float st1=sin(this->gettheta());    
         float ct2=cos(l1->gettheta());     
@@ -33,14 +28,17 @@ bool lineGeom::intersection(lineGeom *l1, cv::Point *r) {
         cvSolve(A, B, X );
         r->x = cvGetReal1D(X,0);
         r->y = cvGetReal1D(X,1);
-        //cout << r->x << " -> " << r->y << endl;
         return true;
     };
-    
+/*
+ 
+ */    
 float lineGeom::resultFromX(float x){
         return (this->getrho()-x*cos(this->gettheta()))/sin(this->gettheta());
     }
-    
+/*
+ 
+ */    
 float lineGeom::resultFromY(float y){
         return (this->getrho()-y*sin(this->gettheta()))/cos(this->gettheta());
     }

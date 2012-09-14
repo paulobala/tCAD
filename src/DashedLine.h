@@ -1,14 +1,9 @@
-//
-//  DashedLine.h
-//  Carver
-//
-//  Created by paulobala on 05/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
+#ifndef tCAD_DashedLine_h
+#define tCAD_DashedLine_h
 
-#ifndef Carver_DashedLine_h
-#define Carver_DashedLine_h
-
+/*
+Visual element - 2D Dashed Line
+ */
 class DashedLine{
     ofVec2f point1;
     ofVec2f point2;

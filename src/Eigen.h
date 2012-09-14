@@ -1,6 +1,10 @@
-#ifndef TeseAppExample_Eigen_h
-#define TeseAppExample_Eigen_h
+#ifndef tCAD_Eigen_h
+#define tCAD_Eigen_h
 
+/*
+ EigenSolver necesseary fo best-fit plane. Based on source code at http://bullet.googlecode.com/svn/trunk/Extras/ConvexDecomposition/bestfit.cpp 
+
+ */
 class Eigen
 {
 public:

@@ -1,7 +1,10 @@
-#ifndef TeseAppExample_lineGeom_h
-#define TeseAppExample_lineGeom_h
+#ifndef tCAD_lineGeom_h
+#define tCAD_lineGeom_h
 using namespace std;
 
+/*
+2D Line described in rho-theta parametrization. Necessary to deal with lines from openCV Hough lines
+*/
 class lineGeom{
     
 protected:
@@ -24,6 +27,7 @@ public:
     cv::Point getpt1(){return pt1;}
     cv::Point getpt2(){return pt2;}
     
+    //intersect this line with l1 line and store intersection point in r
     bool intersection(lineGeom *l1, cv::Point *r) ;
     
     float resultFromX(float x);

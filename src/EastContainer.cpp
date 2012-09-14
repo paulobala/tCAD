@@ -1,21 +1,18 @@
-//
-//  EastContainer.cpp
-//  Carver
-//
-//  Created by paulobala on 03/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
 #include <iostream>
 #include "EastContainer.h"
 #include "lineIntersection.h"
+/*
+ Constructor
+ */
 EastContainer::EastContainer( ofVec2f nw_, ofVec2f ne_, ofVec2f sw_, ofVec2f se_){
     nw = nw_; ne = ne_; sw = sw_; se = se_;
      color = ofColor(ofColor::gray);
     limitTime = 1000;
 } 
-
-void EastContainer::update(  ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_){
+/*
+ Update edges
+ */
+void EastContainer::update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_){
     nw = nw_; ne = ne_; sw = sw_; se = se_;
     path.clear();
     path.lineTo(nw);
@@ -24,7 +21,9 @@ void EastContainer::update(  ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_)
     path.lineTo(sw);
     path.close();
 }
-
+/*
+ Draw area with image
+ */
 void EastContainer::draw(ofImage img){
     ofPushStyle();
     if(ofGetElapsedTimeMillis() - clickTime < limitTime){
@@ -64,7 +63,9 @@ void EastContainer::draw(ofImage img){
 
     ofPopStyle();
 }
-
+/*
+ Draw area
+ */
 void EastContainer::draw(){
     ofPushStyle();
     if(ofGetElapsedTimeMillis() - clickTime < limitTime){
@@ -82,7 +83,9 @@ void EastContainer::draw(){
     path.draw();
     ofPopStyle();
 }
-
+/*
+ Is point inside area?
+ */
 bool EastContainer::inside(float x, float y){
     ofPolyline polyline;
     polyline.addVertex(nw.x, nw.y);
@@ -118,7 +121,9 @@ bool EastContainer::inside(float x, float y){
     else return true;
     
 }
-
+/*
+ Finger was in area
+ */
 void EastContainer::action(){
      clickTime = ofGetElapsedTimeMillis();
 }

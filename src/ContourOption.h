@@ -1,22 +1,19 @@
-//
-//  ContourOption.h
-//  Carver
-//
-//  Created by paulobala on 31/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_ContourOption_h
-#define Carver_ContourOption_h
+#ifndef tCAD_ContourOption_h
+#define tCAD_ContourOption_h
 
 #include "OnScreenOption.h"
 
-
+/*
+ Option was Contour mode
+ */
 class ContourOption: public OnScreenOption
 {
    
    
 public:
+    /*
+     Constructor
+     */
     ContourOption(ofVec2f center_, float radius_, string name_, ofVec3f * point_, ofColor color_){
         center = center_; 
         radius = radius_; 
@@ -27,7 +24,9 @@ public:
         font.loadFont("fonts/helveticaNeue.ttf", 14, true, true);
         img.loadImage("images/contour.png");
     }
-    
+    /*
+     Draw option
+     */
     void draw(){
         ofPushStyle();
         ofSetColor(color);
@@ -39,11 +38,15 @@ public:
         font.drawString(name, center.x - 20,center.y-10);
         ofPopStyle();
     };
-    
+    /*
+     Pressed option
+     */
     void action(){
         
     };
-    
+    /*
+     Pressed?
+     */
     bool checkHit(float x, float y){
         if( ofVec2f(x,y).distance(center) < radius){
             action();

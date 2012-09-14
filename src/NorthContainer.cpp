@@ -1,12 +1,16 @@
-
 #include <iostream>
 #include "NorthContainer.h"
 #include "lineIntersection.h"
+/*
+ Constructor
+ */
 NorthContainer::NorthContainer(  ofVec2f nw_, ofVec2f ne_, ofVec2f sw_, ofVec2f se_ ){
      nw = nw_; ne = ne_; sw = sw_; se = se_;
     color = ofColor(ofColor::black);
 } 
-
+/*
+ Update edges
+ */
 void NorthContainer::update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_){
      nw = nw_; ne = ne_; sw = sw_; se = se_;
     path.clear();
@@ -16,7 +20,9 @@ void NorthContainer::update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_)
     path.lineTo(sw);
     path.close();
 }
-
+/*
+ Draw area with image
+ */
 void NorthContainer::draw(ofImage img_){
     ofPushStyle();  
     if(ofGetElapsedTimeMillis() - clickTime < 1000){
@@ -55,6 +61,9 @@ void NorthContainer::draw(ofImage img_){
 
     ofPopStyle();
 }
+/*
+ Draw area
+ */
 void NorthContainer::draw(){
     ofPushStyle();
     if(ofGetElapsedTimeMillis() - clickTime < 1000){
@@ -72,7 +81,9 @@ void NorthContainer::draw(){
     path.draw();
     ofPopStyle();
 }
-
+/*
+ Is point inside area?
+ */
 bool NorthContainer::inside(float x, float y){
     
     ofPolyline polyline;
@@ -109,7 +120,9 @@ bool NorthContainer::inside(float x, float y){
     else return true;
     
 }
-
+/*
+ Finger was in area
+ */
 void NorthContainer::action(){
   clickTime = ofGetElapsedTimeMillis();
 }

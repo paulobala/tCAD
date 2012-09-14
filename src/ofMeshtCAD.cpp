@@ -1,5 +1,7 @@
 #include "ofMeshtCAD.h"
-
+/*
+Add face (3 points) to mesh
+ */
 void ofMeshtCAD::addFace(ofVec3f a, ofVec3f b, ofVec3f c) {
     ofVec3f normal = ((c - a).cross(b - a)).normalize();
 	addNormal(normal);
@@ -12,12 +14,16 @@ void ofMeshtCAD::addFace(ofVec3f a, ofVec3f b, ofVec3f c) {
     addIndex(getNumIndices());
     addIndex(getNumIndices());    
 }
-
+/*
+ Add face (4 points) to mesh
+ */
 void ofMeshtCAD::addFace(ofVec3f a, ofVec3f b, ofVec3f c, ofVec3f d) {
     addFace(a, b, d);
 	addFace(b, c, d);
 }
-
+/*
+ Add face (rectangle) to mesh
+ */
 void ofMeshtCAD::addFace(ofRectangle r) {
     ofVec2f lt(r.x,r.y);
     ofVec2f rt(r.x+r.width,r.y);
@@ -25,9 +31,10 @@ void ofMeshtCAD::addFace(ofRectangle r) {
     ofVec2f lb(r.x,r.y+r.height);
     addFace(lt,lb,rb,rt);
 }
-
+/*
+ Add box to mesh
+ */
 void ofMeshtCAD::addBox(ofRectangle r, float height) {
-    
     ofVec3f a(r.x,r.y);
     ofVec3f b(r.x,r.y+r.height);
     ofVec3f c(r.x+r.width,r.y+r.height);
@@ -46,25 +53,33 @@ void ofMeshtCAD::addBox(ofRectangle r, float height) {
     
     addMesh(mesh);
 }
-
+/*
+ Moves mesh to pos
+ */
 void ofMeshtCAD::translate(ofVec3f pos) {
     for (int i=0; i<getNumVertices(); i++) {
         getVertices()[i] += pos;
     }
 }
-
+/*
+  Moves mesh to pos (x,y,z)
+ */
 void ofMeshtCAD::translate(float x, float y, float z) {
     for (int i=0; i<getNumVertices(); i++) {
         getVertices()[i] += ofVec3f(x,y,z);
     }
 }
-
+/*
+ Rotate mesh by angle around axis
+ */
 void ofMeshtCAD::rotate(float angle, ofVec3f axis) {
     for (int i=0; i<getNumVertices(); i++) {
         getVertices()[i].rotate(angle, axis);
     }
 }
-
+/*
+ Scale mesh
+ */
 void ofMeshtCAD::scale(float x, float y, float z) {
     ofVec3f centroid = getCentroid();
     for (int i=0; i<getNumVertices(); i++) {
@@ -76,13 +91,17 @@ void ofMeshtCAD::scale(float x, float y, float z) {
     newCentroid = centroid - newCentroid;
     translate(newCentroid);
 }
-
+/*
+ Invert face normals
+ */
 void ofMeshtCAD::invertNormals() {
     for (int i=0; i<getNumNormals(); i++) {
         getNormals()[i] *= -1;
     }
 }
-
+/*
+Add mesh to mesh 
+ */
 ofMeshtCAD &ofMeshtCAD::addMesh(ofMesh b) {
     
     int numVertices = getNumVertices();    
@@ -100,7 +119,9 @@ ofMeshtCAD &ofMeshtCAD::addMesh(ofMesh b) {
     
     return *this;
 }
-
+/*
+ get center of mesh
+ */
 ofVec3f ofMeshtCAD::getCentroid() {
 	if(getNumVertices() == 0) {
 		//ofLogWarning() << "Called ofMesh::getCentroid() on mesh with zero vertices, returned ofPoint(0, 0, 0)";
@@ -114,7 +135,9 @@ ofVec3f ofMeshtCAD::getCentroid() {
 	}
 	return runningAverage;
 }
-
+/*
+ get mesh triangles
+ */
 vector<TCADTriangle> ofMeshtCAD::getTriangles(){
     vector<TCADTriangle> temp = vector<TCADTriangle>();
     
@@ -124,7 +147,9 @@ vector<TCADTriangle> ofMeshtCAD::getTriangles(){
     
     return temp;
 }
-
+/*
+ Draw x, y, z axis
+ */
 void ofMeshtCAD::ofDrawAxis(float size) {
     ofVec3f centroid = getCentroid();
     ofVec3f centroidx1, centroidy1, centroidz1,centroidx2,centroidy2, centroidz2;
@@ -135,7 +160,7 @@ void ofMeshtCAD::ofDrawAxis(float size) {
     centroidx2.x -= size;
     centroidy2.y -= size;
     centroidz2.z -= size;
-	//ofPushStyle();
+	
 	ofSetLineWidth(3);
     ofSetColor(ofColor::green);
     
@@ -150,10 +175,10 @@ void ofMeshtCAD::ofDrawAxis(float size) {
     	// draw z axis
     	ofSetColor(ofColor::blue);
     	ofLine(centroidz1,centroidz2);
-	
-	//ofPopStyle();
 }
-
+/*
+ Get x, y and z limits for mesh
+ */
 vector<float> ofMeshtCAD::ofLimits(){
     
     vector<float> limits;

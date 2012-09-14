@@ -1,13 +1,5 @@
-//
-//  panningTween.h
-//  Carver
-//
-//  Created by paulobala on 18/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_panningTween_h
-#define Carver_panningTween_h
+#ifndef tCAD_panningTween_h
+#define tCAD_panningTween_h
 
 class PanningTween {
 public: 

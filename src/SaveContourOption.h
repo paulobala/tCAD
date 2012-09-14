@@ -1,23 +1,18 @@
-//
-//  SaveContourOption.h
-//  Carver
-//
-//  Created by paulobala on 09/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_SaveContourOption_h
-#define Carver_SaveContourOption_h
+#ifndef tCAD_SaveContourOption_h
+#define tCAD_SaveContourOption_h
 
 #include "OnScreenOption.h"
-
+/*
+Option to save contour into a 3D shape 
+ */
 class SaveContourOption: public OnScreenOption
 {
-   
     ofTrueTypeFont font14;
     
 public:
-    
+    /*
+     Constructor
+     */
     SaveContourOption(ofVec2f center_, float radius_, string name_, ofVec3f * point_, ofColor color_){
         center = center_; 
         radius = radius_; 
@@ -28,7 +23,9 @@ public:
         font14.loadFont("fonts/helveticaNeue.ttf", 14, true, true);
         img.loadImage("images/okay.png");
     }
-    
+    /*
+     Draw
+     */
     void draw(){
         ofPushStyle();
         ofSetColor(color);
@@ -40,11 +37,15 @@ public:
         font14.drawString(name, center.x -20,center.y);
         ofPopStyle();
     };
-    
+    /*
+     Pressed
+     */
     void action(){
         
     };
-    
+    /*
+     Button was pressed?
+     */
     bool checkHit(float x, float y){
         if( ofVec2f(x,y).distance(center) < radius){
             action();

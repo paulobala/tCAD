@@ -1,14 +1,9 @@
-//
-//  AxisPlane.h
-//  Carver
-//
-//  Created by paulobala on 21/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
+#ifndef tCAD_AxisPlane_h
+#define tCAD_AxisPlane_h
 
-#ifndef Carver_AxisPlane_h
-#define Carver_AxisPlane_h
-
+/*
+ Represents Plane formed by 2 axes in 3D space.
+ */
 class AxisPlane{
 public:
     enum AXIS{
@@ -18,6 +13,9 @@ public:
     AXIS axis;
     AXIS axisPrevious;
     
+    /*
+     Constructor
+     */
     AxisPlane(){
         axis = NOAXIS;
         axisPrevious = NOAXIS;

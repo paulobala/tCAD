@@ -1,23 +1,17 @@
-//
-//  BackOption.h
-//  Carver
-//
-//  Created by paulobala on 09/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_BackOption_h
-#define Carver_BackOption_h
-
-
+#ifndef tCAD_BackOption_h
+#define tCAD_BackOption_h
 #include "OnScreenOption.h"
 
-
+/*
+ Option to go back to main menu
+ */
 class BackOption: public OnScreenOption
 {
-    
     ofTrueTypeFont font14;
 public:
+    /*
+     Constructor
+     */
     BackOption(ofVec2f center_, float radius_, string name_, ofVec3f * point_, ofColor color_){
         center = center_; 
         radius = radius_; 
@@ -28,7 +22,9 @@ public:
         font14.loadFont("fonts/helveticaNeue.ttf", 14, true, true);
         
     }
-    
+    /*
+     Draw option
+     */
     void draw(){
         ofPushStyle();
         ofSetColor(color);
@@ -37,11 +33,15 @@ public:
         font14.drawString(name, center.x - 10,center.y);
         ofPopStyle();
     };
-    
+    /*
+     Pressed
+     */
     void action(){
         
     };
-    
+    /*
+     Option pressed?
+     */
     bool checkHit(float x, float y){
         if( ofVec2f(x,y).distance(center) < radius){
             action();

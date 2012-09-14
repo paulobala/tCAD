@@ -1,7 +1,9 @@
-#ifndef Carver_kinectDrawVariables_h
-#define Carver_kinectDrawVariables_h
+#ifndef tCAD_kinectDrawVariables_h
+#define tCAD_kinectDrawVariables_h
 
-
+/*
+ variables for Kinect Mode. Based on source code at https://github.com/cibomahto/Makerbot-1/tree/master/KinectToStl
+*/
 class kinectDrawVariables{
 public:
     int zCutoff, smoothingAmount, backOffset;

@@ -1,11 +1,4 @@
-/*
-*  Calibration.h
-*  
-*
-*  Created on 2/2/09.
-*  Copyright 2009 NUI Group. All rights reserved.
-*
-*/
+
 
 #ifndef CALIBRATIONMARKER_H
 #define CALIBRATIONMARKER_H
@@ -14,6 +7,9 @@
 #include "CalibrationUtilsMarker.h"
 #include "Token.h"
 
+/*
+ Calibration process. Based on http://ccv.nuigroup.com/
+ */
 class CalibrationMarker{
 
 	public:

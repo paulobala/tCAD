@@ -1,21 +1,16 @@
-//
-//  CenterContainer.cpp
-//  Carver
-//
-//  Created by paulobala on 03/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
 #include <iostream>
-
 #include "CenterContainer.h"
 #include "lineIntersection.h"
-
+/*
+ Constructor
+ */
 CenterContainer::CenterContainer(  ofVec2f nw_, ofVec2f ne_, ofVec2f sw_, ofVec2f se_ ){
     nw = nw_; ne = ne_; sw = sw_; se = se_;
     color = ofColor(ofColor::gray);
 } 
-
+/*
+ Update edges
+ */
 void CenterContainer::update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_){
      nw = nw_; ne = ne_; sw = sw_; se = se_;
     path.clear();
@@ -34,7 +29,9 @@ bool CenterContainer::isWaiting(){
         return false;
     }
 }
-
+/*
+ Draw area with image
+ */
 void CenterContainer::draw(ofImage img_){
     ofPushStyle();
 
@@ -78,6 +75,9 @@ void CenterContainer::draw(ofImage img_){
     ofPopStyle();
     
 }
+/*
+ Draw area
+ */
 void CenterContainer::draw(){
     ofPushStyle();
     if(ofGetElapsedTimeMillis() - clickTime < 1000){
@@ -97,7 +97,9 @@ void CenterContainer::draw(){
     ofPopStyle();
     
 }
-
+/*
+ Is point inside area?
+ */
 bool CenterContainer::inside(float x, float y){
     
     ofPolyline polyline;
@@ -134,7 +136,12 @@ bool CenterContainer::inside(float x, float y){
     else return true;
     
 }
-
+/*
+ Finger was in area
+ */
 void CenterContainer::action(){
      clickTime = ofGetElapsedTimeMillis();
 }
+
+
+

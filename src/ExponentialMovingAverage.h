@@ -1,13 +1,15 @@
 
-#ifndef Carver_ExponentialMovingAverage_h
-#define Carver_ExponentialMovingAverage_h
+#ifndef tCAD_ExponentialMovingAverage_h
+#define tCAD_ExponentialMovingAverage_h
 
 #include "RollingAverage.h"
-
+/*
+ Exponential Moving average
+ */
 class ExponentialMovingAverage
 {
     std::vector<float> samples;
-    float total;
+    float total;//sum of samples
     int numSamples;
 public:
     

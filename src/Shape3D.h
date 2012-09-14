@@ -1,12 +1,15 @@
 
-#ifndef Modeller__Shape3D_h
-#define Modeller__Shape3D_h
+#ifndef tCAD__Shape3D_h
+#define tCAD__Shape3D_h
 #include "ofxSTLFacet.h"
 
 #include "ofMeshtCAD.h"
 #include "ShapeVariables.h"
 #include "Subject.h"
 
+/*
+Represent 3D shapes. Has virtual methods. 
+ */
 class Shape3D: public Subject{
 protected:
     ShapeVariables shapeVariables;
@@ -30,7 +33,6 @@ public:
     ofMeshtCAD mesh;
     
     unsigned long creationTime;
-    
     
     virtual void add(Shape3D *sp) = 0;
     virtual void draw() = 0;

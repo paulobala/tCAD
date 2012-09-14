@@ -1,29 +1,26 @@
-
-//
-//  Basic3DObjectFromSTL.h
-//  Modeller
-//
-//  Created by paulobala on 11/04/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Modeller_Basic3DObjectFromStencil_h
-#define Modeller_Basic3DObjectFromStencil_h
+#ifndef tCAD_Basic3DObjectFromStencil_h
+#define tCAD_Basic3DObjectFromStencil_h
 #include "Basic3DObject.h"
 #include "ofxSTL.h"
 #include "ofEasyFingerCam.h"
-
+/*
+ Object from Contour Mode
+ */
 class Basic3DObjectFromContour: public Basic3DObject
 {
 public:
-    
+    /*
+     Constructor. Receives a path, tesselates it and converts it to a mesh
+     */
     Basic3DObjectFromContour(ofVec3f * entryPoint, ofPolyline poly):Basic3DObject()
     {
         mesh.setMode(OF_PRIMITIVE_TRIANGLES);
+        
         ofMesh meshCarve, bottomMesh, topMesh;
         vector<ofPolyline> contours;
         contours.push_back(poly);
         meshCarve.clear();
+        
         float zOffset = 10;
         ofVec3f offset(0, 0, -zOffset);
         for(int k = 0; k < contours.size(); k++)
@@ -38,6 +35,7 @@ public:
                 addFace(meshCarve, b, a, a + offset, b + offset);
             }
         }
+        //Top mesh
         ofPath top;
         top.setPolyWindingMode(OF_POLY_WINDING_NONZERO);
         for(int k = 0; k < contours.size(); k++)
@@ -55,6 +53,7 @@ public:
         {
             topVertices[i] += offset;
         }
+        //bottom mesh
         ofPath bottom;
         for(int k = 0; k < contours.size(); k++)
         {
@@ -66,13 +65,15 @@ public:
             bottom.close();
         }
         bottomMesh = bottom.getTessellation();
+        
         addMesh(meshCarve);
         addMesh(topMesh);
         addMesh(bottomMesh);
+        
         ofVec3f centroid = mesh.getCentroid();
         ofVec3f entry = *entryPoint;
         centroid = entry - centroid;
-        mesh.translate(centroid);
+        mesh.translate(centroid);//move to entry point
     }
     
     void addFace(ofMesh& amesh, ofVec3f a, ofVec3f b, ofVec3f c)

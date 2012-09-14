@@ -1,5 +1,5 @@
-#ifndef Carver_lockableVector_h
-#define Carver_lockableVector_h
+#ifndef tCAD_lockableVector_h
+#define tCAD_lockableVector_h
 
 #ifndef WIN32
 #include <pthread.h>
@@ -7,6 +7,10 @@
 #include <windows.h>
 #endif
 #include <vector>
+
+/*
+ Generic class for a lockable vector
+ */
 
 template <typename T>
 class LockableVector { 

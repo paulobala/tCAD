@@ -1,12 +1,16 @@
-
 #include <iostream>
 #include "SouthContainer.h"
 #include "lineIntersection.h"
+/*
+ Constructor
+ */
 SouthContainer::SouthContainer(  ofVec2f nw_, ofVec2f ne_, ofVec2f sw_, ofVec2f se_ ){
     nw = nw_; ne = ne_; sw = sw_; se = se_;
     color = ofColor(ofColor::white);
 } 
-
+/*
+ Update edges
+ */
 void SouthContainer::update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_){
      nw = nw_; ne = ne_; sw = sw_; se = se_;
     path.clear();
@@ -16,7 +20,9 @@ void SouthContainer::update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_)
     path.lineTo(sw);
     path.close();
 }
-
+/*
+ Draw area with image
+ */
 void SouthContainer::draw(ofImage img_){
     ofPushStyle();
     if(ofGetElapsedTimeMillis() - clickTime < 1000){
@@ -54,6 +60,9 @@ void SouthContainer::draw(ofImage img_){
     img_.draw(intersection.x, intersection.y);
     ofPopStyle();
 }
+/*
+ Draw area
+ */
 void SouthContainer::draw(){
     ofPushStyle();
     if(ofGetElapsedTimeMillis() - clickTime < 1000){
@@ -71,7 +80,9 @@ void SouthContainer::draw(){
     path.draw();
     ofPopStyle();
 }
-
+/*
+ Is point inside area?
+ */
 bool SouthContainer::inside(float x, float y){
     
     ofPolyline polyline;
@@ -108,7 +119,9 @@ bool SouthContainer::inside(float x, float y){
     else return true;
     
 }
-
+/*
+ Finger was in area
+ */
 void SouthContainer::action(){
      clickTime = ofGetElapsedTimeMillis();
 }

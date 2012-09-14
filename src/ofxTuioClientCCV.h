@@ -1,7 +1,5 @@
-
-
-#ifndef Carver_ofxTuioWrapperCCV_h
-#define Carver_ofxTuioWrapperCCV_h
+#ifndef tCAD_ofxTuioWrapperCCV_h
+#define tCAD_ofxTuioWrapperCCV_h
 
 
 /*

@@ -1,5 +1,8 @@
 #include "testApp.h"
 //--------------------------------------------------------------
+/*
+Setup parameters about the physical setup
+*/
 void testApp::setup()
 {
     screenChoice = SCREEN1;//starts on Setup Screen
@@ -31,7 +34,7 @@ void testApp::setup()
     kinect.setRegistration(false);
     kinect.init();
     kinect.open();
-    //Allocate space for depth images 
+    //Allocate space for depth images
     originalDepthImage.allocate(kinect.getWidth(), kinect.getHeight());
     depthImgForSurfacePlane.allocate(kinect.getWidth(), kinect.getHeight());
     depthImgForPlaneAboveObjects.allocate(kinect.getWidth(), kinect.getHeight());
@@ -40,8 +43,7 @@ void testApp::setup()
     maskedDepthImgForSurfacePlane.allocate(kinect.getWidth(), kinect.getHeight());
     maskedDepthImgForPlaneAboveObjects.allocate(kinect.getWidth(), kinect.getHeight());
     correctedDepthValues.reserve(kinect.width*kinect.height);//reserve space for matrix
-                                                             
-    //Setup edges of tabletop and corners
+                                                             //Setup edges of tabletop and corners
     centerTabletop = new ofPoint();
     resetLines();
     ltCorner = new cv::Point();
@@ -68,6 +70,10 @@ void testApp::setup()
     ofSetFrameRate(60);
 }
 //--------------------------------------------------------------
+/*
+ Update and process parameters about the physical setup: image processing,
+ plane detection, tabletop corner detection, etc. 
+ */
 void testApp::update()
 {
     kinect.update();//get frame
@@ -75,7 +81,6 @@ void testApp::update()
     {
         //Store Depth Image
         originalDepthImage.setFromPixels(kinect.getDepthPixels(), kinect.getWidth(), kinect.getHeight());
-        
         //Find Corners of Table
         if(lockCorners)//if requested by GUI
         {
@@ -85,8 +90,8 @@ void testApp::update()
         if(findingPlanes)//if a definite plane has not been found
         {
             vector<ofVec3f> pts;//Red Circle on Point Cloud View
-            for(int x= centerTabletop->x - radiusForPlaneDetection; 
-                x< centerTabletop->x + radiusForPlaneDetection && x< kinect.width; 
+            for(int x= centerTabletop->x - radiusForPlaneDetection;
+                x< centerTabletop->x + radiusForPlaneDetection && x< kinect.width;
                 x++)
             {
                 for(int y= centerTabletop->y- radiusForPlaneDetection;
@@ -105,23 +110,19 @@ void testApp::update()
             }
             //change vector of points into array of floats as expected by the best fit plane
             float points[pts.size()*3];
-            
             for(int ff=0; ff<pts.size(); ff++)
             {
                 points[ff*3] = pts[ff].x;
                 points[ff*3+1] = pts[ff].y;
                 points[ff*3+2] = pts[ff].z;
             }
-            
             float plane[4];//result stored here
             getBestFitPlane(pts.size(),points,sizeof(float)*3,0,0,plane);
-            
             //Best plane for the points inside the red circle
             normalUnitVec[0]= plane[0];
             normalUnitVec[1]= plane[1];
             normalUnitVec[2]= plane[2];
             distancePlane = plane[3];
-            
             //Correct plane values with a kalman filter
             const CvMat* prediction = cvKalmanPredict( m_pKalmanFilter, 0 );
             //get predictions
@@ -148,18 +149,15 @@ void testApp::update()
             normalUnitVec[0] = correction->data.fl[0];
             normalUnitVec[1] = correction->data.fl[1];
             normalUnitVec[2] = correction->data.fl[2];
-         
             //Set planes with adjusted values; both planes are equal at this phase
             planeAboveSurface = Plane(Vector3d(normalUnitVec[0], normalUnitVec[1], normalUnitVec[2]),distancePlane);
             planeAboveObjects = Plane(Vector3d(normalUnitVec[0], normalUnitVec[1], normalUnitVec[2]),distancePlane);
-            
             if(lockPlane)//if requested by GUI
             {
                 vector<ofxCvBlob> blobsTemp;
                 Boolean foundBlobs = false;
                 float endDistance;
                 //move the plane towards the kinect
-                
                 if(planeAboveSurface.normal.z >0)//check side up of plane
                 {
                     endDistance = planeAboveSurface.d -20;//termination value
@@ -174,11 +172,9 @@ void testApp::update()
                     planeAboveObjects = Plane(Vector3d(normalUnitVec[0], normalUnitVec[1], normalUnitVec[2]),600);
                     getDepthImgForPlanesAlternative();//masked image
                 }
-                
                 //take masked depth image and find blobs
                 blobfinder.findContours(depthImgForSurfacePlane, minBlobSize, maxBlobSize, numBlobs, false);
                 blobsTemp = blobfinder.blobs;//store blobs
-                
                 if(planeAboveSurface.normal.z >0)//which side is up?
                 {
                     while(!foundBlobs && planeAboveSurface.d > endDistance)//if still have not found blobs and has not reached termination value
@@ -214,8 +210,8 @@ void testApp::update()
                     lockPlane = false;//the plane detection failed; redo the plane detection
                 }
                 else
-                {//a plane with top of columns was found
-                    
+                {
+                    //a plane with top of columns was found
                     //we need to get points inside the blobs to feed into the best fit plane
                     vector<ofVec3f> pts2;
                     for(int x=0;  x< kinect.width; x++)
@@ -230,7 +226,7 @@ void testApp::update()
                                 if(!added)
                                 {
                                     vector<ofPoint> pointblobs = (*it).pts;
-                                    for(vector<ofPoint>::iterator it2 = pointblobs.begin(); 
+                                    for(vector<ofPoint>::iterator it2 = pointblobs.begin();
                                         it2 != pointblobs.end() && added == false;
                                         it2++)
                                     {
@@ -256,23 +252,18 @@ void testApp::update()
                         points2[ff*3+1] = pts2[ff].y;
                         points2[ff*3+2] = pts2[ff].z;
                     }
-                    
                     float plane2[4];//result is stored here
                     getBestFitPlane(pts2.size(),points2,sizeof(float)*3,0,0,plane2);
-                    
                     normalUnitVec[0]= plane2[0];
                     normalUnitVec[1]= plane2[1];
                     normalUnitVec[2]= plane2[2];
                     distancePlane = plane2[3];
-                    
                     //Setup Planes for use
                     planeAboveSurface = Plane(Vector3d(normalUnitVec[0], normalUnitVec[1], normalUnitVec[2]), distancePlane + distanceForPlaneAboveSurface);
                     planeAboveObjects = Plane(Vector3d(normalUnitVec[0], normalUnitVec[1], normalUnitVec[2]), distancePlane + distanceForPlaneAboveObjects);
-                    
                     addNormalX = 0;
                     addNormalY = 0;
                     addNormalZ= 0;
-                    
                     findingPlanes = false;//stop findinf planes
                     lockPlane = false;
                     //Update GUI
@@ -287,7 +278,6 @@ void testApp::update()
             planeAboveSurface = Plane(Vector3d(normalUnitVec[0] + addNormalX, normalUnitVec[1] +addNormalY, normalUnitVec[2]+ addNormalZ), distancePlane + distanceForPlaneAboveSurface);
             planeAboveObjects = Plane(Vector3d(normalUnitVec[0] + addNormalX, normalUnitVec[1] +addNormalY, normalUnitVec[2]+ addNormalZ), distancePlane + distanceForPlaneAboveObjects);
         }
-        
         //Prepare Depth Images
         if(planeAboveSurface.normal.z >0)//Which Side up?
         {
@@ -297,19 +287,15 @@ void testApp::update()
         {
             getDepthImgForPlanesAlternative();//masks depth images with plane
         }
-        
         //Correct perspective of depth images and depth values matrix
         perspectiveCorrectionSurfacePlane();
         perspectiveCorrectionPlaneAboveObjects();
         perspectiveCorrectionDepthValues();
-        
         //Find blobs for Screen 3
         blobfinder.findContours(perspectiveDepthImgForPlaneAboveObjects, minBlobSize, maxBlobSize,numBlobs, false);
-        
         //Finger tracking
         detectedFingers = detectFingers();
     }
-    
     //Connecting blobs to objects from the TUIO clien
     vector<ofxCvBlob> blobs;
     list<TuioObject*> objs;
@@ -317,7 +303,6 @@ void testApp::update()
     int iterations = 20;//limit of iterations
     blobs = blobfinder.blobs;
     objs = client.client->getTuioObjects();
-    
     for (list<TuioObject*>::iterator tobj=objs.begin(); tobj != objs.end(); tobj++)
     {
         TuioObject *obj = (*tobj);
@@ -325,7 +310,6 @@ void testApp::update()
         {
             ofRectangle bounds = (*it).boundingRect;//get bounds of blob
             bounds.set(bounds.x - 15, bounds.y - 15, bounds.width + 30, bounds.height +30);//increase blob bounds
-            
             if(bounds.inside(kinect.getWidth() - obj->getX()*kinect.getWidth(), kinect.getHeight()- (obj->getY()* kinect.getHeight())))//is tuio object inside blob bounds?
             {
                 bool found =false;
@@ -356,7 +340,6 @@ void testApp::update()
                 }
             }
         }
-        
         vector< TokenData*> temp = tokensData.getObjects();
         for(vector< TokenData *>::iterator ito=temp.begin() ; ito < temp.end(); ito++ )
         {
@@ -371,7 +354,6 @@ void testApp::update()
             }
         }
     }
-    
     //Specific update according to Screen
     if(screenChoice == SCREEN4)
     {
@@ -386,11 +368,13 @@ void testApp::update()
         updateCalibrationMarker();
     }
 }
-
+//--------------------------------------------------------------
+/*
+ Average depth value inside a rectangle
+ */
 float testApp::averageDepth(ofRectangle bounding)
 {
     std::vector<float> pts;
-    
     //collect depth values for points inside the ofRectangle
     for(int x= bounding.getCenter().x - bounding.width/2;
         x < bounding.getCenter().x + bounding.width/2&& x< kinect.width;
@@ -407,7 +391,6 @@ float testApp::averageDepth(ofRectangle bounding)
             }
         }
     }
-    
     float result;
     //Sum all depth values and divide to achieve an average
     for(int i= 0; i< pts.size(); i++)
@@ -416,7 +399,10 @@ float testApp::averageDepth(ofRectangle bounding)
     }
     return result/pts.size();
 }
-
+//--------------------------------------------------------------
+/*
+ Average depth value inside a circle with center xorig, yorig
+ */
 float testApp::averageDepth(float xorig, float yorig)
 {
     int radius = 4;
@@ -448,7 +434,10 @@ float testApp::averageDepth(float xorig, float yorig)
     }
     return result/pts.size();//divide by number of points to achieve average
 }
-
+//--------------------------------------------------------------
+/*
+  Average corrected depth value inside a circle with center xorig, yorig
+ */
 float testApp::averageDepthCorrected(float xorig, float yorig)
 {
     int radius =4;
@@ -481,24 +470,45 @@ float testApp::averageDepthCorrected(float xorig, float yorig)
     }
     return result/pts.size();//divide by number of points to achieve average
 }
-
 //--------------------------------------------------------------
+/*
+Not used
+ */
 void testApp::mouseMoved(int x, int y )
 {
 }
+//--------------------------------------------------------------
+/*
+ Not used
+ */
 void testApp::mouseDragged(int x, int y, int button)
 {
 }
+//--------------------------------------------------------------
+/*
+ Not used
+ */
 void testApp::mousePressed(int x, int y, int button)
 {
 }
+//--------------------------------------------------------------
+/*
+ Not used
+ */
 void testApp::mouseReleased()
 {
 }
 //--------------------------------------------------------------
+/*
+ Not used
+ */
 void testApp::keyReleased(int key)
 {
 }
+//--------------------------------------------------------------
+/*
+ Deal with key events
+ */
 void testApp::keyPressed (int key)
 {
     if (key == 'r')//reset
@@ -629,6 +639,9 @@ void testApp::keyPressed (int key)
     }
 }
 //--------------------------------------------------------------
+/*
+ Draw application conform current screen
+ */
 void testApp::draw()
 {
     if(screenChoice==SCREEN1)
@@ -640,14 +653,12 @@ void testApp::draw()
     else if(screenChoice==SCREEN2)
     {
         int offset = kinect.width/2;//leave space for GUI
-        
         kinect.drawDepth(0 + offset, 0, kinect.width/2 , kinect.height/2);//Kinect depth image
         kinect.draw(kinect.width/2+ offset, 0, kinect.width/2 , kinect.height/2);//kinect real color image
         showCorners(offset, 0);//draw corners on depth image
         showCorners(kinect.width/2+offset, 0);//draw corners on real color image
         maskedDepthImgForSurfacePlane.draw(0+ offset, kinect.height/2, kinect.width/2 , kinect.height/2);//corrected and masked depth image for plane above surface
         maskedDepthImgForPlaneAboveObjects.draw(kinect.width/2+offset,kinect.height/2, kinect.width/2 , kinect.height/2);//corrected and masked depth image for plane above objects
-        
         ofPushStyle();
         ofSetColor(0, 255, 0);//green
         ofFill();
@@ -658,12 +669,10 @@ void testApp::draw()
             ofCircle( p.x /2 + offset , kinect.height/2 + p.y/2, 4);
         }
         ofPopStyle();
-        
         ofPushStyle();
         ofSetColor(0, 255, 255);
         ofCircle(kinect.width/2 + centerTabletop->x /2  + offset, centerTabletop->y/2, radiusForPlaneDetection);//pixels used in the plane detection are represented on the real color image
         ofPopStyle();
-        
         maskedDepthImgForSurfacePlane.draw(0+ offset, kinect.height, kinect.width/2 , kinect.height/2);//base
         blobfinder.draw(0+ offset, kinect.height, kinect.width/2 , kinect.height/2);//blobs over base
     }
@@ -674,14 +683,10 @@ void testApp::draw()
         list<TuioObject*> objs;
         int treedepth = 50;
         int iterations = 20;//limitation of iterations
-     
         perspectiveDepthImgForPlaneAboveObjects.draw(0,0,kinect.getWidth(), kinect.getHeight());//draw base
-        
         blobfinder.draw(0, 0, kinect.getWidth(), kinect.getHeight());//draw blobs
         blobs = blobfinder.blobs;
-        
         kinect.draw(300+ kinect.getWidth()/2,kinect.getHeight(), kinect.width/2 , kinect.height/2);//draw real Kinect image
-        
         std::list<TuioObject*> objectList = client.client->getTuioObjects();//TUIO objects
         list<TuioObject*>::iterator tobj;
         client.client->lockObjectList();
@@ -736,10 +741,8 @@ void testApp::draw()
                 }
             }
         }
-        
         ofPopMatrix;
     }
-   
     else if (screenChoice==SCREEN4)
     {
         drawtCAD();//draw 3D Scene, tokens UIs, etc.
@@ -754,19 +757,71 @@ void testApp::draw()
     }
 }
 //--------------------------------------------------------------
+/*
+ Exit application
+ */
 void testApp::exit()
 {
     kinect.close();
 }
 
 //--------------------------------------------------------------
-//GUIs
-
+/*
+ Setup events for GUI (using ofxUI)
+ */
+void testApp::setGUISETUP()
+{
+    float dim = 16;
+    float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
+    float length = 255-xInit;
+    gui = new ofxUICanvas(0, 0, length+xInit, ofGetHeight());
+    if(findingPlanes)//if does not have a plane?
+    {
+        gui->addWidgetDown(new ofxUILabel("PANEL 1: LOAD", OFX_UI_FONT_LARGE));
+        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
+        gui->addWidgetDown(new ofxUILabelButton(false, "LOAD XML", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabel("PANEL 2: PLANE", OFX_UI_FONT_LARGE));
+        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
+        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,5, 60, radiusForPlaneDetection, "RADIUS"));
+        gui->addWidgetDown(new ofxUILabelButton(false, "LOCK PLANE", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabelButton(false, "LOCK CORNERS", OFX_UI_FONT_MEDIUM));
+    }
+    else
+    {
+        gui->addWidgetDown(new ofxUILabel("PANEL 1: SAVE", OFX_UI_FONT_LARGE));
+        gui->addWidgetDown(new ofxUILabelButton(false, "LOAD XML", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
+        gui->addWidgetDown(new ofxUILabelButton(false, "SAVE XML", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabel("PANEL 2: PLANE", OFX_UI_FONT_LARGE));
+        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
+        gui->addWidgetDown(new ofxUILabelButton(false, "RECALIBRATE", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabelButton(false, "LOCK CORNERS", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,- 500, 500, distanceForPlaneAboveObjects, "DIST FOR SURFACE PLANE"));
+        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,- 500, 500, distanceForPlaneAboveSurface, "DIST FOR OBJECT PLANE"));
+        gui->addWidgetDown(new ofxUILabelButton(true, "-X", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabelButton(true, "+X", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabelButton(true, "-Y", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabelButton(true, "+Y", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabelButton(true, "-Z", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabelButton(true, "+Z", OFX_UI_FONT_MEDIUM));
+        gui->addWidgetDown(new ofxUILabel("PANEL 3: BLOBS", OFX_UI_FONT_LARGE));
+        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
+        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
+        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,1, 5000, minBlobSize, "minBlobSize"));
+        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,5000, (640*480)/3, maxBlobSize, "maxBlobSize"));
+        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,2, 100, numBlobs, "numBlobs"));
+    }
+    ofAddListener(gui->newGUIEvent,this,&testApp::guiSetupEvent);//set event handler
+    guiChoice = GUISETUP;//set GUI type
+}
+//--------------------------------------------------------------
+/*
+ Deal with events from setGUISETUP
+ */
 void testApp::guiSetupEvent(ofxUIEventArgs &e)
 {
     string name = e.widget->getName();
     int kind = e.widget->getKind();
-    
     if(name == "RADIUS")
     {
         ofxUISlider *slider = (ofxUISlider *) e.widget;
@@ -874,53 +929,10 @@ void testApp::guiSetupEvent(ofxUIEventArgs &e)
         addNormalZ = addNormalZ +0.01;
     }
 }
-
-void testApp::setGUISETUP()
-{
-    float dim = 16;
-    float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
-    float length = 255-xInit;
-    gui = new ofxUICanvas(0, 0, length+xInit, ofGetHeight());
-    if(findingPlanes)//if does not have a plane?
-    {
-        gui->addWidgetDown(new ofxUILabel("PANEL 1: LOAD", OFX_UI_FONT_LARGE));
-        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
-        gui->addWidgetDown(new ofxUILabelButton(false, "LOAD XML", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabel("PANEL 2: PLANE", OFX_UI_FONT_LARGE));
-        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
-        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,5, 60, radiusForPlaneDetection, "RADIUS"));
-        gui->addWidgetDown(new ofxUILabelButton(false, "LOCK PLANE", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabelButton(false, "LOCK CORNERS", OFX_UI_FONT_MEDIUM));
-    }
-    else
-    {
-        gui->addWidgetDown(new ofxUILabel("PANEL 1: SAVE", OFX_UI_FONT_LARGE));
-        gui->addWidgetDown(new ofxUILabelButton(false, "LOAD XML", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
-        gui->addWidgetDown(new ofxUILabelButton(false, "SAVE XML", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabel("PANEL 2: PLANE", OFX_UI_FONT_LARGE));
-        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
-        gui->addWidgetDown(new ofxUILabelButton(false, "RECALIBRATE", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabelButton(false, "LOCK CORNERS", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,- 500, 500, distanceForPlaneAboveObjects, "DIST FOR SURFACE PLANE"));
-        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,- 500, 500, distanceForPlaneAboveSurface, "DIST FOR OBJECT PLANE"));
-        gui->addWidgetDown(new ofxUILabelButton(true, "-X", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabelButton(true, "+X", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabelButton(true, "-Y", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabelButton(true, "+Y", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabelButton(true, "-Z", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabelButton(true, "+Z", OFX_UI_FONT_MEDIUM));
-        gui->addWidgetDown(new ofxUILabel("PANEL 3: BLOBS", OFX_UI_FONT_LARGE));
-        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
-        gui->addWidgetDown(new ofxUISpacer(length-xInit, 2));
-        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,1, 5000, minBlobSize, "minBlobSize"));
-        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,5000, (640*480)/3, maxBlobSize, "maxBlobSize"));
-        gui->addWidgetDown(new ofxUISlider(length-xInit,dim,2, 100, numBlobs, "numBlobs"));
-    }
-    ofAddListener(gui->newGUIEvent,this,&testApp::guiSetupEvent);//set event handler
-    guiChoice = GUISETUP;//set GUI type
-}
-
+//--------------------------------------------------------------
+/*
+ Setup events for GUI (using ofxUI)
+ */
 void testApp::setGUIKINECT()
 {
     kinectScan->kinect_DrawVariables = kinectDraw_Variables;//set Kinect Scanning Mode variables
@@ -942,7 +954,10 @@ void testApp::setGUIKINECT()
     ofAddListener(gui->newGUIEvent,this,&testApp::guiKinectEvent);
     guiChoice = GUIKINECT;
 }
-
+//--------------------------------------------------------------
+/*
+ Deal with events from setGUIKINECT
+ */
 void testApp::guiKinectEvent(ofxUIEventArgs &e)
 {
     string name = e.widget->getName();
@@ -982,7 +997,10 @@ void testApp::guiKinectEvent(ofxUIEventArgs &e)
     }
     kinectScan->kinect_DrawVariables = kinectDraw_Variables ;
 }
-
+//--------------------------------------------------------------
+/*
+ Clear GUI
+ */
 void testApp::unsetGUI()
 {
     if(gui!=NULL)
@@ -991,49 +1009,41 @@ void testApp::unsetGUI()
         guiChoice = NOGUI;
     }
 }
-
 //--------------------------------------------------------------
-//Lines
+/*
+ Clear tabletop edges
+ */
 void testApp::resetLines()
 {
     //reset lines into Kinect depth image edges
     cv::Point pt1,pt2;
     pt1.x = 0;
     pt1.y = kinect.getWidth();
-    
     pt2.x = kinect.getWidth();
     pt2.y = kinect.getHeight();
-    
     topLine = new lineGeom(kinect.getHeight(),(float) 90*PI/180, pt1, pt2);
-    
     pt1.x = 0;
     pt1.y = 0;
-    
     pt2.x = 0;
     pt2.y = kinect.getHeight();
-    
     leftLine = new lineGeom(0,0, pt1, pt2);
-    
     pt1.x = 0;
     pt1.y = 0;
-    
     pt2.x = kinect.getWidth();
     pt2.y = 0;
-    
     bottomLine = new lineGeom(0,(float) 90*PI/180, pt1, pt2);
-    
     pt1.x = kinect.getWidth();
     pt1.y = 0;
-    
     pt2.x = kinect.getWidth();
     pt2.y = kinect.getHeight();
-    
     rightLine = new lineGeom(kinect.getWidth(),0, pt1, pt2);
-    
     centerTabletop->x=320;
     centerTabletop->y=240;
 }
-
+//--------------------------------------------------------------
+/*
+ Find tabletop edges
+ */
 void testApp::findLines(IplImage* asrc)
 {
     //receives Kinect depth image
@@ -1042,10 +1052,8 @@ void testApp::findLines(IplImage* asrc)
     IplImage* color_dst = cvCreateImage( cvGetSize(src), 8, 3 );
     CvMemStorage* storage = cvCreateMemStorage(0);
     CvSeq* lines = 0;
-    
     cvCanny( src, dst, 50, 200, 3 );//canny filter
     cvCvtColor( dst, color_dst, CV_GRAY2BGR );//color space change
-    
     lines = cvHoughLines2( dst,
                           storage,
                           CV_HOUGH_STANDARD,
@@ -1054,15 +1062,12 @@ void testApp::findLines(IplImage* asrc)
                           100,
                           0,
                           0 );//Hough Lines filter
-    
-    //store previous lines
+                              //store previous lines
     lineGeom *previousLeftLine = leftLine;
     lineGeom *previousRightLine = rightLine;
     lineGeom *previousTopLine = topLine;
     lineGeom *previousBottomLine = bottomLine;
-    
     resetLines();//reset lines
-    
     CvPoint pt1,pt2;
     pt1.x = 0;
     pt1.y = kinect.getHeight()/2;
@@ -1074,13 +1079,10 @@ void testApp::findLines(IplImage* asrc)
     pt2.x = kinect.getWidth()/2;
     pt2.y = kinect.getHeight();
     lineGeom *verticalCenter = new lineGeom(kinect.getWidth()/2,0, pt1, pt2);//vertical line passing through center
-
-    
     bool bottomChanged = false;
     bool topChanged = false;
     bool leftChanged = false;
     bool rightChanged = false;
-    
     //passthrough lines from Hough lines filter, searching for tabletop edge lines
     for(int i = 0; i < MIN(lines->total,100); i++ )
     {
@@ -1107,25 +1109,21 @@ void testApp::findLines(IplImage* asrc)
                     leftLine=lg;
                     leftChanged = true;
                 }
-                
             }
             else
             {
-                
                 if(rightLine->resultFromY(kinect.getHeight()/2) > ptHorizontalIntersect->x)//line is in the right of the image
                 {
                     rightLine = lg;
                     rightChanged = true;
                 }
-                
             }
         }
         else
         {
             //top or bottom
         }
-        
-        if(lg->intersection(verticalCenter, ptVerticalIntersect))//find intersection of line with vertical line 
+        if(lg->intersection(verticalCenter, ptVerticalIntersect))//find intersection of line with vertical line
         {
             if(ptVerticalIntersect->y > kinect.getHeight()/2)
             {
@@ -1149,7 +1147,6 @@ void testApp::findLines(IplImage* asrc)
             //left or right
         }
     }
-    
     if(!rightChanged)//right line was not found
     {
         rightLine = previousRightLine;
@@ -1166,13 +1163,14 @@ void testApp::findLines(IplImage* asrc)
     {
         topLine = previousTopLine;
     }
-    
     updateCorners();//intersect lines to find corners
-    
     cvReleaseImage(&color_dst);
     cvReleaseMemStorage(&storage);
 }
 //--------------------------------------------------------------
+/*
+According to tabletop lines, find tabletop corners 
+ */
 void testApp::updateCorners()
 {
     // Update ltCorner,lbCorner, rTCorner, rbCorner;
@@ -1196,7 +1194,6 @@ void testApp::updateCorners()
         //updated right top corner
         *rbCorner = rbCornerKalman->correct(*rbCorner);
     }
-    
     //Update center
     ofVec2f pta = ofVec2f(ltCorner->x,ltCorner->y);
     ofVec2f ptb = ofVec2f(rbCorner->x, rbCorner->y);
@@ -1205,13 +1202,16 @@ void testApp::updateCorners()
     LineSegment cross1 = LineSegment(pta,ptb);
     LineSegment cross2 = LineSegment(ptc,ptd);
     ofVec2f intersect;
-    
     if( cross1.Intersect(cross2, intersect)==LineSegment::INTERESECTING)
     {
         centerTabletop->x=intersect.x;
         centerTabletop->y=intersect.y;
     };
 }
+//--------------------------------------------------------------
+/*
+Show tabletop corners with an offset of offsetX offsetY 
+ */
 void testApp::showCorners(int offsetX, int offsetY)
 {
     ofPushStyle();
@@ -1230,11 +1230,13 @@ void testApp::showCorners(int offsetX, int offsetY)
     ofPopStyle();
 }
 //--------------------------------------------------------------
+/*
+Mask depth images for both planes
+ */
 void testApp::getDepthImgForPlanes()
 {
     ofxCvGrayscaleImage temp1 = originalDepthImage;//for surface plane
     ofxCvGrayscaleImage temp2 = originalDepthImage;//for plane above the objects
-    
     unsigned char * pixels1 = temp1.getPixels();
     unsigned char * pixels2 = temp2.getPixels();
     for (int i = 0; i < kinect.getHeight(); i++)
@@ -1259,7 +1261,6 @@ void testApp::getDepthImgForPlanes()
                 {
                     pixels1[pix]=0;
                 }
-                
                 //Mask plane above objects
                 if(planeAboveObjects.ClassifyPoint(pt)== CP_BACK)
                 {
@@ -1281,14 +1282,16 @@ void testApp::getDepthImgForPlanes()
             }
         }
     }
-    
     //update images with masked pixels
     depthImgForSurfacePlane.setFromPixels(pixels1, kinect.getWidth(), kinect.getHeight());
     depthImgForSurfacePlane.updateTexture();
-    
     depthImgForPlaneAboveObjects.setFromPixels(pixels2, kinect.getWidth(), kinect.getHeight());
     depthImgForPlaneAboveObjects.updateTexture();
 }
+//--------------------------------------------------------------
+/*
+Mask depth images for both planes
+ */
 void testApp::getDepthImgForPlanesAlternative()
 {
     ofxCvGrayscaleImage temp1 = originalDepthImage;//for surface plane
@@ -1304,7 +1307,7 @@ void testApp::getDepthImgForPlanesAlternative()
             Vector3d pt = Vector3d(p.x,p.y,p.z);
             if(kinect.getDistanceAt(j,i) > 0)//ignore infinite depth values
             {
-                 //Mask surface plane
+                //Mask surface plane
                 if(planeAboveSurface.ClassifyPoint(pt)== CP_BACK)
                 {
                     pixels1[pix]=0;
@@ -1317,7 +1320,6 @@ void testApp::getDepthImgForPlanesAlternative()
                 {
                     pixels1[pix]=255;
                 }
-                
                 //Mask plane above objects
                 if(planeAboveObjects.ClassifyPoint(pt)== CP_BACK)
                 {
@@ -1339,26 +1341,25 @@ void testApp::getDepthImgForPlanesAlternative()
             }
         }
     }
-     //update images with masked pixels
+    //update images with masked pixels
     depthImgForSurfacePlane.setFromPixels(pixels1, kinect.getWidth(), kinect.getHeight());
     depthImgForSurfacePlane.updateTexture();
-    
     depthImgForPlaneAboveObjects.setFromPixels(pixels2, kinect.getWidth(), kinect.getHeight());
     depthImgForPlaneAboveObjects.updateTexture();
 }
-
+//--------------------------------------------------------------
+/*
+3D representation of Kinect points 
+ */
 void testApp::drawKinectPointCloud()
 {
     int w = kinect.width;
     int h = kinect.height;
-    
     ofMesh mesh;//kinect point cloud
     mesh.setMode(OF_PRIMITIVE_POINTS);
     ofMesh mesh2;
     mesh2.setMode(OF_PRIMITIVE_POINTS);
-    
     int step = 3;//draw a pixel in three pixels
-    
     for(int y = 0; y < h; y += step)
     {
         for(int x = 0; x < w; x += step)
@@ -1377,7 +1378,6 @@ void testApp::drawKinectPointCloud()
             }
         }
     }
-    
     glPointSize(3);
     ofPushMatrix();
     // the projected points are 'upside down' and 'backwards'
@@ -1387,7 +1387,6 @@ void testApp::drawKinectPointCloud()
     mesh.drawVertices();
     glDisable(GL_DEPTH_TEST);
     ofPopMatrix();
-    
     ofPushMatrix();
     for(int y = -h; y < h; y += step)
     {
@@ -1400,20 +1399,16 @@ void testApp::drawKinectPointCloud()
             v.y = y;
             v.z= z;
             mesh2.addVertex(v);
-            
             if(!findingPlanes)//if the plane above the surface and the plane above the objects ha been found then
             {
                 mesh2.addColor(ofFloatColor(0,255,255));//cyan
                 z = -(distancePlane + distanceForPlaneAboveSurface + (normalUnitVec[0]+addNormalX)*x +(normalUnitVec[1]+addNormalY)*y)/(normalUnitVec[2]+addNormalZ);//convert normal and distance to z
-
                 v.x = x;
                 v.y = y;
                 v.z = z;
                 mesh2.addVertex(v);
-                
                 mesh2.addColor(ofFloatColor(255,0,255));//magenta
                 z = -(distancePlane + distanceForPlaneAboveObjects + (normalUnitVec[0]+addNormalX)*x +(normalUnitVec[1]+addNormalY)*y)/(normalUnitVec[2]+addNormalZ);//convert normal and distance to z
-
                 v.x = x;
                 v.y = y;
                 v.z = z;
@@ -1421,7 +1416,6 @@ void testApp::drawKinectPointCloud()
             }
         }
     }
-    
     // the projected points are 'upside down' and 'backwards'
     ofScale(1, -1,-1);
     ofTranslate(0, 0, -1000); // center the points a bit
@@ -1430,7 +1424,10 @@ void testApp::drawKinectPointCloud()
     glDisable(GL_DEPTH_TEST);
     ofPopMatrix();
 };
-
+//--------------------------------------------------------------
+/*
+ Convert 3D points into a plane. Based on source code http://bullet.googlecode.com/svn/trunk/Extras/ConvexDecomposition/bestfit.cpp 
+ */
 bool testApp::getBestFitPlane(unsigned int vcount,
                               const float *points,
                               unsigned int vstride,
@@ -1529,13 +1526,15 @@ bool testApp::getBestFitPlane(unsigned int vcount,
     plane[3] = 0 - kNormal.dot(kOrigin);
     return ret;
 }
-
+//--------------------------------------------------------------
+/*
+Correct depth values with a perspective transform
+ */
 void testApp::perspectiveCorrectionDepthValues()
 {
     ofxCvGrayscaleImage temp = depthImgForSurfacePlane;
     unsigned char * pixels = temp.getPixels();
     cv::Mat src(cv::Size(640,480), CV_32FC1);
-    
     //fill matrix with depth values
     for (int i = 0; i < kinect.getHeight(); i++)
     {
@@ -1544,12 +1543,9 @@ void testApp::perspectiveCorrectionDepthValues()
             src.at<float>(i,j) = kinect.getDistanceAt(j,i);
         }
     }
-    
     cv::Mat outmat(cv::Size(640,480), CV_32FC1);//result of perspective correction
-    
     cv::Point2f *c1 = new cv::Point2f[4];//pixels destinations
     cv::Point2f *c2 = new cv::Point2f[4];//pixels origin
-    
     c1[0].x = lbCorner->x;
     c1[0].y = lbCorner->y;
     c1[1].x = rbCorner->x;
@@ -1566,15 +1562,11 @@ void testApp::perspectiveCorrectionDepthValues()
     c2[2].y = 480;
     c2[3].x = 640;
     c2[3].y = 480;
-    
     cv::Size size (640,480);
     cv:: Mat mmat(cv::Size(3,3),CV_32FC1);
-    
     mmat = getPerspectiveTransform(c1, c2);//matrix with perspective transform
-    
     warpPerspective(src, outmat, mmat, size);//apply perspective transform to src matrix
-    
-    //fill matrix with corrected depth values
+                                             //fill matrix with corrected depth values
     for (int i = 0; i < kinect.getHeight(); i++)
     {
         for (int j = 0; j < kinect.getWidth(); j++)
@@ -1584,7 +1576,10 @@ void testApp::perspectiveCorrectionDepthValues()
         }
     }
 }
-
+//--------------------------------------------------------------
+/*
+Correct depth image for surface plane with a perspective transform 
+ */
 void testApp::perspectiveCorrectionSurfacePlane()
 {
     ofxCvGrayscaleImage temp = depthImgForSurfacePlane;
@@ -1599,12 +1594,9 @@ void testApp::perspectiveCorrectionSurfacePlane()
             src.at<uchar>(i,j) = pixels[pix];
         }
     }
-    
     cv::Mat outmat(cv::Size(640,480), CV_8UC1);//result of perspective correction
-    
     cv::Point2f *c1 = new cv::Point2f[4];//pixels destinations
     cv::Point2f *c2 = new cv::Point2f[4];//pixels origin
-    
     c1[0].x = lbCorner->x;
     c1[0].y = lbCorner->y;
     c1[1].x = rbCorner->x;
@@ -1622,23 +1614,22 @@ void testApp::perspectiveCorrectionSurfacePlane()
     c2[3].x = 640;
     c2[3].y = 480;
     cv::Size size (640,480);
-    
     cv:: Mat mmat(cv::Size(3,3),CV_32FC1);
     mmat = getPerspectiveTransform(c1, c2);//matrix with perspective transform
-    
     warpPerspective(src, outmat, mmat, size);//apply perspective transform to src matrix
-    
     IplImage * ip = new IplImage (outmat);
     perspectiveDepthImgForSurfacePlane = ip;//reload image with new pixels
     perspectiveDepthImgForSurfacePlane.updateTexture();
 }
-
+//--------------------------------------------------------------
+/*
+Correct depth image for plane above objects with a perspective transform
+ */
 void testApp::perspectiveCorrectionPlaneAboveObjects()
 {
     ofxCvGrayscaleImage temp = depthImgForPlaneAboveObjects;
     unsigned char * pixels = temp.getPixels();
     cv::Mat src(cv::Size(640,480), CV_8UC1);
-    
     //fill matrix with pixels values
     for (int i = 0; i < kinect.getHeight(); i++)
     {
@@ -1648,12 +1639,9 @@ void testApp::perspectiveCorrectionPlaneAboveObjects()
             src.at<uchar>(i,j) = pixels[pix];
         }
     }
-    
     cv::Mat outmat(cv::Size(640,480), CV_8UC1);//result of perspective correction
-    
     cv::Point2f *c1 = new cv::Point2f[4];//pixels destinations
     cv::Point2f *c2 = new cv::Point2f[4];//pixels origin
-    
     c1[0].x = lbCorner->x;
     c1[0].y = lbCorner->y;
     c1[1].x = rbCorner->x;
@@ -1670,19 +1658,18 @@ void testApp::perspectiveCorrectionPlaneAboveObjects()
     c2[2].y = 480;
     c2[3].x = 640;
     c2[3].y = 480;
-    
     cv::Size size (640,480);
     cv:: Mat mmat(cv::Size(3,3),CV_32FC1);
-    
     mmat = getPerspectiveTransform(c1, c2);//matrix with perspective transform
-    
     warpPerspective(src, outmat, mmat, size);//apply perspective transform to src matrix
-    
     IplImage * ip = new IplImage (outmat);
     perspectiveDepthImgForPlaneAboveObjects = ip;//reload image with new pixels
     perspectiveDepthImgForPlaneAboveObjects.updateTexture();
 }
-
+//--------------------------------------------------------------
+/*
+ Setup kalman filter for plane stabilization
+ */
 void testApp::setupKalmanPlane()
 {
     int dynam_params = 4;
@@ -1719,18 +1706,19 @@ void testApp::setupKalmanPlane()
     // choose random initial state
     cvRand( &rng, m_pKalmanFilter->state_post );
 }
-
+//--------------------------------------------------------------
+/*
+Process depth image for finger. Detected fingers are returned in a vector.
+ Based on source code from http://www.youtube.com/watch?v=lCuItHQEgEQ
+ */
 vector<DetectedFinger *> testApp::detectFingers()
 {
     //Find fingers in plane above surface
     ofxCvGrayscaleImage temp = perspectiveDepthImgForPlaneAboveObjects;//copy depth image
     temp.invert();//invert colors
-    
-    //convert image into matrix
+                  //convert image into matrix
     unsigned char * pixels = temp.getPixels();
-    
     cv::Mat hand(cv::Size(640,480),CV_8UC1);
-    
     for (int i = 0; i < kinect.getHeight(); i++)
     {
         for (int j = 0; j < kinect.getWidth(); j++)
@@ -1739,45 +1727,33 @@ vector<DetectedFinger *> testApp::detectFingers()
             hand.at<uchar>(i,j)= pixels[pix];
         }
     }
-    
     vector<DetectedFinger *> detectedFingers;
     hand = hand < 225;//mask for this value
-    
     IplImage * ip = new IplImage(hand);
-    
     maskedDepthImgForSurfacePlane = ip;
     std::vector<std::vector<cv::Point > > contours;
-    
     cv::findContours(hand, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
     // we are cloning here since method will destruct the image
-    
     if (contours.size())
     {
         for (int i=0; i<contours.size(); i++)//iterate over found contours
         {
             vector<cv::Point> contour = contours[i];
             vector<ofPoint> contourforPoly = vector<ofPoint>();
-            
             //change contour points (to native openframeworks type)
             for(int i = 0; i< contour.size(); i++)
             {
                 contourforPoly.push_back(ofVec2f(contour[i].x, contour[i].y));
             }
-            
             ofPolyline poly = ofPolyline(contourforPoly);//change contour into polyline
-            
             cv::Mat contourMat = cv::Mat(contour);
             double area = contourArea(contourMat);//calculate area of contour
-            
             if (area > 400)    // possible hand
             {
                 cv::Scalar center = mean(contourMat);//center of contour
-                
                 cv::Point centerPoint = cv::Point(center.val[0], center.val[1]);
-                
                 vector<cv::Point> approxCurve;
                 approxPolyDP(contourMat, approxCurve, 20, true);//get approximate contour
-                
                 vector<int> hull;
                 convexHull(cv::Mat(approxCurve), hull);
                 // find upper and lower bounds of the hand and define cutoff threshold (don't consider upper vertices as fingers)
@@ -1788,10 +1764,8 @@ vector<DetectedFinger *> testApp::detectFingers()
                     if (approxCurve[idx].y < upper) upper = approxCurve[idx].y;
                     if (approxCurve[idx].y > lower) lower = approxCurve[idx].y;
                 }
-                
                 float cutoff = upper - (upper - lower) * 0.1f;
                 float cutoff2 = lower - (lower - upper) * 0.1f;
-                
                 // find interior angles of hull corners
                 for (int j=0; j<hull.size(); j++)
                 {
@@ -1817,7 +1791,6 @@ vector<DetectedFinger *> testApp::detectFingers()
                             int radius = 20;
                             std::vector<float> pts;
                             std::vector<float> pts2;
-                            
                             //get depth of finger in both planes
                             for(int x =  temp->getExtremity().x - radius/2; x <  temp->getExtremity().x + radius/2; x++)
                             {
@@ -1846,23 +1819,20 @@ vector<DetectedFinger *> testApp::detectFingers()
                             //average depth points
                             RollingAverage avg = RollingAverage(pts.size());
                             RollingAverage avg2 = RollingAverage(pts2.size());
-                            
                             for(int i= 0; i< pts.size(); i++)
                             {
                                 avg.addSample(pts[i]);
                                 avg2.addSample(pts[i]);
                             }
-                            
                             temp->setFingerDepthForSurfacePLane(avg.Average());
                             temp->setFingerDepthForObjectPlane(avg2.Average());
-                            
                             detectedFingers.push_back(temp);
                         }
                         else if (angle < 1 && approxCurve[idx].y < cutoff2)//test other cutoff
                         {
                             int u = approxCurve[idx].x;
                             int v = approxCurve[idx].y;
-                            //New finger; get attribute 
+                            //New finger; get attribute
                             DetectedFinger * temp = new DetectedFinger();
                             temp->setExtremeity(cv::Point2i(u,v));
                             temp->getLimb()->setCenterLimb(centerPoint);
@@ -1871,7 +1841,6 @@ vector<DetectedFinger *> testApp::detectFingers()
                             int radius = 20;
                             std::vector<float> pts;
                             std::vector<float> pts2;
-                            
                             //get finger depth in both planes
                             for(int x =  temp->getExtremity().x - radius/2; x <  temp->getExtremity().x + radius/2; x++)
                             {
@@ -1900,13 +1869,11 @@ vector<DetectedFinger *> testApp::detectFingers()
                             //average depth values
                             RollingAverage avg = RollingAverage(pts.size());
                             RollingAverage avg2 = RollingAverage(pts2.size());
-                            
                             for(int i= 0; i< pts.size(); i++)
                             {
                                 avg.addSample(pts[i]);
                                 avg2.addSample(pts[i]);
                             }
-                            
                             temp->setFingerDepthForSurfacePLane(avg.Average());
                             temp->setFingerDepthForObjectPlane(avg2.Average());
                             detectedFingers.push_back(temp);
@@ -1916,11 +1883,9 @@ vector<DetectedFinger *> testApp::detectFingers()
             }
         }
     }
-    
     //Find fingers in plane above objects; same procedure as before; see comments above for more info
     ofxCvGrayscaleImage temp2 = perspectiveDepthImgForSurfacePlane;//copy depth image
     temp2.invert();//invert colors
-    
     unsigned char * pixels2 = temp2.getPixels();
     cv::Mat hand2(cv::Size(640,480),CV_8UC1);
     for (int i = 0; i < kinect.getHeight(); i++)
@@ -2056,8 +2021,8 @@ vector<DetectedFinger *> testApp::detectFingers()
                                                 {
                                                     ofVec3f p =  kinect.getWorldCoordinateAt(x,y,correctedDepthValues[pix]);
                                                     Vector3d pt = Vector3d(p.x,p.y,p.z);
-                                                    pts.push_back(planeAboveObjects.DistanceTo(pt));//abs
-                                                    pts2.push_back(planeAboveSurface.DistanceTo(pt));//abs
+                                                    pts.push_back(planeAboveObjects.DistanceTo(pt));
+                                                    pts2.push_back(planeAboveSurface.DistanceTo(pt));
                                                 }
                                             }
                                         }
@@ -2080,10 +2045,8 @@ vector<DetectedFinger *> testApp::detectFingers()
             }
         }
     }
-    
     //Mix detected fingers to find duplicates
     vector<DetectedFinger *> detectedFingersFinal = vector<DetectedFinger *>();
-    
     for(std::vector<DetectedFinger*>::iterator it = detectedFingers2.begin() ; it < detectedFingers2.end() ; it++)
     {
         DetectedFinger * temp = (*it);
@@ -2106,19 +2069,24 @@ vector<DetectedFinger *> testApp::detectFingers()
             detectedFingersFinal.push_back(temp);
         }
     }
-    
     for(std::vector<DetectedFinger*>::iterator it = detectedFingers.begin() ; it < detectedFingers.end() ; it++)
     {
         detectedFingersFinal.push_back((*it));
     }
     return detectedFingersFinal;
 }
-
+//--------------------------------------------------------------
+/*
+ Used in detectFingers
+ */
 double testApp::normCV(cv::Point pt)
 {
     return std::sqrt((double)pt.x*pt.x + (double)pt.y*pt.y);
 }
-
+//--------------------------------------------------------------
+/*
+ Setup of parameters about the tCAD application
+ */
 void testApp::setuptCAD()
 {
     ofEnableAlphaBlending();
@@ -2177,15 +2145,16 @@ void testApp::setuptCAD()
     //Set camera to starting position
     cameraScene.addRotationTween(0,45,0,1);
 }
-
+//--------------------------------------------------------------
+/*
+Draw tCAD main screen 
+ */
 void testApp::drawtCAD()
 {
     ofPushStyle();
     cameraScene.begin(viewport);//open camera
     drawScene();//draw 3D Scene
-    
     cameraScene.checkSelectable();
-    
     if(kinectScanning)//If Kinect Mode is active
     {
         kinectScan->update();//Update textured depth map
@@ -2193,11 +2162,9 @@ void testApp::drawtCAD()
     }
     cameraScene.end();//close camera
     ofPopStyle();
-    
     ofPushStyle();
     shapeEntryPoint = cameraScene.cursor;//get cursor = "Entry point"
     ofPopStyle();
-    
     ofPushStyle();
     //Draw containers
     vector<ContainerToken*> temp = containers.getObjects();
@@ -2209,7 +2176,6 @@ void testApp::drawtCAD()
     }
     containers.unlockVector();
     ofPopStyle();
-    
     ofPushStyle();
     //Draw any ongoing Selection Movements
     vector<SelectionMovement*> temp3 = selectionMovements.getObjects();
@@ -2220,7 +2186,6 @@ void testApp::drawtCAD()
     }
     selectionMovements.unlockVector();
     ofPopStyle();
-    
     ofPushStyle();
     //Draw Shredder tokens
     if(hasShredder1 && hasShredder2)
@@ -2258,7 +2223,6 @@ void testApp::drawtCAD()
     }
     ofPopStyle();
     ofPushStyle();
-    
     //Draw Content Creation tokens
     if(onTableCCToken != NULL)
     {
@@ -2281,7 +2245,6 @@ void testApp::drawtCAD()
             inAirCCToken->draw();
         }
     }
-    
     //Draw Save token
     if(saveToken != NULL)
     {
@@ -2290,7 +2253,6 @@ void testApp::drawtCAD()
             saveToken->draw();
         }
     }
-    
     //Draw Limb shadows and fingers circles
     std::vector<Finger *> copyfingers = fingers.getObjects();
     for (std::vector<Finger *>::iterator it = copyfingers.begin() ; it < copyfingers.end(); it++)
@@ -2333,21 +2295,17 @@ void testApp::drawtCAD()
         ofPopStyle();
     }
     ofPopStyle();
-    
     if(showKinectGUI)//if entering in Kinect Mode
     {
         setGUIKINECT();
         showKinectGUI = false;
     }
-    
     ofPushStyle();
     calibrationMarker->drawBox(COLORSCHEME_LIGHTGREY);//frame around the screen, showing recognition frontiers for markers
     ofPopStyle();
-    
     ofPushStyle();
     logo.draw(ofGetWidth()-90, 10, 80, 52);//draw Logo; logo changes according to plane
     ofPopStyle();
-    
     ofPushStyle();
     ofSetColor(COLORSCHEME_TEXT_BLACK);
     //Draw feedback messages for camera control
@@ -2400,7 +2358,6 @@ void testApp::drawtCAD()
         default:
             break;
     }
-    
     //Draw orbiter token
     if(hasOrbiter)
     {
@@ -2409,11 +2366,14 @@ void testApp::drawtCAD()
     }
     ofPopStyle();
 }
-
+//--------------------------------------------------------------
+/*
+Join new detected fingers with previous detected fingers to achieve
+ temporal and spatial consistency
+ */
 void testApp::stitchFingers()
 {
     std::vector<Finger *> copyfingers = fingers.getObjects();
-    
     for(vector<DetectedFinger *>::iterator it = detectedFingers.begin(); it != detectedFingers.end(); it++)
     {
         cv::Point2i pointextremity = (*it)->getExtremity();
@@ -2423,7 +2383,6 @@ void testApp::stitchFingers()
         float distanceclosest = 9999;
         bool found = false;
         std::vector<Finger *>::iterator tempit;
-        
         for (std::vector<Finger *>::iterator it2 = copyfingers.begin() ; it2 < copyfingers.end(); it2++ )
         {
             float distancetemp;
@@ -2435,13 +2394,11 @@ void testApp::stitchFingers()
                     break;
                 }
                 distancetemp = ofVec2f(calib1.x*ofGetWidth(), calib1.y*ofGetHeight()).distance(ofVec2f((*it2)->getX()*ofGetWidth(), (*it2)->getY() *ofGetHeight()));
-                
             }
             else// if calibrating fingers then get raw distance
             {
                 distancetemp = ofVec2f(pointextremity.x,pointextremity.y).distance(ofVec2f((1-(*it2)->getX())*kinect.width,  (1-(*it2)->getY()) *kinect.height));
             }
-            
             if(distancetemp < distanceclosest)//always find closer points
             {
                 closest = (*it2);
@@ -2459,7 +2416,6 @@ void testApp::stitchFingers()
                     ofVec2f calib1 = calibrationFinger->applyCalibration(kinect.width-pointextremity.x, kinect.height-pointextremity.y);
                     ofVec2f calib2 = calibrationFinger->applyCalibration(kinect.width-pointlimb.x, kinect.height- pointlimb.y);
                     ofVec2f calib3 = calibrationFinger->applyCalibration(kinect.width-pointbase.x, kinect.height- pointbase.y);
-                    
                     closest->checkFinger(calib1.x,calib1.y,  (*it)->getFingerDepthForSurfacePLane(), (*it)->getFingerDepthForObjectPlane() , calib2.x, calib2.y, calib3.x, calib3.y, (*it)->getLimb()->getApproxCountour());
                 }
                 else
@@ -2469,7 +2425,6 @@ void testApp::stitchFingers()
                     ofVec2f calib3 = ofVec2f(pointbase.x/(float)kinect.width, pointbase.y/(float)kinect.height);
                     closest->checkFinger(1-calib1.x,1-calib1.y,  (*it)->getFingerDepthForSurfacePLane(), (*it)->getFingerDepthForObjectPlane(), 1-calib2.x, 1-calib2.y,1-calib3.x, 1-calib3.y, (*it)->getLimb()->getApproxCountour());
                 }
-                
                 closest->updateMoved();
                 copyfingers.erase(tempit);
             }
@@ -2479,7 +2434,8 @@ void testApp::stitchFingers()
             }
         }
         else
-        { // the finger is new
+        {
+            // the finger is new
             fingers.lockVector();
             if( !calibratingFingers)//if not calibrating, apply calibration, else use raw values
             {
@@ -2502,7 +2458,6 @@ void testApp::stitchFingers()
             fingers.unlockVector();
         }
     }
-    
     for (std::vector<Finger *>::iterator it = copyfingers.begin() ; it < copyfingers.end(); it++)
     {
         if(!(*it)->hasBeenAdded)
@@ -2515,7 +2470,10 @@ void testApp::stitchFingers()
         }
     }
 }
-
+//--------------------------------------------------------------
+/*
+Attribute a level to a finger based on its depth 
+ */
 void testApp::updateLevel(Finger * finger)
 {
     if( finger->getZForSurfacePlane() > 260)// camera control layer/ interaction ceiling
@@ -2524,11 +2482,8 @@ void testApp::updateLevel(Finger * finger)
         finger->typeLevel = Finger::CEILING;//new level is CEILING
         return;
     }
-    
-  
     //Over or touching container?
     vector<ContainerToken*> temp = containers.getObjects();
-
     bool hitcontainer = false;
     for (std::vector<ContainerToken*>::iterator it2=temp.begin() ; it2 < temp.end() && !hitcontainer; it2++ )
     {
@@ -2537,7 +2492,6 @@ void testApp::updateLevel(Finger * finger)
             hitcontainer = true;
         };
     }
-    
     if(hitcontainer)
     {
         if( finger->getZForObjectPlane() > 34)//Above the container?
@@ -2553,7 +2507,6 @@ void testApp::updateLevel(Finger * finger)
             return;
         }
     }
-    
     //Over or touching Shredder1?
     if(hasShredder1)
     {
@@ -2577,7 +2530,6 @@ void testApp::updateLevel(Finger * finger)
             //carry on
         }
     }
-    
     //Over or touching Shredder2?
     if(hasShredder2)
     {
@@ -2601,7 +2553,6 @@ void testApp::updateLevel(Finger * finger)
             //carry on
         }
     }
-    
     //Over orbit token
     if(hasOrbiter)
     {
@@ -2616,9 +2567,7 @@ void testApp::updateLevel(Finger * finger)
                                ofVec2f(finger->getX()*ofGetWidth(),
                                        finger->getY()*ofGetHeight())
                                );//send value to token for averaging
-                
                 orbiter->action();
-                
                 if( finger->getZForObjectPlane() > 34)//over the object?
                 {
                     finger->previousTypeLevel = finger->typeLevel;
@@ -2642,7 +2591,6 @@ void testApp::updateLevel(Finger * finger)
                                        finger->getY()*ofGetHeight())
                                );//send value to token for averaging
                 orbiter->action();
-                
                 if( finger->getZForObjectPlane() > 34)//over the object
                 {
                     finger->previousTypeLevel = finger->typeLevel;
@@ -2662,7 +2610,6 @@ void testApp::updateLevel(Finger * finger)
             //carry on
         }
     }
-    
     //over or touching On-token Content Creation token
     if(onTokenCCToken != NULL)
     {
@@ -2685,7 +2632,6 @@ void testApp::updateLevel(Finger * finger)
             }
         }
     }
-    
     //over or touching the save token
     if(saveToken != NULL)
     {
@@ -2708,7 +2654,6 @@ void testApp::updateLevel(Finger * finger)
             }
         }
     }
-    
     //over or touching the In-air Content Creation token
     if(inAirCCToken != NULL)
     {
@@ -2731,7 +2676,6 @@ void testApp::updateLevel(Finger * finger)
             }
         }
     }
-    
     //just above or on the surface (no tokens)
     if(finger->getZForSurfacePlane() > 32)
     {
@@ -2746,24 +2690,24 @@ void testApp::updateLevel(Finger * finger)
         return;
     }
 }
-
+//--------------------------------------------------------------
+/*
+Finger is being pressed on the tabletop. Find out if it interacts
+ with any onscreen option
+ */
 void testApp::onSurface(Finger * finger)
 {
     bool hitOnTableCCToken = false;
-    
     //check to see if finger is pressing an option on screen that is connected to the On-table Content Creation token
-
     if(onTableCCToken != NULL)
     {
         if(onTableCCToken->getIsOnTable())
         {
             std::pair<bool, OnScreenOption *> temppair = onTableCCToken->checkHit(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight());
-            
             if(temppair.first)// its a hit; finf out which option was pressed
             {
                 hitOnTableCCToken = true;
                 finger->typeFinger = Finger::ONTABLEOPTION;
-                
                 if(temppair.second != NULL)
                 {
                     KinectOption *d1 = dynamic_cast<KinectOption*>(temppair.second);
@@ -2821,9 +2765,7 @@ void testApp::onSurface(Finger * finger)
                                     SaveContourOption *d5 = dynamic_cast<SaveContourOption*>(temppair.second);
                                     if((bool)d5)//Save Contour option was hit
                                     {
-                                        
                                         drawAreaForContour.save();//converts contour into shape  and adds it to shapes vector
-                                       
                                     }
                                     else
                                     {
@@ -2836,7 +2778,6 @@ void testApp::onSurface(Finger * finger)
             }
         }
     }
-    
     if(!hitOnTableCCToken)
     {
         //check to see if finger is pressing an option on the screen that is connected to the On-token Content Creation token
@@ -2850,7 +2791,7 @@ void testApp::onSurface(Finger * finger)
                 {
                     hitOnTokenCCToken = true;
                     finger->typeFinger = Finger::ONTABLEOPTION;
-                    if(temppair.second != NULL)//what type of option was 
+                    if(temppair.second != NULL)//what type of option was
                     {
                         SaveKinectOption *d1 = dynamic_cast<SaveKinectOption*>(temppair.second);
                         if((bool)d1)//Save Kinect option was hit; save textured depth map to shapes
@@ -2872,9 +2813,7 @@ void testApp::onSurface(Finger * finger)
                             SaveContourOption *d2 = dynamic_cast<SaveContourOption*>(temppair.second);
                             if((bool)d2)//Save Contour option was hit
                             {
-                               
                                 drawAreaForContour.save();//converts contour into shape  and adds it to shapes vector
-                                
                             }
                             else
                             {
@@ -2940,9 +2879,7 @@ void testApp::onSurface(Finger * finger)
             {
                 //Check to see if an onscreen drag circle (Scale control) is being pressed
                 vector<ContainerToken*> temp3 = containers.getObjects();
-                
                 bool hitsouthcontainer = false;
-                
                 //Check south scale
                 for (std::vector<ContainerToken*>::iterator it3=temp3.begin() ; it3 < temp3.end() && !hitsouthcontainer; it3++ )
                 {
@@ -2976,17 +2913,20 @@ void testApp::onSurface(Finger * finger)
                         finger->typeFinger = Finger::SCALECONTAINEREAST;
                     }
                     else
-                    {//if everthing else fails, then is picker
+                    {
+                        //if everthing else fails, then is picker
                         finger->typeFinger = Finger::PICKER;
                         cameraScene.fingerPickerIn(finger);
                     }
-                    
                 }
             }
         }
     }
 }
-
+//--------------------------------------------------------------
+/*
+Finger change from one level to another may trigger actions. 
+ */
 void testApp::changeLevel(Finger * finger)
 {
     //given a transition between levels, decide what action should be taken
@@ -3024,7 +2964,6 @@ void testApp::changeLevel(Finger * finger)
                         changeFingerType(finger);
                         finger->typeFinger = Finger::NOTYPE;
                     }
-                    
                     break;
                 }
                 case Finger::ABOVEOBJECT:
@@ -3053,7 +2992,8 @@ void testApp::changeLevel(Finger * finger)
                     break;
                 }
                 case Finger::ABOVESURFACE:
-                { //no change
+                {
+                    //no change
                     break;
                 }
                 case Finger::CEILING:
@@ -3066,7 +3006,6 @@ void testApp::changeLevel(Finger * finger)
                 case Finger::OBJECT:
                 {
                     //surface to object -> may be a touch on token
-                    
                     vector<ContainerToken*> temp = containers.getObjects();
                     bool hitcontainer = false;
                     //find if the token is a container
@@ -3080,7 +3019,8 @@ void testApp::changeLevel(Finger * finger)
                         };
                     }
                     if(!hitcontainer)
-                    {//not a container, go trough the other tokens
+                    {
+                        //not a container, go trough the other tokens
                         bool hitonTokenCCToken = false;
                         if(onTokenCCToken != NULL)
                         {
@@ -3091,7 +3031,6 @@ void testApp::changeLevel(Finger * finger)
                                     finger->typeFinger = Finger::NOTYPE;
                                     hitonTokenCCToken = true;
                                     OnTokenContentCreationUI::RETURNTYPE rt = onTokenCCToken->action(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight());
-                                    
                                     switch(rt)//which option was pressed
                                     {
                                         case OnTokenContentCreationUI::RETURNCONTOUR:
@@ -3106,7 +3045,8 @@ void testApp::changeLevel(Finger * finger)
                                             break;
                                         }
                                         case OnTokenContentCreationUI::RETURNKINECT:
-                                        {//activate Kinect Mode
+                                        {
+                                            //activate Kinect Mode
                                             unsetGUI();
                                             showKinectGUI = true;
                                             kinectScanning = true;
@@ -3153,7 +3093,8 @@ void testApp::changeLevel(Finger * finger)
                                                 break;
                                             }
                                             case InAirContentCreationUI::RETURNKINECT:
-                                            {//activate Kinect Mode
+                                            {
+                                                //activate Kinect Mode
                                                 unsetGUI();
                                                 showKinectGUI = true;
                                                 kinectScan->changeColor(new ofColor(255,255,255));
@@ -3246,7 +3187,7 @@ void testApp::changeLevel(Finger * finger)
                 {
                     changeFingerType(finger);
                     finger->typeFinger == Finger::NOTYPE;
-                    onSurface(finger);//check to see where user pressed 
+                    onSurface(finger);//check to see where user pressed
                     break;
                 }
                 case Finger::ABOVESURFACE:
@@ -3284,7 +3225,7 @@ void testApp::changeLevel(Finger * finger)
                 {
                     changeFingerType(finger);
                     finger->typeFinger == Finger::NOTYPE;
-                    onSurface(finger);//check to see where user pressed 
+                    onSurface(finger);//check to see where user pressed
                     break;
                 }
                 case Finger::ABOVESURFACE:
@@ -3493,7 +3434,6 @@ void testApp::changeLevel(Finger * finger)
                 {
                     //above object to object -> may be a touch on token
                     //see comments above, since its the same procedure
-                    
                     vector<ContainerToken*> temp = containers.getObjects();
                     bool hitcontainer = false;
                     for (std::vector<ContainerToken*>::iterator it2=temp.begin() ; it2 < temp.end() && !hitcontainer; it2++ )
@@ -3755,11 +3695,13 @@ void testApp::changeLevel(Finger * finger)
             break;
     }
 }
-
+//--------------------------------------------------------------
+/*
+Update parameters about the tCAD application: finger tracking, token tracking, etc.
+ */
 void testApp::updatetCAD()
 {
     stitchFingers();//join new finger detections with path finger detections
-    
     vector<Finger *> tempfingers = fingers.getObjects();
     if(tempfingers.size() == 0)//no finger on scene, clean everthing justo make sure nothing is left behind because of a glitch
     {
@@ -3771,14 +3713,14 @@ void testApp::updatetCAD()
     {
         (*it)->update();
         updateLevel((*it));
-      
         if((*it)->markForAdd)//new finger; stayed long enough to be considered as valid
         {
             if((*it)->typeLevel == Finger::ABOVESURFACE)
             {
             }
             else if((*it)->typeLevel == Finger::CEILING)
-            {   //all fingers at this level belong to the camera
+            {
+                //all fingers at this level belong to the camera
                 (*it)->typeFinger = Finger::CAMERA;
                 cameraScene.fingerIn((*it));
             }
@@ -3830,7 +3772,6 @@ void testApp::updatetCAD()
             }
             else if((*it)->typeLevel == Finger::ABOVEOBJECT)
             {
-                
                 if(inAirCCToken != NULL)
                 {
                     if(inAirCCToken->getIsOnTable())
@@ -3895,7 +3836,6 @@ void testApp::updatetCAD()
                 }
             }
             changeLevel((*it));
-            
             switch ((*it)->typeFinger)
             {
                 case Finger::PICKER:
@@ -3914,14 +3854,14 @@ void testApp::updatetCAD()
                     break;
                 case Finger::CONTOUR:
                 {
-                    bool invalidFingerForContour = false;
+                    bool dontAddToContour = false;
                     if(onTableCCToken != NULL)
                     {
                         if(onTableCCToken->getIsOnTable())
                         {
                             if(onTableCCToken->insideProtectedOptions((*it)->getX()*ofGetWidth(), (*it)->getY()*ofGetHeight()))
                             {
-                                invalidFingerForContour = true;
+                                dontAddToContour = true;
                             }
                         }
                     }
@@ -3931,7 +3871,7 @@ void testApp::updatetCAD()
                         {
                             if(onTokenCCToken->insideProtectedOptions((*it)->getX()*ofGetWidth(), (*it)->getY()*ofGetHeight()))
                             {
-                                invalidFingerForContour = true;
+                                dontAddToContour = true;
                             }
                         }
                     }
@@ -3939,10 +3879,10 @@ void testApp::updatetCAD()
                     {
                         if(inAirCCToken->getIsOnTable())
                         {
-                            invalidFingerForContour = false;
+                            dontAddToContour = false;
                         }
                     }
-                    if(!invalidFingerForContour)
+                    if(!dontAddToContour)
                     {
                         drawAreaForContour.addVert((*it));
                     }
@@ -3960,7 +3900,6 @@ void testApp::updatetCAD()
                     {
                         if((*it2)->finger->getFingerID() == (*it)->getFingerID())
                         {
-                           
                             vector<ContainerToken*> temp2 = containers.getObjects();
                             containers.lockVector();
                             bool found = false;
@@ -4009,7 +3948,6 @@ void testApp::updatetCAD()
         {
             if((*it)->getSymbolID() == MARKER_ID_SAVE)//Is it a save token?
             {
-                
                 if(saveToken==NULL)
                 {
                     saveToken = new SaveToken((*it), &shapes);
@@ -4106,7 +4044,6 @@ void testApp::updatetCAD()
             }
             else//everthing else failed, must be a container
             {
-                
                 //the container might already be in the list of containers
                 vector<ContainerToken*> temp = containers.getObjects();
                 containers.lockVector();
@@ -4167,7 +4104,6 @@ void testApp::updatetCAD()
                             ofPolyline p;
                             p.addVertexes(verts);
                             p.close();
-                            
                             if(inside((*it)->getX()*ofGetWidth(), (*it)->getY()*ofGetHeight(), p))
                             {
                                 shapes.lockVector();
@@ -4240,7 +4176,6 @@ void testApp::updatetCAD()
             tokens.removeElement((*it));
         }
     }
-    
     //Update containers
     vector<ContainerToken*> temp = containers.getObjects();
     for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ )
@@ -4269,9 +4204,13 @@ void testApp::updatetCAD()
         }
     }
 }
-
+//--------------------------------------------------------------
+/*
+Remove functionality from a token
+ */
 void testApp::changeMarkerType(Token * token)
 {
+    //according to function type, "clean" token as to make ready to become other type or remove from tabletop
     switch (token->typeobject)
     {
         case Token::CONTAINER:
@@ -4336,9 +4275,13 @@ void testApp::changeMarkerType(Token * token)
             break;
     }
 }
-
+//--------------------------------------------------------------
+/*
+remove functionality from a finger 
+ */
 void testApp::changeFingerType(Finger * finger)
 {
+    //according to function type, "clean" finger as to make ready to become other type or remove from tabletop
     switch ( finger->typeFinger)
     {
         case Finger::PICKER:
@@ -4346,20 +4289,20 @@ void testApp::changeFingerType(Finger * finger)
             cameraScene.fingerPickerOut(finger);
             break;
         case Finger::CAMERA:
-            cameraScene.fingerOut(finger);
+            cameraScene.fingerOut(finger);//remove finger from camera
             break;
         case Finger::ONTABLEOPTION:
             break;
         case Finger::CONTOUR:
         {
-            bool inMenuCircle = false;
+            bool dontAddToContour = false;
             if(onTableCCToken != NULL)
             {
                 if(onTableCCToken->getIsOnTable())
                 {
                     if(onTableCCToken->insideProtectedOptions(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
                     {
-                        inMenuCircle = true;
+                        dontAddToContour = true;
                     }
                 }
             }
@@ -4369,7 +4312,7 @@ void testApp::changeFingerType(Finger * finger)
                 {
                     if(onTokenCCToken->insideProtectedOptions(finger->getX()*ofGetWidth(), finger->getY()*ofGetHeight()))
                     {
-                        inMenuCircle = true;
+                        dontAddToContour = true;
                     }
                 }
             }
@@ -4377,10 +4320,10 @@ void testApp::changeFingerType(Finger * finger)
             {
                 if(inAirCCToken->getIsOnTable())
                 {
-                    inMenuCircle = false;
+                    dontAddToContour = false;
                 }
             }
-            if(!inMenuCircle)
+            if(!dontAddToContour)
             {
                 drawAreaForContour.addVert(finger);
             }
@@ -4388,6 +4331,7 @@ void testApp::changeFingerType(Finger * finger)
             break;
         case Finger::SCALECONTAINEREAST:
         {
+            //find Container with this finger
             vector<ContainerToken*> temp2 = containers.getObjects();
             for (std::vector<ContainerToken*>::iterator it2=temp2.begin() ; it2 < temp2.end(); it2++ )
             {
@@ -4395,7 +4339,7 @@ void testApp::changeFingerType(Finger * finger)
                 {
                     if((*it2)->fingerOnEastScale->getFingerID() == finger->getFingerID())
                     {
-                        (*it2)->setHasEastScale(false);
+                        (*it2)->setHasEastScale(false); //release east scale
                     }
                 }
             }
@@ -4403,6 +4347,7 @@ void testApp::changeFingerType(Finger * finger)
             break;
         case Finger::SCALECONTAINERSOUTH:
         {
+            //find Container with this finger
             vector<ContainerToken*> temp2 = containers.getObjects();
             for (std::vector<ContainerToken*>::iterator it2=temp2.begin() ; it2 < temp2.end(); it2++ )
             {
@@ -4410,7 +4355,7 @@ void testApp::changeFingerType(Finger * finger)
                 {
                     if((*it2)->fingerOnSouthScale->getFingerID() == finger->getFingerID())
                     {
-                        (*it2)->setHasSouthScale(false);
+                        (*it2)->setHasSouthScale(false);//release south scale
                     }
                 }
             }
@@ -4418,6 +4363,7 @@ void testApp::changeFingerType(Finger * finger)
             break;
         case Finger::SHAPESELECTION:
         {
+            //remove linking/selection movement
             vector<SelectionMovement*> temp = selectionMovements.getObjects();
             selectionMovements.lockVector();
             for (std::vector<SelectionMovement *>::iterator it2=temp.begin() ; it2 < temp.end(); it2++ )
@@ -4437,20 +4383,28 @@ void testApp::changeFingerType(Finger * finger)
             break;
     }
 }
-
-
+//--------------------------------------------------------------
+/*
+Descending predicate for sorting; used in drawScene 
+ */
 bool Descending(const float& d1, const float& d2)
 {
     return d1 > d2;
 }
+//--------------------------------------------------------------
+/*
+Draw 3D scene
+ */
 void testApp::drawScene()
 {
-    float gridsize = 100.0f;
+    float gridsize = 100.0f;//base size of ggrid
     if(shapes.getObjects().size()==0)
     {
     }
     else
     {
+        //grids change size according to shapes present in the scene
+        //find min and max values
         float xMin=999999,xMax=-999999, yMin=999999, yMax=-999999, zMin = 999999, zMax =-999999;
         for (int i=0; i<shapes.getObjects().size(); i++)
         {
@@ -4465,6 +4419,7 @@ void testApp::drawScene()
                 zMax = max(zMax,pt.at(5));
             }
         }
+        //need to order the absolute values to find biggest value
         vector<float> distances;
         distances.push_back((int)abs(xMin));
         distances.push_back((int)abs(xMax));
@@ -4472,8 +4427,9 @@ void testApp::drawScene()
         distances.push_back((int)abs(yMax));
         distances.push_back((int)abs(zMin));
         distances.push_back((int)abs(zMax));
-        sort(distances.begin(), distances.end(),Descending);
-        gridsize = distances.front();
+        sort(distances.begin(), distances.end(),Descending);//order values
+        gridsize = distances.front();//get biggest value
+                                     //correct size of grid
         float rest = (int) fmod(gridsize,10);
         while(rest != 0)
         {
@@ -4485,12 +4441,12 @@ void testApp::drawScene()
             gridsize = 100.0f;
         }
     }
-    float ticks = gridsize/20;
+    float ticks = gridsize/20;//size of grid rectangles
     Grids tempgrid = Grids();
-    switch (axis->axis)
+    switch (axis->axis)//draw grids
     {
         case AxisPlane::NOAXIS:
-            tempgrid.ofDrawGrid(gridsize,ticks,false,true,true,true);
+            tempgrid.ofDrawGrid(gridsize,ticks,false,true,true,true);//draw 3 axis
             break;
         case AxisPlane::X_Z:
             tempgrid.ofDrawGrid(gridsize,ticks,false,false,true,false);
@@ -4504,6 +4460,7 @@ void testApp::drawScene()
         default:
             break;
     }
+    //Draw Axis
     ofSetColor(COLORSCHEME_RED);
     ofSetLineWidth(30);
     ofLine(ofVec3f(-gridsize,0,0), ofVec3f(gridsize,0,0));
@@ -4514,15 +4471,19 @@ void testApp::drawScene()
     ofSetLineWidth(30);
     ofLine(ofVec3f(0,0,-gridsize), ofVec3f(0,0,gridsize));
 }
-
-
+//--------------------------------------------------------------
+/*
+A new token was added on the table. Function triggered by TUIO protocol. 
+ */
 void testApp::objectAdded(TuioObject & obj)
 {
+    //new token is added to table; this token can be a present token that changed its ID momentarly or dissapeared and appeared
+    //therefore, we need to check to see if this new token is a old token
     vector<Token *> temptokens = tokens.getObjects();
     bool found = false;
     for (std::vector<Token *>::iterator it=temptokens.begin() ; it < temptokens.end() && !found; it++ )
     {
-        if(calibratingMarker)
+        if(calibratingMarker)//is the calibration going on?
         {
             if ((*it)->checkToken(&obj))
             {
@@ -4531,6 +4492,7 @@ void testApp::objectAdded(TuioObject & obj)
         }
         else
         {
+            //apply calibration
             ofVec2f tempcalib = calibrationMarker->applyCalibration(obj.getX()*640, obj.getY()*480);
             if ((*it)->checkToken(&obj, tempcalib.x, tempcalib.y))
             {
@@ -4538,29 +4500,34 @@ void testApp::objectAdded(TuioObject & obj)
             }
         }
     }
-    if(!found)
+    if(!found)//its a new token, add to list
     {
         tokens.lockVector();
-        if(calibratingMarker)
+        if(calibratingMarker)//is the calibration going on?
         {
             tokens.addElement(new Token(&obj));
         }
         else
         {
+            //apply calibration
             ofVec2f tempcalib = calibrationMarker->applyCalibration(obj.getX()*640, obj.getY()*480);
             tokens.addElement(new Token(&obj, tempcalib.x, tempcalib.y));
         }
         tokens.unlockVector();
     }
 }
-
+//--------------------------------------------------------------
+/*
+A token was moved on the table. Function triggered by TUIO protocol.  
+ */
 void testApp::objectUpdated(TuioObject & obj)
 {
     vector<Token *> temptokens = tokens.getObjects();
     bool found = false;
+    //Find token
     for (std::vector<Token*>::iterator it=temptokens.begin() ; it < temptokens.end() && !found; it++ )
     {
-        if(calibratingMarker)
+        if(calibratingMarker)//is the calibration going on?
         {
             if ((*it)->checkToken(&obj))
             {
@@ -4570,6 +4537,7 @@ void testApp::objectUpdated(TuioObject & obj)
         }
         else
         {
+            //apply calibration
             ofVec2f tempcalib = calibrationMarker->applyCalibration(obj.getX()*640, obj.getY()*480);
             if ((*it)->checkToken(&obj, tempcalib.x, tempcalib.y))
             {
@@ -4579,11 +4547,15 @@ void testApp::objectUpdated(TuioObject & obj)
         }
     }
 }
-
+//--------------------------------------------------------------
+/*
+A token was removed from the table. Function triggered by TUIO protocol.  
+ */
 void testApp::objectRemoved(TuioObject & obj)
 {
     vector<Token *> temptokens = tokens.getObjects();
     bool found = false;
+    //token disappeared, we need to keep token for some more time in case its a glitch from reactivision
     for (std::vector<Token*>::iterator it = temptokens.begin() ; it < temptokens.end() && !found; it++ )
     {
         if ((*it)->getSymbolID() == obj.getSymbolID())
@@ -4595,12 +4567,16 @@ void testApp::objectRemoved(TuioObject & obj)
             }
             else
             {
+                //did not stay on long enough to be valid, so just remove
                 (*it)->hasBeenRemoved = true;
             };
         }
     }
 }
-
+//--------------------------------------------------------------
+/*
+ Is point x,y inside ofPolyLine? native in future versions of openFrameworks
+ */
 bool testApp::inside(float x, float y, ofPolyline polyline)
 {
     int counter = 0;
@@ -4632,55 +4608,63 @@ bool testApp::inside(float x, float y, ofPolyline polyline)
     if (counter % 2 == 0) return false;
     else return true;
 }
-
+//--------------------------------------------------------------
+/*
+ Update calibration process for Fingers
+ */
 void testApp::updateCalibrationFingers()
 {
-    stitchFingers();
-    
+    stitchFingers();//join new finger detections with path finger detections
     vector<Finger *> tempfingers = fingers.getObjects();
     for (std::vector<Finger*>::iterator it=tempfingers.begin() ; it < tempfingers.end(); it++ )
     {
         (*it)->update();
         if((*it)->markForAdd)
         {
-            if((*it)->getZForSurfacePlane() < 100 )
+            if((*it)->getZForSurfacePlane() < 100 )//on the surface
             {
-                calibrationFinger->touchDown((*it));
+                calibrationFinger->touchDown((*it));//send to calibration process
                 (*it)->typeFinger = Finger::CALIBRATION;
             }
             (*it)->markForAdd = false;
         }
         else if((*it)->markForMoved)
         {
-            if((*it)->getZForSurfacePlane() > 100 && (*it)->typeFinger == Finger::CALIBRATION)
+            if((*it)->getZForSurfacePlane() > 100 && (*it)->typeFinger == Finger::CALIBRATION)//finger went up
             {
-                calibrationFinger->touchUp((*it));
+                calibrationFinger->touchUp((*it));//remove from calibration process
                 (*it)->typeFinger = Finger::NOTYPE;
             }
-            else if((*it)->getZForSurfacePlane() < 100 && (*it)->typeFinger != Finger::CALIBRATION)
+            else if((*it)->getZForSurfacePlane() < 100 && (*it)->typeFinger != Finger::CALIBRATION)//finger went down on surface
             {
-                calibrationFinger->touchDown((*it));
+                calibrationFinger->touchDown((*it));//send to calibration process
                 (*it)->typeFinger = Finger::CALIBRATION;
             }
-            (*it)->markForMoved = false;
+            (*it)->markForMoved = false;//finger was processed
         }
         else if((*it)->markForRemoval)
         {
-            if((*it)->typeFinger == Finger::CALIBRATION)
+            if((*it)->typeFinger == Finger::CALIBRATION)//finger went up
             {
-                calibrationFinger->touchUp((*it));
+                calibrationFinger->touchUp((*it));//remove from calibration process
             }
             fingers.removeElement((*it));
         }
     }
-    calibrationFinger->update();
+    calibrationFinger->update();//update calibration process
 }
-
+//--------------------------------------------------------------
+/*
+Draw Fingers calibration process 
+ */
 void testApp::drawCalibrationFingers()
 {
-    calibrationFinger->doCalibration();
+    calibrationFinger->doCalibration();//show calibration screen
 }
-
+//--------------------------------------------------------------
+/*
+ Update calibration process for tokens 
+ */
 void testApp::updateCalibrationMarker()
 {
     vector<Token *> temptokens = tokens.getObjects();
@@ -4690,7 +4674,7 @@ void testApp::updateCalibrationMarker()
         if((*it)->markForAdd)
         {
             changeMarkerType((*it));
-            calibrationMarker->objectAdded((*it));
+            calibrationMarker->objectAdded((*it));//add token to calibration process
             (*it)->typeobject= Token::CALIBRATION;
             (*it)->markForAdd = false;
         }
@@ -4699,7 +4683,7 @@ void testApp::updateCalibrationMarker()
             if((*it)->typeobject!= Token::CALIBRATION)
             {
                 changeMarkerType((*it));
-                calibrationMarker->objectAdded((*it));
+                calibrationMarker->objectAdded((*it));//add token to calibration process
                 (*it)->typeobject= Token::CALIBRATION;
             }
             (*it)->markForMoved = false;
@@ -4709,19 +4693,25 @@ void testApp::updateCalibrationMarker()
             changeMarkerType((*it));
             if((*it)->typeobject == Token::CALIBRATION)
             {
-                calibrationMarker->objectRemoved((*it));
+                calibrationMarker->objectRemoved((*it));//remove token to calibration process
             }
             tokens.removeElement((*it));
         }
     }
-    calibrationMarker->update();
+    calibrationMarker->update();//update calibration process
 }
-
+//--------------------------------------------------------------
+/*
+ Draw tokens calibration process
+ */
 void testApp::drawCalibrationMarker()
 {
-    calibrationMarker->doCalibration();
+    calibrationMarker->doCalibration();//show calibration screen
 }
-
+//--------------------------------------------------------------
+/*
+Load XML file with physical setup configuration parameters
+ */
 bool testApp::loadXML()
 {
     if( xmlfile.loadFile("planeSettings.xml")) {}
@@ -4747,7 +4737,10 @@ bool testApp::loadXML()
     rbCorner->y = xmlfile.getValue("CORNERS:RBCORNER:Y",  0.000000);
     return true;
 }
-
+//--------------------------------------------------------------
+/*
+ Save XML file with physical setup configuration parameters
+ */
 void testApp::saveXML()
 {
     xmlfile.setValue("PLANE:NORMALX", normalUnitVec[0]);

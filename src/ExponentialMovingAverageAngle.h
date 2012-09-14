@@ -1,16 +1,11 @@
-//
-//  ExponentialMovingAverageAngle.h
-//  Carver
-//
-//  Created by paulobala on 12/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_ExponentialMovingAverageAngle_h
-#define Carver_ExponentialMovingAverageAngle_h
+#ifndef tCAD_ExponentialMovingAverageAngle_h
+#define tCAD_ExponentialMovingAverageAngle_h
 
 #include "RollingAverage.h"
-
+/*
+ Exponential Moving average for angles; differs from normal exponential moving average because it takes into account
+ the tarnsition of 360 to 0 degrees.
+ */
 class ExponentialMovingAverageAngle
 {
     std::vector<float> samples;

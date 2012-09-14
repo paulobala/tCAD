@@ -1,13 +1,5 @@
-//
-//  UpContainer.h
-//  Carver
-//
-//  Created by paulobala on 03/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_UpContainer_h
-#define Carver_UpContainer_h
+#ifndef tCAD_UpContainer_h
+#define tCAD_UpContainer_h
 
 #include "ofMain.h"
 

@@ -1,12 +1,3 @@
-/*
-*  CalibrationUtils.cpp
-*
-*
-*  Created on 2/2/09.
-*  Copyright 2009 NUI Group. All rights reserved.
-*
-*/
-
 #include "CalibrationUtilsMarker.h"
 #include <cmath>
 CalibrationUtilsMarker::CalibrationUtilsMarker()

@@ -1,14 +1,9 @@
-//
-//  Limb.h
-//  Carver
-//
-//  Created by paulobala on 18/06/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
+#ifndef tCAD_Limb_h
+#define tCAD_Limb_h
 
-#ifndef Carver_Limb_h
-#define Carver_Limb_h
-
+/*
+ Represents a limb.
+ */
 class Limb{
     cv::Point centerLimb;
     vector<cv::Point> approxCountour;

@@ -1,5 +1,5 @@
-#ifndef Carver_Observer_h
-#define Carver_Observer_h
+#ifndef tCAD_Observer_h
+#define tCAD_Observer_h
 
 #pragma once
 
@@ -8,8 +8,10 @@
 
 using namespace std;
 
-class Subject;
-
+class Subject;//fowards declaration
+/*
+ Part of Observer Pattern
+ */
 class Observer
 {
 public:

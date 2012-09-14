@@ -1,13 +1,6 @@
-//
-//  BasicDraw.h
-//  Modeller
-//
-//  Created by paulobala on 17/04/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
 
-#ifndef Modeller_BasicDraw_h
-#define Modeller_BasicDraw_h
+#ifndef tCAD_BasicDraw_h
+#define tCAD_BasicDraw_h
 
 #include "Shape3D.h"
 #include "ParentDraw.h"
@@ -26,6 +19,7 @@ public:
         if(ofGetElapsedTimeMillis() - shape3D->creationTime > limitTime){
             ofSetColor(*color);}
         else{
+            //new shapes are added in white and transition into their chosen color
             float difr = 255-color->r;
             float difg = 255-color->g;
             float difb = 255-color->b;
@@ -33,8 +27,7 @@ public:
             float newg = ofMap(ofGetElapsedTimeMillis() - shape3D->creationTime, 0, limitTime, 0, difg);
             float newb = ofMap(ofGetElapsedTimeMillis() - shape3D->creationTime, 0, limitTime, 0, difb);
             
-            ofSetColor(ofColor(ofClamp(255-newr, 0, 255),ofClamp(255-newg, 0, 255),ofClamp(255-newb, 0, 255)));//white to color
-        }
+            ofSetColor(ofColor(ofClamp(255-newr, 0, 255),ofClamp(255-newg, 0, 255),ofClamp(255-newb, 0, 255)));        }
         glEnable(GL_DEPTH_TEST);
         ofEnableLighting();
         ParentDraw::draw();

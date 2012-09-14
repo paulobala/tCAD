@@ -1,15 +1,5 @@
-//
-//  WireFrame.h
-//  Carver
-//
-//  Created by paulobala on 12/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_WireFrame_h
-#define Carver_WireFrame_h
-
-
+#ifndef tCAD_WireFrame_h
+#define tCAD_WireFrame_h
 class WireFrameDraw: public ParentDraw{
 public:
     
@@ -27,9 +17,5 @@ public:
         glDisable(GL_DEPTH_TEST);
         ofPopStyle();
     }
-    
-    
 };
-
-
 #endif

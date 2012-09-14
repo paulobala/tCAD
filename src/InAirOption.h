@@ -1,17 +1,12 @@
-//
-//  ThirdMenuOption.h
-//  Carver
-//
-//  Created by paulobala on 05/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_ThirdMenuOption_h
-#define Carver_ThirdMenuOption_h
+#ifndef tCAD_ThirdMenuOption_h
+#define tCAD_ThirdMenuOption_h
 
 #include "ofMain.h"
 #include "ColorScheme.h"
 
+/*
+ 
+ */
 class InAirOption
 {
     ofImage stlImg, kinectImg, contourImg, copyImg, leftArrow, rightArrow, okayImg, notOkayImg;
@@ -677,7 +672,6 @@ public:
     
     void action()
     {
-        // color = ofColor(ofRandom(0,255), ofRandom(0,255), ofRandom(0,255));
         clickTime = ofGetElapsedTimeMillis();
     }
     

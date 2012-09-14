@@ -1,5 +1,5 @@
-#ifndef Carver_ColorScheme_h
-#define Carver_ColorScheme_h
+#ifndef tCAD_ColorScheme_h
+#define tCAD_ColorScheme_h
 
 #define COLORSCHEME_CYAN ofColor(0, 174, 239)
 #define COLORSCHEME_YELLOW ofColor(255, 242, 0)

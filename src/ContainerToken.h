@@ -1,13 +1,5 @@
-//
-//  Container.h
-//  Carver
-//
-//  Created by paulobala on 20/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_Container_h
-#define Carver_Container_h
+#ifndef tCAD_Container_h
+#define tCAD_Container_h
 #include "ofMeshtCAD.h"
 #include "AxisPlane.h"
 #include "lineIntersection.h"
@@ -17,27 +9,38 @@
 #include "OperationContainerAlternative.h"
 #include "DashedLine.h"
 
+/*
+ Represents Container token
+ */
 class ContainerToken:public Observer
 {
     
-    ofVec2f nw, ne, sw, se;
-    ofVec2f southScale;
-    ofVec2f eastScale;
-    ofImage southScaleImg, eastScaleImg, scissorsImg;
-    ofEasyFingerCam * cam;
-    ofRectangle view;
+    ofVec2f nw, ne, sw, se;//token edges
+    ofVec2f southScale;//on screen draggable scale
+    ofVec2f eastScale;//on screen draggable scale
+    bool hasEastScale;
+    bool hasSouthScale;
+    
+    ofImage southScaleImg, eastScaleImg, scissorsImg;//images
+    ofEasyFingerCam * cam;//camera object
+    ofRectangle view;//viewport
+    
     float prevDistanceX;
     float prevDistanceY;
     ofVec2f previousPointX;
     ofVec2f previousPointY;
-    AxisPlane * selectedPlane;
-    LockableVector<Shape3D* > * shapes;
-    bool hasEastScale;
-    bool hasSouthScale; 
-    bool hover;
-    bool onTable;
+    
+    AxisPlane * selectedPlane;//Plane of 3D scene
+    LockableVector<Shape3D* > * shapes;//shapes in 3D scene
+    
+    bool hover;//is finger hovering above it
+    bool onTable;//is token on table
     Token * token;
     int idToken;
+    
+    /*
+     Returns point in line (p1, p2) after distance
+     */
     ofVec2f calculate_line_point(int x1, int y1, int x2, int y2, int distance)
     {
         float vx = x2 - x1;
@@ -49,36 +52,54 @@ class ContainerToken:public Observer
         float py = (int)((float)y1 + vy * (distance));
         return ofVec2f(px,py);
     }
-   
+    
 public:
-    std::vector<Shape3D*> links;
-
-    int getID(){return idToken;}
     
-    void setToken(Token * value){token = value;}
+    std::vector<Shape3D*> links;//links between 3D shapes and this container
     
-    Token * getToken(){return token;}
+    int getID()
+    {
+        return idToken;
+    }
     
-    bool getIsOnTable(){return onTable;}
-    void setIsOnTable(bool value){onTable = value;}
+    void setToken(Token * value)
+    {
+        token = value;
+    }
     
-    Finger * fingerOnEastScale;
-    Finger * fingerOnSouthScale;
+    Token * getToken()
+    {
+        return token;
+    }
+    
+    bool getIsOnTable()
+    {
+        return onTable;
+    }
+    void setIsOnTable(bool value)
+    {
+        onTable = value;
+    }
     void setHasEastScale(bool value)
     {
         hasEastScale = value;
     }
-
+    
     void setHasSouthScale(bool value)
     {
         hasSouthScale = value;
     }
+    Finger * fingerOnEastScale;//finger pressing on east scale
+    Finger * fingerOnSouthScale;//finger pressing on south scale
     
-    OperationContainer * operation;
-    OperationContainerAlternative * operationAlt;
+    //Manipluation UI
+    OperationContainer * operation;//dwell Container
+    OperationContainerAlternative * operationAlt;//finger movement Container
     
-    bool alternative;
-    
+    bool alternative;//if true, use alternative container
+    /*
+     Constructor
+     */
     ContainerToken(Token * token_, ofRectangle view_, AxisPlane * selectedPlane_, ofEasyFingerCam * cam_, bool alternative_, LockableVector<Shape3D* > * shapes_)
     {
         links = std::vector<Shape3D*>();
@@ -90,7 +111,7 @@ public:
         selectedPlane = selectedPlane_;
         shapes = shapes_;
         southScale = ofVec2f(token->getX()*ofGetWidth() + 200, token->getY()*ofGetHeight() );
-        eastScale = ofVec2f(token->getX()*ofGetWidth(), token->getY()*ofGetHeight() + 200);//should be named down
+        eastScale = ofVec2f(token->getX()*ofGetWidth(), token->getY()*ofGetHeight() + 200);
         hasEastScale = false;
         hasSouthScale = false;
         prevDistanceX = 0;
@@ -104,13 +125,15 @@ public:
         southScaleImg.loadImage("images/rightscale.png");
         scissorsImg.loadImage("images/scissors.png");
     }
-    
+    /*
+     New link
+     */
     void addLink(Shape3D * shape_)
     {
         bool found = false;
         for (std::vector<Shape3D*>::iterator it  = links.begin()  ; it < links.end()&& !found; it++ )
         {
-            if((*it)==shape_)
+            if((*it)==shape_)//don't add repeated shapes to the container
             {
                 found = true;
             }
@@ -118,8 +141,8 @@ public:
         if(!found)
         {
             links.push_back(shape_);
-            shape_->addObserver(this);
-            //change operation containers
+            shape_->addObserver(this);//add observer, so if the 3D shape is removed, the link can be removed
+                                      //change operation containers
             if(alternative)
             {
                 operationAlt->changedLinks();
@@ -130,7 +153,9 @@ public:
             }
         }
     }
-    
+    /*
+     Remove link (triggered by cutting links or
+     */
     void removeLink(Shape3D *shape_)
     {
         for (std::vector<Shape3D*>::iterator it  = links.begin()  ; it < links.end(); it++ )
@@ -150,7 +175,9 @@ public:
             operation->changedLinks();
         }
     }
-    
+    /*
+     Clear all links
+     */
     void clearLinks()
     {
         links.clear();
@@ -163,7 +190,9 @@ public:
             operation->changedLinks();
         }
     }
-    
+    /*
+     Draw token and manipulation UI
+     */
     void draw()
     {
         if(onTable)
@@ -171,7 +200,7 @@ public:
             if(token->getX()!=0 && token->getY()!=0)
             {
                 ofPushStyle();
-                if(hover)
+                if(hover)//if finger is hoverinf, draw 2 dashed circles
                 {
                     ofVec2f centroidToken = ofVec2f(token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                     Dash dashing;
@@ -181,16 +210,14 @@ public:
                     ofCircle(centroidToken.x, centroidToken.y, 110);
                     dashing.end();
                 }
-                else
-                {
-                }
+                //draw conections between token and linked 3D shapes
                 for (std::vector<Shape3D*>::iterator it  = links.begin()  ; it < links.end(); it++ )
                 {
                     ofSetColor(*(*it)->color);
                     ofVec2f centroidToken = ofVec2f(token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                     ofVec3f centroidCam = cam->worldToScreen((*it)->mesh.getCentroid(),view);
                     ofVec2f centroid = ofVec2f(centroidCam.x, centroidCam.y);
-                    if(centroid.distance(centroidToken) >320)
+                    if(centroid.distance(centroidToken) >320)//if line is big enough, the cutable part is exposed
                     {
                         ofVec2f pointA = calculate_line_point(centroidToken.x, centroidToken.y, centroid.x, centroid.y, 200);
                         ofVec2f pointB = calculate_line_point( centroid.x, centroid.y, centroidToken.x, centroidToken.y, 100);
@@ -198,7 +225,7 @@ public:
                         ofLine(centroidToken, pointA);
                         ofLine(centroid, pointB);
                         ofSetLineWidth(3);
-                        DashedLine dash = DashedLine(pointA, pointB);
+                        DashedLine dash = DashedLine(pointA, pointB);//cutable part
                         dash.draw();
                         scissorsImg.setAnchorPercent(0.5, 0.5);
                         scissorsImg.draw((pointA+pointB)/2, 30, 30);
@@ -212,6 +239,7 @@ public:
                 ofPopStyle();
                 ofPushStyle();
                 ofFill();
+                //draw manipulation UI
                 if(alternative)
                 {
                     operationAlt->draw();
@@ -222,6 +250,7 @@ public:
                 }
                 ofPopStyle();
                 ofPushStyle();
+                //draw onscreen draggable scales according to Manipulation Mode and selected plane
                 if(links.size() >= 1 )
                 {
                     if(alternative)
@@ -236,8 +265,6 @@ public:
                                 ofLine(fingerOnSouthScale->getX()*ofGetWidth(), token->getY()*ofGetHeight(),token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofLine(fingerOnSouthScale->getX()*ofGetWidth(), token->getY()*ofGetHeight(),fingerOnSouthScale->getX()*ofGetWidth(), fingerOnSouthScale->getY()*ofGetHeight());
                                 ofCircle(fingerOnSouthScale->getX()*ofGetWidth(), fingerOnSouthScale->getY()*ofGetHeight(), 30);
-                                //scaleImg.setAnchorPercent(0.5, 0.5);
-                                //scaleImg(fingerOnSouthScale->getX()*ofGetWidth(), fingerOnSouthScale->getY()*ofGetHeight(),40,40);
                             }
                             else
                             {
@@ -277,7 +304,6 @@ public:
                             }
                             if(hasEastScale)
                             {
-                                //ofSetColor(255, 0, 0);
                                 ofSetLineWidth(3);
                                 ofLine(token->getX()*ofGetWidth(), fingerOnEastScale->getY()*ofGetHeight(),token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofLine(token->getX()*ofGetWidth(), fingerOnEastScale->getY()*ofGetHeight(),fingerOnEastScale->getX()*ofGetWidth(), fingerOnEastScale->getY()*ofGetHeight());
@@ -285,7 +311,6 @@ public:
                             }
                             else
                             {
-                                //ofSetColor(0, 255, 0);
                                 ofSetLineWidth(3);
                                 ofLine(eastScale.x, eastScale.y,token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofCircle(eastScale.x, eastScale.y, 30);
@@ -317,7 +342,6 @@ public:
                             }
                             if(hasSouthScale)
                             {
-                                //ofSetColor(255, 0, 0);
                                 ofSetLineWidth(3);
                                 ofLine(fingerOnSouthScale->getX()*ofGetWidth(), token->getY()*ofGetHeight(),token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofLine(fingerOnSouthScale->getX()*ofGetWidth(), token->getY()*ofGetHeight(),fingerOnSouthScale->getX()*ofGetWidth(), fingerOnSouthScale->getY()*ofGetHeight());
@@ -325,7 +349,6 @@ public:
                             }
                             else
                             {
-                                //ofSetColor(0, 255, 0);
                                 ofSetLineWidth(3);
                                 ofLine(southScale.x, southScale.y,token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofCircle(southScale.x, southScale.y, 30);
@@ -448,7 +471,6 @@ public:
                             }
                             if(hasEastScale)
                             {
-                                //ofSetColor(255, 0, 0);
                                 ofSetLineWidth(3);
                                 ofLine(token->getX()*ofGetWidth(), fingerOnEastScale->getY()*ofGetHeight(),token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofLine(token->getX()*ofGetWidth(), fingerOnEastScale->getY()*ofGetHeight(),fingerOnEastScale->getX()*ofGetWidth(), fingerOnEastScale->getY()*ofGetHeight());
@@ -456,7 +478,6 @@ public:
                             }
                             else
                             {
-                                //ofSetColor(0, 255, 0);
                                 ofSetLineWidth(3);
                                 ofLine(eastScale.x, eastScale.y,token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofCircle(eastScale.x, eastScale.y, 30);
@@ -488,7 +509,6 @@ public:
                             }
                             if(hasSouthScale)
                             {
-                                //ofSetColor(255, 0, 0);
                                 ofSetLineWidth(2);
                                 ofLine(fingerOnSouthScale->getX()*ofGetWidth(), token->getY()*ofGetHeight(),token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofLine(fingerOnSouthScale->getX()*ofGetWidth(), token->getY()*ofGetHeight(),fingerOnSouthScale->getX()*ofGetWidth(), fingerOnSouthScale->getY()*ofGetHeight());
@@ -496,7 +516,6 @@ public:
                             }
                             else
                             {
-                                
                                 ofSetLineWidth(2);
                                 ofLine(southScale.x, southScale.y,token->getX()*ofGetWidth(), token->getY()*ofGetHeight());
                                 ofCircle(southScale.x, southScale.y, 30);
@@ -570,14 +589,12 @@ public:
                     }
                 }
                 ofPopStyle();
-                if(links.size() == 2)
-                {
-                    //boolLock->draw();
-                }
             }
         }
     }
-    
+    /*
+     check to see if finger is pressing on south scale
+     */
     bool checkSouthScale(float x, float y)
     {
         if(onTable)
@@ -625,7 +642,9 @@ public:
         }
         return false;
     }
-    
+    /*
+     check to see if finger is pressing on east scale
+     */
     bool checkEastScale(float x, float y)
     {
         if(onTable)
@@ -659,7 +678,9 @@ public:
         }
         return false;
     }
-    
+    /*
+     check if the line formed by the points, crosses the cutable portion of a link
+     */
     void checkLinkCut(int x, int y, int xprev, int yprev)
     {
         if(onTable)
@@ -680,18 +701,17 @@ public:
                         ofVec2f intersection;
                         if( mainline.Intersect(touchline, intersection) == LineSegment::INTERESECTING)
                         {
-                            //links.erase(it);
+                            //link is going to be cut
                             removeLink((*it));
                         }
-                    }
-                    else
-                    {
                     }
                 }
             }
         }
     }
-    
+    /*
+     Get center of all linked 3D shapes
+     */
     ofVec3f getCentroid()
     {
         if(links.size()==0)
@@ -704,6 +724,7 @@ public:
         }
         else
         {
+            //average all centroids
             ofVec3f avg;
             for (int i = 0; i < links.size(); i++)
             {
@@ -713,12 +734,14 @@ public:
             return avg;
         }
     }
-    
+    /*
+     Find if 3D point is over/touching token or token Manipulation UI
+     */
     bool inside(float  x, float y, float z, bool excludeCenter)
     {
         if(alternative)
         {
-            if(excludeCenter)
+            if(excludeCenter)//exclude token, consider only the area around it
             {
                 if(operationAlt->insidedepth(x, y,z))
                 {
@@ -743,7 +766,7 @@ public:
         }
         else
         {
-            if(excludeCenter)
+            if(excludeCenter)//exclude token, consider only the area around it
             {
                 if(operation->insideDepth(x, y,z))
                 {
@@ -768,7 +791,9 @@ public:
         }
     }
     
-    
+    /*
+     Scaling of linked 3D shapes
+     */
     void updateScale()
     {
         southScale = ofVec2f(token->getX()*ofGetWidth() + 200, token->getY()*ofGetHeight() );
@@ -1012,7 +1037,9 @@ public:
         }
     }
     
-    
+    /*
+     Is 3D point over token; touching the token
+     */
     void click(float x, float y, float z)
     {
         if(alternative)
@@ -1021,11 +1048,6 @@ public:
             {
                 operationAlt->action(x, y,z);
             }
-            else
-            {
-                cout << "nothing" << endl;
-                //nothing
-            }
         }
         else
         {
@@ -1033,14 +1055,11 @@ public:
             {
                 operation->action(x, y,z);
             }
-            else
-            {
-                cout << "nothing" << endl;
-                //nothing
-            }
         }
     }
-    
+    /*
+     Update translation and rotation of linked shapes
+     */
     void update()
     {
         if(left == NULL)
@@ -1054,21 +1073,15 @@ public:
         if(alternative)
         {
             operationAlt->update(token->getX(), token->getY(),0);
-            //operationAlt->update(token->getX(), token->getY(), -token->getAngle());
         }
         else
         {
             operation->update(token->getX(), token->getY(),0);
         }
-        // operation->update(point1r, point4l, point3l, point2r);
         if(onTable)
         {
             if(token->getX()!=0 && token->getY()!=0)
             {
-                if(links.size() == 2)
-                {
-                    // boolLock->center = ofVec2f(token->getX()*ofGetWidth(), token->getY()*ofGetHeight() + 100);
-                }
                 if(links.size()>0)
                 {
                     switch(selectedPlane->axis)
@@ -1221,7 +1234,9 @@ public:
         }
     }
     
-    
+    /*
+     Observer pattern
+     */
     void Notify(Subject* subject_, ObserverMessage* message_)
     {
         switch(message_->message)
@@ -1242,7 +1257,9 @@ public:
         }
     }
     
-    
+    /*
+     Finger is hovering above it
+     */
     void hovering()
     {
         hover = true;
@@ -1250,11 +1267,13 @@ public:
         {
             if((*it)->style != Shape3D::BASICWITHAXIS)
             {
-                (*it)->changeStyle(Shape3D::BASICWITHAXIS);
+                (*it)->changeStyle(Shape3D::BASICWITHAXIS);//shows axes and measures
             }
         }
     }
-    
+    /*
+     No finger is hovering
+     */
     void noHovering()
     {
         hover = false;
@@ -1268,7 +1287,5 @@ public:
     }
     
 };
-
-
 
 #endif

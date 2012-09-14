@@ -1,11 +1,9 @@
-//
-//http://forum.openframeworks.cc/index.php?&topic=1055.0
-//
+#ifndef tCAD_lineIntersection_h
+#define tCAD_lineIntersection_h
 
-#ifndef TeseAppExample_lineIntersection_h
-#define TeseAppExample_lineIntersection_h
-
-
+/*
+ 2D Line used for intersection. Based on http://forum.openframeworks.cc/index.php?&topic=1055.0
+ */
 class LineSegment
 
 {
@@ -24,7 +22,6 @@ public:
     
     
     enum IntersectResult { PARALLEL, COINCIDENT, NOT_INTERESECTING, INTERESECTING };
-    
     
     
     IntersectResult Intersect(const LineSegment& other_line, ofVec2f& intersection)

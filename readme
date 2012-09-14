@@ -1,0 +1,22 @@
+# tCAD
+
+tCAD is a 3D modeling application for a depth enhanced tabletop merging object tracking and user input (on and above the tabletop) in a single system. See class diagram (classDiagram.png)
+
+Compile with LLVM GCC 4.2
+
+## Dependencies / addons
+
+[ofxDelaunay](https://github.com/obviousjim/ofxDelaunay)
+[ofKinect](https://github.com/ofTheo/ofxKinect)
+[ofxOpenCv](https://github.com/openframeworks/ofxOpenCv)
+[ofxOsc](https://github.com/openframeworks/ofxOsc)
+[ofxSTL](https://github.com/obviousjim/ofxSTL)
+[ofxTuioWrapper](https://github.com/arturoc/ofxTuioWrapper)
+[ofxUI](https://github.com/rezaali/ofxUI)
+[ofxXmlSettings](https://github.com/openframeworks/ofxXmlSettings)
+[ofxGeometry](https://github.com/roxlu/ofxGeometry)
+[ofxCarveCSG](https://github.com/paulobala/ofxCarveCSG)
+
+##Contact
+
+Please email paulo.bala@gmail.com with any bugs or questions.

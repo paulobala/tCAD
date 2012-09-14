@@ -1,12 +1,3 @@
-/*
-*  CalibrationUtils.h
-*  
-*
-*  Created on 2/2/09.
-*  Copyright 2009 NUI Group. All rights reserved.
-*
-*/
-
 #ifndef CALIBRATIONUTILSMARKER_H
 #define CALIBRATIONUTILSMARKER_H
 
@@ -16,6 +7,9 @@
 #include "rect2d.h"
 #include "vector2d.h"
 
+/*
+ Calibration process. Based on http://ccv.nuigroup.com/
+ */
 class CalibrationUtilsMarker
 {
 	public:

@@ -4,8 +4,7 @@
 #include "Basic3DObject.h"
 
 class Basic3DObjectBlank: public Basic3DObject {
-    
-    
+        
 public:
     Basic3DObjectBlank():Basic3DObject()
     {

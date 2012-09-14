@@ -1,21 +1,15 @@
-//
-//  3DObject.h
-//  Modeller
-//
-//  Created by paulobala on 17/04/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Modeller__DObject_h
-#define Modeller__DObject_h
+#ifndef tCAD__DObject_h
+#define tCAD__DObject_h
 #include "Shape3D.h"
 #include "DrawStyles.h"
 #include "ofEasyFingerCam.h"
-
+/*
+ Base class for Basic3DObject and Composite3DObject.
+ */
 class Base3DObject : public Shape3D
 {
 public:
-    IDrawable * drawStyle;
+    IDrawable * drawStyle;//style of draw
     
     Base3DObject(ofColor * color_):Shape3D()
     {
@@ -38,7 +32,9 @@ public:
     void scale(float scalex, float scaley, float scalez) {};
     void translate(float coordx, float coordy, float coordz) {};
     void rotate (float anglex, float angley,float anglez) {};
-    
+    /*
+     Change draw style
+     */
     void changeStyle(STYLE st)
     {
         switch (st)
@@ -67,6 +63,9 @@ public:
     void update()
     {
     };
+    /*
+     Change color of mesh
+     */
     void changeColor(float r, float g, float b)
     {
         if(r!=color->r && g != color->g && b != color->b)
@@ -85,6 +84,9 @@ public:
             }
         }
     }
+    /*
+     Change color of mesh
+     */
     void changeColor(ofColor * color_)
     {
         if(color_->r!=color->r && color_->g != color->g && color_->b != color->b)
@@ -103,12 +105,16 @@ public:
             }
         }
     }
-    
+    /*
+     get center of mesh
+     */
     ofVec3f getCentroid()
     {
         return mesh.getCentroid();
     }
-    
+    /*
+     change scale
+     */
     void changeScaleXYZ(INCRTYPE it, float qt)
     {
         float qttemp = qt;
@@ -128,7 +134,9 @@ public:
         shapeVariables.scaleXYZ = 1;
         mesh.scale(shapeVariables.scaleX ,shapeVariables.scaleY ,shapeVariables.scaleZ);
     }
-    
+    /*
+     change scale, translation and rotation
+     */
     void change(MANIPULATIONTYPE ct, AXIS a, INCRTYPE it, float qt)
     {
         switch (ct)

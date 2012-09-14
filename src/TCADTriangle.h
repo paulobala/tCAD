@@ -1,6 +1,6 @@
 
-#ifndef Carver_triangle_h
-#define Carver_triangle_h
+#ifndef tCAD_triangle_h
+#define tCAD_triangle_h
 #include "ofVec3f.h"
 
 class TCADTriangle {

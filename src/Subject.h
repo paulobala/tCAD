@@ -1,5 +1,5 @@
-#ifndef Carver_Subject_h
-#define Carver_Subject_h
+#ifndef tCAD_Subject_h
+#define tCAD_Subject_h
 
 #pragma once
 
@@ -8,8 +8,11 @@
 #include "Observer.h"
 #include "ObserverMessages.h"
 
-class Observer;
+class Observer;//fowards declaration
 
+/*
+ Part of Observer Pattern
+ */
 class Subject
 {
 public:

@@ -1,7 +1,5 @@
-
-
-#ifndef Carver_BasicDrawWithAxis_h
-#define Carver_BasicDrawWithAxis_h
+#ifndef tCAD_BasicDrawWithAxis_h
+#define tCAD_BasicDrawWithAxis_h
 
 #include "Shape3D.h"
 #include "ParentDraw.h"
@@ -21,6 +19,7 @@ public:
      
         ParentDraw::draw(); 
         ofDisableLighting();  
+        //Get Limits and draw shape axis
         vector<float> limits = shape3D->mesh.ofLimits();
         if(limits.size()==6){
             float offset = 1;

@@ -1,13 +1,5 @@
-//
-//  SecondMenu.h
-//  Carver
-//
-//  Created by paulobala on 04/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_SecondMenu_h
-#define Carver_SecondMenu_h
+#ifndef tCAD_SecondMenu_h
+#define tCAD_SecondMenu_h
 
 #include "OnScreenOption.h"
 #include "lockableVector.h"
@@ -19,30 +11,39 @@
 #include "SaveKinectOption.h"
 #include "SaveContourOption.h"
 
-class OnTokenContentCreationUI{
-    Token * tuioObject;
-    LockableVector<Shape3D* > * shapes;
-    LockableVector<ContainerToken* > * containers;
-    ofVec3f * entryPoint; 
-    ofVec2f nw, ne, se, sw, center;
+/*
+ On token Content Creation token
+ */
+class OnTokenContentCreationUI
+{
+    Token * tuioObject;//token
+    LockableVector<Shape3D* > * shapes;//shapes in 3D scene
+    LockableVector<ContainerToken* > * containers;//containers on tabletop
+    ofVec3f * entryPoint;//entryPoint for new shapes
+    ofVec2f nw, ne, se, sw, center;//token limits
     float radius;
+    
+    //Options on top of token
     OnTokenOption * stlOption;
     OnTokenOption * kinectOption;
     OnTokenOption * contourOption;
     OnTokenOption * copyOption;
-    vector<OnScreenOption *> options;
-    ofImage textureCircle;
     
-    float setupSTLSubOptions(){
+    vector<OnScreenOption *> options;//options on screen
+    ofImage textureCircle;//texture for Contour mode
+    
+    /*
+     Options for STL Mode
+     */
+    float setupSTLSubOptions()
+    {
         int numOptions = 6;
         float center = (numOptions* 100)/2;
         float x1 = tuioObject->getX()*ofGetWidth() - center;
         float y1 = tuioObject->getY()*ofGetHeight() - 300;
-        
         x1 = x1 + 30 + 20;
         ofImage img;
         img.loadImage("images/cube.png");
-        
         options.push_back(new STLSubOptions(ofVec2f(x1,y1),40, "Cube",entryPoint, shapes, "stls/cube.stl",ofColor(233,29,45),img));
         x1 = x1 + 20 + 30;
         x1 = x1 + 30 + 20;
@@ -62,19 +63,24 @@ class OnTokenContentCreationUI{
         options.push_back(new STLSubOptions(ofVec2f(x1,y1),40, "Sphere",entryPoint, shapes, "stls/sphere.stl",ofColor(117,206,219),img));
         x1 = x1 + 20 + 30;
         x1 = x1 + 30 + 20;
-        img.loadImage("images/tube.png"); 
+        img.loadImage("images/tube.png");
         options.push_back(new STLSubOptions(ofVec2f(x1,y1),40, "Tube",entryPoint, shapes, "stls/tube.stl",ofColor(0,159,215),img));
         x1 = x1 + 20 + 30;
         x1 = x1 + 30 + 20;
         options.push_back(new BackOption(ofVec2f(x1,y1),40, "BACK", entryPoint, COLORSCHEME_GREY));
         return 2;
     }
-    void setupCopyContainerOptions(){
+    /*
+     Options for Copy Mode
+     */
+    void setupCopyContainerOptions()
+    {
         int numOptions = 0;
         vector<ContainerToken*> temp = containers->getObjects();
-        for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ ){
-            //if((*it)->onTable){
-            if((*it)->links.size()>0){
+        for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ )
+        {
+            if((*it)->links.size()>0)
+            {
                 numOptions ++;
             }
         }
@@ -82,36 +88,44 @@ class OnTokenContentCreationUI{
         float x1 = tuioObject->getX()*ofGetWidth() - center;
         float y1 = tuioObject->getY()*ofGetHeight() - 300;
         int count = 0;
-        for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ ){
-            //if((*it)->onTable){
-            if((*it)->links.size()>0){
+        for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ )
+        {
+            if((*it)->links.size()>0)
+            {
                 x1 = x1 + 30 + 20;
                 options.push_back(new CopyContainerOption(ofVec2f(x1,y1),40, "Copy",entryPoint, shapes, ofColor(233,29,45), (*it) ));
                 x1 = x1 + 20 +30;
                 count++;
             }
         }
-        if(count!=0){ x1 = x1 + 30 + 20;}
+        if(count!=0)
+        {
+            x1 = x1 + 30 + 20;
+        }
         options.push_back(new BackOption(ofVec2f(x1,y1),40, "BACK", entryPoint, COLORSCHEME_GREY ));
     }
-    void setupKinectOptions(){
+    /*
+     Options for Kinect Mode
+     */
+    void setupKinectOptions()
+    {
         float center = (2* 100)/2;
         float x1 = tuioObject->getX()*ofGetWidth() - center;
         float y1 = tuioObject->getY()*ofGetHeight() - 300;
-        
         x1 = x1 + 30 + 20;
         options.push_back(new SaveKinectOption(ofVec2f(x1,y1),40, "SAVE",entryPoint,COLORSCHEME_MENU_GREEN));
         x1 = x1 + 20 + 30;
         x1 = x1 + 30 + 20;
         options.push_back(new BackOption(ofVec2f(x1,y1),40, "DISCARD",entryPoint,COLORSCHEME_MENU_ORANGE));
-        
-        
     }
-    void setupContourOptions(){
+    /*
+     Options for Contour Mode
+     */
+    void setupContourOptions()
+    {
         float center = (2* 100)/2;
         float x1 = tuioObject->getX()*ofGetWidth() - center;
         float y1 = tuioObject->getY()*ofGetHeight() - 300;
-        
         x1 = x1 + 30 + 20;
         options.push_back(new SaveContourOption(ofVec2f(x1,y1),40, "SAVE",entryPoint,COLORSCHEME_MENU_GREEN));
         x1 = x1 + 20 + 30;
@@ -121,21 +135,36 @@ class OnTokenContentCreationUI{
     bool isOnTable;
     bool visible;
 public:
-    void setToken(Token * value){tuioObject = value;}
+    void setToken(Token * value)
+    {
+        tuioObject = value;
+    }
+    bool getIsOnTable()
+    {
+        return isOnTable;
+    }
+    void setIsOnTable(bool value)
+    {
+        isOnTable = value;
+    }
     
-    enum CURRENTMENU{
+    enum CURRENTMENU
+    {
         STL, KINECT, COPY, CONTOUR, MAINMENU
-    };
+    };//Mode
     
-    enum RETURNTYPE{
+    enum RETURNTYPE
+    {
         RETURNKINECT, RETURNSTL, RETURNCOPY, RETURNCONTOUR, NORETURN
     };
     
-    CURRENTMENU current;
-    bool getIsOnTable(){return isOnTable;}
-    void setIsOnTable(bool value){isOnTable = value;}
+    CURRENTMENU current;//current Mode
     
-    OnTokenContentCreationUI(Token * token_, ofVec3f * point_, LockableVector<Shape3D* > * shapes_, LockableVector<ContainerToken* > * containers_){
+    /*
+     Constructor
+     */
+    OnTokenContentCreationUI(Token * token_, ofVec3f * point_, LockableVector<Shape3D* > * shapes_, LockableVector<ContainerToken* > * containers_)
+    {
         entryPoint = point_;
         tuioObject = token_;
         shapes = shapes_;
@@ -155,7 +184,11 @@ public:
         textureCircle.loadImage("images/textureCircleMenu.png");
     }
     
-    bool insideToken(float x, float y){
+    /*
+     is point over token?
+     */
+    bool insideToken(float x, float y)
+    {
         ofPolyline polyline;
         polyline.addVertex(nw.x, nw.y);
         polyline.addVertex(ne.x, ne.y);
@@ -166,16 +199,19 @@ public:
         int i;
         double xinters;
         ofPoint p1,p2;
-        
         int N = polyline.size();
-        
         p1 = polyline[0];
-        for (i=1;i<=N;i++) {
+        for (i=1; i<=N; i++)
+        {
             p2 = polyline[i % N];
-            if (y > MIN(p1.y,p2.y)) {
-                if (y <= MAX(p1.y,p2.y)) {
-                    if (x <= MAX(p1.x,p2.x)) {
-                        if (p1.y != p2.y) {
+            if (y > MIN(p1.y,p2.y))
+            {
+                if (y <= MAX(p1.y,p2.y))
+                {
+                    if (x <= MAX(p1.x,p2.x))
+                    {
+                        if (p1.y != p2.y)
+                        {
                             xinters = (y-p1.y)*(p2.x-p1.x)/(p2.y-p1.y)+p1.x;
                             if (p1.x == p2.x || x <= xinters)
                                 counter++;
@@ -185,33 +221,38 @@ public:
             }
             p1 = p2;
         }
-        
         if (counter % 2 == 0) return false;
         else return true;
-        
     }
     
-    bool insideProtectedOptions(float x, float y){
+    /*
+     is point inside protected on-screen area?
+     */
+    bool insideProtectedOptions(float x, float y)
+    {
         float center = (2* 100)/2;
         float x1 = tuioObject->getX()*ofGetWidth();
         float y1 = tuioObject->getY()*ofGetHeight() - 300;
         float radius = 150;
-        if( ofVec2f(x,y).distance(ofVec2f(x1,y1)) < radius){
+        if( ofVec2f(x,y).distance(ofVec2f(x1,y1)) < radius)
+        {
             return true;
         };
         return false;
     }
     
-    void update(){
-        if(isOnTable){
+    /*
+     Update parameters namely location of edges
+     */
+    void update()
+    {
+        if(isOnTable)
+        {
             float x = tuioObject->getX();
             float y = tuioObject->getY();
             float angle = -tuioObject->getAngle();
-            
             center = ofVec2f(x*ofGetWidth(), y*ofGetHeight());
-            
             ofVec2f centerpoint = ofVec2f(x*ofGetWidth(), y*ofGetHeight());
-            
             ofVec2f point1 = ofVec2f(x*ofGetWidth() +cos(angle)*140, y*ofGetHeight()+sin(angle)*140);
             point1.rotate(-45, centerpoint);
             ofVec2f point2 = ofVec2f(x*ofGetWidth()+cos(angle+PI/2)*140,
@@ -221,109 +262,134 @@ public:
             point3.rotate(-45, centerpoint);
             ofVec2f point4 = ofVec2f(x*ofGetWidth()+cos(angle+PI+PI/2)*140, y*ofGetHeight()+sin(angle+PI+PI/2)*140);
             point4.rotate(-45, centerpoint);
-            
             nw = point4;
             ne = point1;
             se = point2;
             sw = point3;
-            
-            switch(current){
-                case STL: {
-                    
+            switch(current)
+            {
+                case STL:
+                {
                     float center = (options.size()* 100)/2;
                     float x1 = tuioObject->getX()*ofGetWidth() - center;
                     float y1 = tuioObject->getY()*ofGetHeight() - 300;
-                    for(int i = 0; i < options.size(); i++){
+                    for(int i = 0; i < options.size(); i++)
+                    {
                         x1 = x1 + 30 + 20;
                         options[i]->center = ofVec2f(x1,y1);
                         x1 = x1 + 20 +30;
                     }
-                    
-                    break;}
-                case KINECT:  {
+                    break;
+                }
+                case KINECT:
+                {
                     float center = (options.size()* 100)/2;
                     float x1 = tuioObject->getX()*ofGetWidth() - center;
                     float y1 = tuioObject->getY()*ofGetHeight() - 300;
-                    for(int i = 0; i < options.size(); i++){
+                    for(int i = 0; i < options.size(); i++)
+                    {
                         x1 = x1 + 30 + 20;
                         options[i]->center = ofVec2f(x1,y1);
                         x1 = x1 + 20 +30;
                     }
-                    break;}
-                case CONTOUR:  {
+                    break;
+                }
+                case CONTOUR:
+                {
                     float center = (options.size()* 100)/2;
                     float x1 = tuioObject->getX()*ofGetWidth() - center;
                     float y1 = tuioObject->getY()*ofGetHeight() - 300;
-                    for(int i = 0; i < options.size(); i++){
+                    for(int i = 0; i < options.size(); i++)
+                    {
                         x1 = x1 + 30 + 20;
                         options[i]->center = ofVec2f(x1,y1);
                         x1 = x1 + 20 +30;
                     }
-                    break;}
-                case COPY:  {
+                    break;
+                }
+                case COPY:
+                {
                     float center = (options.size()* 100)/2;
                     float x1 = tuioObject->getX()*ofGetWidth() - center;
                     float y1 = tuioObject->getY()*ofGetHeight() - 300;
-                    for(int i = 0; i < options.size(); i++){
+                    for(int i = 0; i < options.size(); i++)
+                    {
                         x1 = x1 + 30 + 20;
                         options[i]->center = ofVec2f(x1,y1);
                         x1 = x1 + 20 +30;
                     }
-                    break;}
-                case MAINMENU:{
+                    break;
+                }
+                case MAINMENU:
+                {
                     contourOption->update(nw,ne,center,angle);
                     copyOption->update(ne,se,center,angle+PI/2);
                     stlOption->update(se,sw,center,angle+PI);
                     kinectOption->update(sw,nw,center,angle+PI/2+PI);
-                    break;}
-                default:break;
+                    break;
+                }
+                default:
+                    break;
             }
         }
     }
     
-    void draw() {
-        if(isOnTable){
+    /*
+     Draw area around token or options
+     */
+    void draw()
+    {
+        if(isOnTable)
+        {
             ofPushMatrix();
-            if(visible){
-                switch(current){
-                    case STL: {
+            if(visible)
+            {
+                switch(current)
+                {
+                    case STL:
+                    {
                         ofPushStyle();
                         ofSetColor(stlOption->color);
                         ofLine(nw,ne);
                         ofLine(ne, se);
                         ofLine(se,sw);
                         ofLine(sw,nw);
-                        
-                        for(int i = 0; i < options.size(); i++){
+                        //draw options
+                        for(int i = 0; i < options.size(); i++)
+                        {
                             ofSetColor(COLORSCHEME_MENU_GREEN);
                             ofLine(ofVec2f(tuioObject->getX()*ofGetWidth(),tuioObject->getY()*ofGetHeight()), options[i]->center);
                             options[i]->draw();
                         }
-                        
                         ofPopStyle();
-                        break;}
-                    case KINECT:  {
+                        break;
+                    }
+                    case KINECT:
+                    {
                         ofPushStyle();
                         ofSetColor(kinectOption->color);
                         ofLine(nw,ne);
                         ofLine(ne, se);
                         ofLine(se,sw);
                         ofLine(sw,nw);
-                        for(int i = 0; i < options.size(); i++){
+                        //draw options
+                        for(int i = 0; i < options.size(); i++)
+                        {
                             ofSetColor(kinectOption->color);
                             ofLine(ofVec2f(tuioObject->getX()*ofGetWidth(),tuioObject->getY()*ofGetHeight()), options[i]->center);
                             options[i]->draw();
                         }
                         ofPopStyle();
-                        break;}
-                    case CONTOUR:  {
+                        break;
+                    }
+                    case CONTOUR:
+                    {
                         ofPushStyle();
                         ofSetColor(contourOption->color);
                         ofLine(nw,ne);
                         ofLine(ne,se);
                         ofLine(se,sw);
                         ofLine(sw,nw);
-                        
                         float x1 = tuioObject->getX()*ofGetWidth();
                         float y1 = tuioObject->getY()*ofGetHeight() - 300;
                         float radius = 150;
@@ -336,130 +402,189 @@ public:
                         textureCircle.draw(0,0,300,300);
                         ofPopMatrix();
                         ofFill();
-                        for(int i = 0; i < options.size(); i++){
+                        //draw options
+                        for(int i = 0; i < options.size(); i++)
+                        {
                             ofSetColor(contourOption->color);
                             ofLine(ofVec2f(tuioObject->getX()*ofGetWidth(),tuioObject->getY()*ofGetHeight()), options[i]->center);
                             options[i]->draw();
                         }
                         ofPopStyle();
-                        break;}
-                    case COPY:  {
+                        break;
+                    }
+                    case COPY:
+                    {
                         ofPushStyle();
                         ofSetColor(copyOption->color);
                         ofLine(nw,ne);
                         ofLine(ne,se);
                         ofLine(se,sw);
                         ofLine(sw,nw);
-                        for(int i = 0; i < options.size(); i++){
+                        //draw options
+                        for(int i = 0; i < options.size(); i++)
+                        {
                             ofSetColor(copyOption->color);
                             ofLine(ofVec2f(tuioObject->getX()*ofGetWidth(),tuioObject->getY()*ofGetHeight()), options[i]->center);
                             options[i]->draw();
                         }
                         ofPopStyle();
-                        break;}
-                    case MAINMENU:  {
+                        break;
+                    }
+                    case MAINMENU:
+                    {
                         ofPushStyle();
+                        //draw area around token
                         contourOption->draw();
                         kinectOption->draw();
                         stlOption->draw();
                         copyOption->draw();
                         ofPopStyle();
-                        break;}
-                    default:break;
+                        break;
+                    }
+                    default:
+                        break;
                 }
             }
-            ofPopMatrix(); 
+            ofPopMatrix();
         }
     }
     
-    RETURNTYPE action(float x, float y){
-        
-        switch(current){
-            case STL: {
-                if(insideToken(x,y)){
-                   visible = !visible;
-                }
-                break;}
-            case KINECT:  {
-                if(insideToken(x,y)){
+    /*
+     Finger was pressed in the token; decide which action to take considering current Menu/Mode
+     */
+    RETURNTYPE action(float x, float y)
+    {
+        switch(current)
+        {
+            case STL:
+            {
+                if(insideToken(x,y))
+                {
                     visible = !visible;
                 }
-                break;}
-            case CONTOUR:  {
-                if(insideToken(x,y)){
+                break;
+            }
+            case KINECT:
+            {
+                if(insideToken(x,y))
+                {
                     visible = !visible;
                 }
-                break;}
-            case COPY:  {
-                if(insideToken(x,y)){
+                break;
+            }
+            case CONTOUR:
+            {
+                if(insideToken(x,y))
+                {
                     visible = !visible;
                 }
-                break;}
-            case MAINMENU:{ 
+                break;
+            }
+            case COPY:
+            {
+                if(insideToken(x,y))
+                {
+                    visible = !visible;
+                }
+                break;
+            }
+            case MAINMENU:
+            {
                 visible = true;
-                if(stlOption->inside(x, y)){
+                if(stlOption->inside(x, y))
+                {
                     current = STL;
                     options.clear();
                     setupSTLSubOptions();
-                    update();return RETURNSTL;
-                }else if(kinectOption->inside(x, y)){ current = KINECT;
+                    update();
+                    return RETURNSTL;
+                }
+                else if(kinectOption->inside(x, y))
+                {
+                    current = KINECT;
                     options.clear();
                     setupKinectOptions();
-                    update();return  RETURNKINECT;
-                }else if(copyOption->inside(x, y)){current = COPY;
+                    update();
+                    return  RETURNKINECT;
+                }
+                else if(copyOption->inside(x, y))
+                {
+                    current = COPY;
                     options.clear();
                     setupCopyContainerOptions();
-                    update(); return  RETURNCOPY;
-                }else if(contourOption->inside(x, y)){ current = CONTOUR;
+                    update();
+                    return  RETURNCOPY;
+                }
+                else if(contourOption->inside(x, y))
+                {
+                    current = CONTOUR;
                     options.clear();
                     setupContourOptions();
-                    update();return  RETURNCONTOUR;
+                    update();
+                    return  RETURNCONTOUR;
                 }
             }
             default:
                 ;
         }
-        
         return NORETURN;
     }
     
-    std::pair<bool, OnScreenOption*> checkHit(float x, float y){
-        if(visible){
-            for(int i = 0; i < options.size(); i++){
-                if(options[i]->checkHit(x, y)){
+    /*
+     Check to see if a onscreen option was pressed. Return information on whheter any option was hit and what type of option
+     */
+    std::pair<bool, OnScreenOption*> checkHit(float x, float y)
+    {
+        if(visible)
+        {
+            for(int i = 0; i < options.size(); i++)
+            {
+                if(options[i]->checkHit(x, y))
+                {
                     STLSubOptions *d2 = dynamic_cast<STLSubOptions*>(options[i]);
-                    if((bool)d2){
+                    if((bool)d2)
+                    {
                         options.clear();
                         current = MAINMENU;
                         visible = true;
-                        //                        setup1(4);
                         return pair<bool,OnScreenOption*>(true, d2);
-                    }else{
+                    }
+                    else
+                    {
                         CopyContainerOption *d5 = dynamic_cast<CopyContainerOption*>(options[i]);
-                        if((bool)d5){
+                        if((bool)d5)
+                        {
                             options.clear();
                             visible = true;
                             current = MAINMENU;
-                            //                        setup1(4);
                             return pair<bool,CopyContainerOption*>(true, d5);
-                        }else {
+                        }
+                        else
+                        {
                             BackOption *d7 = dynamic_cast<BackOption*>(options[i]);
-                            if((bool)d7){
+                            if((bool)d7)
+                            {
                                 options.clear();
                                 current = MAINMENU;
                                 visible = true;
                                 update();
                                 return pair<bool,BackOption*>(true, d7);
-                            }else{ SaveKinectOption *d8 = dynamic_cast<SaveKinectOption*>(options[i]);
-                                if((bool)d8){
+                            }
+                            else
+                            {
+                                SaveKinectOption *d8 = dynamic_cast<SaveKinectOption*>(options[i]);
+                                if((bool)d8)
+                                {
                                     options.clear();
                                     current = MAINMENU;
                                     visible = true;
                                     return pair<bool,SaveKinectOption*>(true, d8);
                                 }
-                                else{
+                                else
+                                {
                                     SaveContourOption *d9 = dynamic_cast<SaveContourOption*>(options[i]);
-                                    if((bool)d9){
+                                    if((bool)d9)
+                                    {
                                         options.clear();
                                         current = MAINMENU;
                                         visible = true;

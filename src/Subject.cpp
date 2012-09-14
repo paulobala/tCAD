@@ -1,7 +1,9 @@
 #include <iostream>
 #include "Subject.h"
 #include "ObserverMessages.h"
-
+/*
+ Part of Observer Pattern
+ */
 class Notifier
 {
 public:
@@ -20,11 +22,11 @@ private:
 
 Subject::~Subject(){}
 
-//this method adds an observer to the vector of observers
+
 bool Subject::addObserver( Observer* observer )
 {
 	vector<Observer*>::iterator temp = find(m_ObserverVec.begin(), m_ObserverVec.end(), observer);
-	//Return false if the observer is already in the vector. This is not expected. But there is nothing really wrong either
+	//Return false if the observer is already in the vector.
 	if ( temp != m_ObserverVec.end() )
 		return false;
     
@@ -32,11 +34,11 @@ bool Subject::addObserver( Observer* observer )
 	return true;
 }
 
-//This method removes an observer from the vector
+
 bool Subject::removeObserver( Observer* observer )
 {
 	vector<Observer*>::iterator temp = find(m_ObserverVec.begin(), m_ObserverVec.end(), observer);
-	//Return false if the observer could not be found (and evidently can’t be removed.
+	//Return false if the observer could not be found
 	if ( temp == m_ObserverVec.end() )
 		return false;
 	else
@@ -45,8 +47,7 @@ bool Subject::removeObserver( Observer* observer )
     	
 }
 
-//This Method is very important, it triggers all Notify() methods of all observers.
-//The specific code in each class that inherits from observer will be executed
+
 bool Subject::notifyObservers(ObserverMessage * message)
 {
 	for_each(m_ObserverVec.begin(), m_ObserverVec.end(), Notifier(this, message));

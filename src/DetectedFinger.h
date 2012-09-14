@@ -1,17 +1,12 @@
-//
-//  Finger.h
-//  Carver
-//
-//  Created by paulobala on 14/06/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_Finger_h
-#define Carver_Finger_h
+#ifndef tCAD_Finger_h
+#define tCAD_Finger_h
 #include "Limb.h"
 
+/*
+ Represents detected finger in the finger detection process
+ */
 class DetectedFinger{
-    cv::Point2i extremity;
+    cv::Point2i extremity;//fingertip
     Limb * limb;
     cv::Point2i fingerBase;
     float fingerDepthForSurfacePLane;

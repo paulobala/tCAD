@@ -1,11 +1,14 @@
-#ifndef Carver_RollingAverage_h
-#define Carver_RollingAverage_h
+#ifndef tCAD_RollingAverage_h
+#define tCAD_RollingAverage_h
 
+/*
+ Rolling average
+ */
 class RollingAverage
 {
 public:
     std::vector<float> samples;
-    float total;
+    float total;//sum of samples
     int numSamples;
     
     float Average()

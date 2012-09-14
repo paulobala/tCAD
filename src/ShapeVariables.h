@@ -1,14 +1,9 @@
-//
-//  ShapeVariables.h
-//  Carver
-//
-//  Created by paulobala on 13/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
+#ifndef tCAD_ShapeVariables_h
+#define tCAD_ShapeVariables_h
 
-#ifndef Carver_ShapeVariables_h
-#define Carver_ShapeVariables_h
-
+/*
+ Variables for 3D Shapes
+ */
 class ShapeVariables{
 public:
 float rotateX;

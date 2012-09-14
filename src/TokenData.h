@@ -1,7 +1,7 @@
 
 
-#ifndef Carver_markerData_h
-#define Carver_markerData_h
+#ifndef tCAD_markerData_h
+#define tCAD_markerData_h
 
 class TokenData
 {
@@ -19,7 +19,9 @@ public:
     float zmax;
     float zcurrent;
     ofPoint centroidBlob;
-    
+    /*
+     Constructor
+     */
     TokenData(TuioObject * tuioObject,float averageDepth, ofPoint centroidBlob_){
         idToken = tuioObject->getSymbolID();
         centroidBlob = centroidBlob_;

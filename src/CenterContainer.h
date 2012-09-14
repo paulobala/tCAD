@@ -1,13 +1,5 @@
-//
-//  CenterContainer.h
-//  Carver
-//
-//  Created by paulobala on 03/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_CenterContainer_h
-#define Carver_CenterContainer_h
+#ifndef tCAD_CenterContainer_h
+#define tCAD_CenterContainer_h
 #include "ofMain.h"
 
 class CenterContainer {

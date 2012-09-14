@@ -1,8 +1,6 @@
-#ifndef Carver_CircleMenu_h
-#define Carver_CircleMenu_h
-
+#ifndef tCAD_CircleMenu_h
+#define tCAD_CircleMenu_h
 #include "STLOption.h"
-
 #include "OnScreenOption.h"
 #include "KinectOption.h"
 #include "STLSubOptions.h"
@@ -13,26 +11,31 @@
 #include "lockableVector.h"
 #include "SaveKinectOption.h"
 #include "SaveContourOption.h"
-
 #include "Shape3D.h"
-
 #include "Token.h"
-
-
-
-class OnTableContentCreationUI{
-private:    
-    float radius; 
-    LockableVector<Shape3D* > * shapes;
-    LockableVector<ContainerToken* > * containers;
-    ofVec3f * entryPoint; 
-    ofImage textureCircle;
-    vector<OnScreenOption * > options; 
+/*
+ On table Content Creation token
+ */
+class OnTableContentCreationUI
+{
+private:
+    float radius;
+    LockableVector<Shape3D* > * shapes;//shapes in 3D scene
+    LockableVector<ContainerToken* > * containers;//container tokens in
+    ofVec3f * entryPoint;//entry for new shapes
+    ofImage textureCircle;//texture for protected options circle
+    
+    vector<OnScreenOption * > options;
     bool onMainLevel;
     bool onContourMode;
     Token * token;
     bool isOnTable;
-    void setupMain(){
+    
+    /*
+     Options for main menu
+     */
+    void setupMain()
+    {
         int numOptions = 4;
         float center = (numOptions* 100)/2;
         float x1 = token->getX()*ofGetWidth() - center;
@@ -41,23 +44,24 @@ private:
         options.push_back(new ContourOption(ofVec2f(x1,y1),40, "Contour" ,entryPoint, COLORSCHEME_MENU_YELLOW ));
         x1 = x1 + 20 + 30;
         x1 = x1 + 30 + 20;
-        options.push_back(new CopyOption(ofVec2f(x1,y1),40, "Copy" , entryPoint, shapes, COLORSCHEME_MENU_ORANGE)); 
+        options.push_back(new CopyOption(ofVec2f(x1,y1),40, "Copy" , entryPoint, shapes, COLORSCHEME_MENU_ORANGE));
         x1 = x1 + 20 +30;
         x1 = x1 + 30 + 20;
         options.push_back(new STLOption(ofVec2f(x1,y1),40, "STL",entryPoint, shapes, COLORSCHEME_MENU_GREEN ));
-                x1 = x1 + 20 +30;
+        x1 = x1 + 20 +30;
         options.push_back(new KinectOption(ofVec2f(x1,y1),40, "Kinect",entryPoint, shapes, COLORSCHEME_MENU_BLUE));
         onMainLevel = true;
         onContourMode = false;
-        
     }
-    
-    void setupSTLSubOptions(){ 
+    /*
+     Options for STL mode
+     */
+    void setupSTLSubOptions()
+    {
         int numOptions = 6;
         float center = (numOptions* 100)/2;
         float x1 = token->getX()*ofGetWidth() - center;
         float y1 = token->getY()*ofGetHeight() - 200;
-        
         x1 = x1 + 30 + 20;
         ofImage img;
         img.loadImage("images/cube.png");
@@ -85,72 +89,97 @@ private:
         x1 = x1 + 20 + 30;
         x1 = x1 + 30 + 20;
         options.push_back(new BackOption(ofVec2f(x1,y1),40, "BACK", entryPoint, ofColor(59,85,162)));
-        
-        onMainLevel = false;onContourMode = false; 
-        
+        onMainLevel = false;
+        onContourMode = false;
     }
-    
-    void setupCopyContainerOptions(){
+    /*
+     Options for Copy mode
+     */
+    void setupCopyContainerOptions()
+    {
         int numOptions = 0;
         vector<ContainerToken*> temp = containers->getObjects();
-        for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ ){
-            
-            if((*it)->links.size()>0){
+        for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ )
+        {
+            if((*it)->links.size()>0)
+            {
                 numOptions ++;
             }
-            
         }
         float center = (numOptions* 100)/2;
         float x1 = token->getX()*ofGetWidth() - center;
         float y1 = token->getY()*ofGetHeight() - 200;
         int count = 0;
-        for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ ){
-            
-            if((*it)->links.size()>0){
+        for (std::vector<ContainerToken*>::iterator it=temp.begin() ; it < temp.end(); it++ )
+        {
+            if((*it)->links.size()>0)
+            {
                 x1 = x1 + 30 + 20;
                 options.push_back(new CopyContainerOption(ofVec2f(x1,y1),40, "Copy",entryPoint, shapes, ofColor(233,29,45), (*it) ));
                 x1 = x1 + 20 +30;
                 count++;
             }
-            
         }
-        if(count != 0){ x1 = x1 + 30 + 20;}
+        if(count != 0)
+        {
+            x1 = x1 + 30 + 20;
+        }
         options.push_back(new BackOption(ofVec2f(x1,y1),40, "BACK", entryPoint, COLORSCHEME_GREY));
-        onMainLevel = false;onContourMode = false;
+        onMainLevel = false;
+        onContourMode = false;
     }
-    void setupContourOptions(){
+    /*
+     options for contour mode
+     */
+    void setupContourOptions()
+    {
         float center = (2* 100)/2;
         float x1 = token->getX()*ofGetWidth() - center;
         float y1 = token->getY()*ofGetHeight() - 200;
-        
         x1 = x1 + 30 + 20;
         options.push_back(new SaveContourOption(ofVec2f(x1,y1),40, "SAVE",entryPoint,COLORSCHEME_MENU_GREEN));
         x1 = x1 + 20 + 30;
         x1 = x1 + 30 + 20;
         options.push_back(new BackOption(ofVec2f(x1,y1),40, "BACK",entryPoint,COLORSCHEME_MENU_ORANGE));
-        onMainLevel = false;onContourMode = true;
+        onMainLevel = false;
+        onContourMode = true;
     }
-    void setupKinectOptions(){
+    /*
+     options for Kinect mode
+     */
+    void setupKinectOptions()
+    {
         float center = (2* 100)/2;
         float x1 = token->getX()*ofGetWidth() - center;
         float y1 = token->getY()*ofGetHeight() - 200;
-        
         x1 = x1 + 30 + 20;
         options.push_back(new SaveKinectOption(ofVec2f(x1,y1),40, "SAVE",entryPoint, COLORSCHEME_MENU_GREEN));
         x1 = x1 + 20 + 30;
         x1 = x1 + 30 + 20;
         options.push_back(new BackOption(ofVec2f(x1,y1),40, "DISCARD",entryPoint,COLORSCHEME_MENU_ORANGE));
-        onMainLevel = false;onContourMode = false;
-        
+        onMainLevel = false;
+        onContourMode = false;
     }
 public:
     
-    void setToken(Token * value){token = value;}
-    bool getIsOnTable(){return isOnTable;}
-    void setIsOnTable(bool value){isOnTable = value;}
+    void setToken(Token * value)
+    {
+        token = value;
+    }
+    bool getIsOnTable()
+    {
+        return isOnTable;
+    }
+    void setIsOnTable(bool value)
+    {
+        isOnTable = value;
+    }
     
-    
-    OnTableContentCreationUI(Token * token_, ofVec3f * point_, LockableVector<Shape3D* > * shapes_, LockableVector<ContainerToken* > * containers_){
+    /*
+     Constructor
+     */
+    OnTableContentCreationUI(Token * token_, ofVec3f * point_, LockableVector<Shape3D* > * shapes_, LockableVector<ContainerToken* > * containers_)
+    {
         entryPoint = point_;
         token = token_;
         shapes = shapes_;
@@ -163,37 +192,52 @@ public:
         onContourMode = false;
         textureCircle.loadImage("images/textureCircleMenu.png");
     }
-    
-    
-    bool insideProtectedOptions(float x, float y){
+    /*
+     Chek if point is inside protected area
+     */
+    bool insideProtectedOptions(float x, float y)
+    {
         float center = (2* 100)/2;
         float x1 = token->getX()*ofGetWidth();
         float y1 = token->getY()*ofGetHeight() - 200;
         float radius = 150;
-        if( ofVec2f(x,y).distance(ofVec2f(x1,y1)) < radius){
+        if( ofVec2f(x,y).distance(ofVec2f(x1,y1)) < radius)
+        {
             return true;
         };
         return false;
-        
     }
-    void update(){
+    /*
+     Update options
+     */
+    void update()
+    {
         float center = (options.size()* 100)/2;
         float x1 = token->getX()*ofGetWidth() - center;
         float y1;
-        
-        if(onMainLevel){y1 =token->getY()*ofGetHeight() - 100;}
-        else{y1 =token->getY()*ofGetHeight() - 200;
+        if(onMainLevel)
+        {
+            y1 =token->getY()*ofGetHeight() - 100;
         }
-        for(int i = 0; i < options.size(); i++){
+        else
+        {
+            y1 =token->getY()*ofGetHeight() - 200;
+        }
+        for(int i = 0; i < options.size(); i++)
+        {
             x1 = x1 + 30 + 20;
             options[i]->center = ofVec2f(x1,y1);
             x1 = x1 + 20 +30;
         }
     }
-    
-    void draw() {
+    /*
+     Draw onscreen options
+     */
+    void draw()
+    {
         ofPushStyle();
-        if(onContourMode){
+        if(onContourMode)
+        {
             float x1 = token->getX()*ofGetWidth();
             float y1 = token->getY()*ofGetHeight() - 200;
             float radius = 150;
@@ -207,8 +251,8 @@ public:
             ofPopMatrix();
             ofFill();
         }
-        
-        for(int i = 0; i < options.size(); i++){
+        for(int i = 0; i < options.size(); i++)
+        {
             ofSetColor(COLORSCHEME_LIGHTGREY);
             ofLine(ofVec2f(token->getX()*ofGetWidth(),token->getY()*ofGetHeight()), options[i]->center);
             options[i]->draw();
@@ -216,71 +260,101 @@ public:
         ofPopStyle();
     }
     
-    std::pair<bool, OnScreenOption *> checkHit(float x, float y){
-        for(int i = 0; i < options.size(); i++){
-            if(options[i]->checkHit(x, y)){
+    /*
+     Find if finger is pressing an onscreen option. Returns if an option was hit and what type of option was hit.
+     */
+    std::pair<bool, OnScreenOption *> checkHit(float x, float y)
+    {
+        for(int i = 0; i < options.size(); i++)
+        {
+            if(options[i]->checkHit(x, y))
+            {
                 STLOption *d1 = dynamic_cast<STLOption*>(options[i]);
-                if((bool)d1){
+                if((bool)d1)
+                {
                     options.clear();
                     setupSTLSubOptions();
                     update();
                     return pair<bool,OnScreenOption*>(true, d1);
-                }else{
+                }
+                else
+                {
                     STLSubOptions *d2 = dynamic_cast<STLSubOptions*>(options[i]);
-                    if((bool)d2){
+                    if((bool)d2)
+                    {
                         options.clear();
-                        setupMain(); 
+                        setupMain();
                         update();
                         return pair<bool,OnScreenOption*>(true, d2);
                     }
-                    else{
+                    else
+                    {
                         KinectOption *d3 = dynamic_cast<KinectOption*>(options[i]);
-                        if((bool)d3){
+                        if((bool)d3)
+                        {
                             options.clear();
-                            setupKinectOptions(); 
+                            setupKinectOptions();
                             update();
                             return pair<bool,OnScreenOption*>(true, d3);
-                        }else{
+                        }
+                        else
+                        {
                             CopyOption *d4 = dynamic_cast<CopyOption*>(options[i]);
-                            if((bool)d4){
+                            if((bool)d4)
+                            {
                                 options.clear();
-                                setupCopyContainerOptions(); 
+                                setupCopyContainerOptions();
                                 update();
                                 return pair<bool,CopyOption*>(true, d4);
-                            }else{
+                            }
+                            else
+                            {
                                 CopyContainerOption *d5 = dynamic_cast<CopyContainerOption*>(options[i]);
-                                if((bool)d5){
+                                if((bool)d5)
+                                {
                                     options.clear();
-                                    setupMain(); 
+                                    setupMain();
                                     update();
                                     return pair<bool,CopyContainerOption*>(true, d5);
-                                }else {
+                                }
+                                else
+                                {
                                     ContourOption *d6 = dynamic_cast<ContourOption*>(options[i]);
-                                    if((bool)d6){
+                                    if((bool)d6)
+                                    {
                                         options.clear();
                                         setupContourOptions();
                                         update();
                                         return pair<bool,ContourOption*>(true, d6);
-                                    }else{
+                                    }
+                                    else
+                                    {
                                         BackOption *d7 = dynamic_cast<BackOption*>(options[i]);
-                                        if((bool)d7){
+                                        if((bool)d7)
+                                        {
                                             options.clear();
                                             setupMain();
                                             update();
                                             return pair<bool,BackOption*>(true, d7);
-                                        }else{
+                                        }
+                                        else
+                                        {
                                             SaveKinectOption *d8 = dynamic_cast<SaveKinectOption*>(options[i]);
-                                            if((bool)d8){
+                                            if((bool)d8)
+                                            {
                                                 options.clear();
                                                 setupMain();
                                                 update();
                                                 return pair<bool,SaveKinectOption*>(true, d8);
                                             }
-                                            else{
+                                            else
+                                            {
                                                 SaveContourOption *d9 = dynamic_cast<SaveContourOption*>(options[i]);
-                                                if((bool)d9){
+                                                if((bool)d9)
+                                                {
                                                     options.clear();
-                                                    setupMain(); update();
+                                                    setupMain();
+                                                    update();
                                                     return pair<bool,SaveContourOption*>(true, d9);
                                                 }
                                             }
@@ -288,7 +362,6 @@ public:
                                     }
                                 }
                             }
-                            
                         }
                     }
                 }

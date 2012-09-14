@@ -1,13 +1,5 @@
-//
-//  grids.h
-//  Carver
-//
-//  Created by paulobala on 20/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_grids_h
-#define Carver_grids_h
+#ifndef tCAD_grids_h
+#define tCAD_grids_h
 #include "ColorScheme.h"
 
 class Grids{
@@ -40,13 +32,13 @@ public:
         
         if (x) {
          c = COLORSCHEME_CYAN;
-            // c.setHsb(0.0f, 200.0f, 255.0f);
+            
             ofSetColor(c);
             ofDrawGridPlane(scale, ticks, labels);
         }
         if (y) {
             c = COLORSCHEME_MAGENTA;
-            //c.setHsb(255.0f / 3.0f, 200.0f, 255.0f);
+           
             ofSetColor(c);
             ofPushMatrix();
             ofRotate(90, 0, 0, -1);
@@ -55,7 +47,7 @@ public:
         }
         if (z) {
             c = COLORSCHEME_YELLOW;   
-            //c.setHsb(255.0f * 2.0f / 3.0f, 200.0f, 255.0f);
+            
             ofSetColor(c);
             ofPushMatrix();
             ofRotate(90, 0, 1, 0);

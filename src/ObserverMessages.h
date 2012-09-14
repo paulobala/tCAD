@@ -1,6 +1,9 @@
-#ifndef Carver_ObserverMessages_h
-#define Carver_ObserverMessages_h
+#ifndef tCAD_ObserverMessages_h
+#define tCAD_ObserverMessages_h
 
+/*
+ Part of Observer Pattern
+ */
 class ObserverMessage{
 
 public:

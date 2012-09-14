@@ -1,15 +1,9 @@
-//
-//  OperationContainerAlternative.cpp
-//  Carver
-//
-//  Created by paulobala on 11/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
 #include <iostream>
 #include "OperationContainerAlternative.h"
 #include "ColorScheme.h"
-
+/*
+ constructor
+ */
 OperationContainerAlternative::OperationContainerAlternative (std::vector<Shape3D*> * links_,  AxisPlane * selectedPlane_, LockableVector<Shape3D* > * shapes_)
 {
     links = links_;
@@ -39,7 +33,9 @@ OperationContainerAlternative::OperationContainerAlternative (std::vector<Shape3
     diffBAImg.loadImage("images/differenceBA.png");
     intersectImg.loadImage("images/intersection.png");
 }
-
+/*
+ Links changed, update Manipulation UI
+ */
 void OperationContainerAlternative::changedLinks()
 {
     if(links->size()== 0)
@@ -54,7 +50,9 @@ void OperationContainerAlternative::changedLinks()
         }
     }
 }
-
+/*
+ Axis changed, restart Manipulation UI
+ */
 void OperationContainerAlternative::changeAxis()
 {
     if (selectedPlane->axis == AxisPlane::NOAXIS)
@@ -62,7 +60,9 @@ void OperationContainerAlternative::changeAxis()
         opType = NOOPERATION;
     }
 }
-
+/*
+ Update edges of GUI elements
+ */
 void OperationContainerAlternative::update(float x, float y, float angle)
 {
     ofVec2f centerpoint = ofVec2f(x*ofGetWidth(), y*ofGetHeight());
@@ -97,7 +97,9 @@ void OperationContainerAlternative::update(float x, float y, float angle)
     south->update(point3, point2, point2d, point3d);
     center->update(point4, point1, point2, point3);
 }
-
+/*
+ Draw GUI elements depending on Manipulation Mode and plane of 3D scene
+ */
 void OperationContainerAlternative::draw()
 {
     ofPushMatrix();
@@ -261,7 +263,9 @@ void OperationContainerAlternative::draw()
     ofPopStyle();
     ofPopMatrix();
 }
-
+/*
+ Is point over area?
+ */
 bool OperationContainerAlternative::inside(float x, float y, float z)
 {
     switch(opType)
@@ -335,8 +339,9 @@ bool OperationContainerAlternative::inside(float x, float y, float z)
     }
     return false;
 }
-
-
+/*
+ Is point over area? Exclude center area
+ */
 bool OperationContainerAlternative::insidedepth(float x, float y, float z)
 {
     switch(opType)
@@ -402,8 +407,9 @@ bool OperationContainerAlternative::insidedepth(float x, float y, float z)
     }
     return false;
 }
-
-
+/*
+ If point is inside an area, perform action deticated to that area
+ */
 void OperationContainerAlternative::action(float x, float y, float z)
 {
     switch(opType)
@@ -562,21 +568,13 @@ void OperationContainerAlternative::action(float x, float y, float z)
             break;
     }
 }
-
+/*
+ Finger in center area
+ */
 void OperationContainerAlternative::centerHit()
 {
     if(selectedPlane->axis == AxisPlane::NOAXIS)
     {
-        //        if(links->size()==2){
-        //            if(opType == NOOPERATION){
-        //                opType = BOOLEANS;
-        //            }else{
-        //                opType = NOOPERATION;
-        //            }
-        //        }
-        //        else{
-        //            opType = NOOPERATION;
-        //        }
     }
     else
     {
@@ -650,7 +648,9 @@ void OperationContainerAlternative::centerHit()
         }
     }
 }
-
+/*
+ Finger in west area
+ */
 void OperationContainerAlternative::westHit(bool directionUp)
 {
     float translatevalue = 5;
@@ -755,6 +755,9 @@ void OperationContainerAlternative::westHit(bool directionUp)
             break;
     }
 }
+/*
+ Finger in east area
+ */
 void OperationContainerAlternative::eastHit(bool directionUp)
 {
     float translatevalue = 5;
@@ -841,6 +844,9 @@ void OperationContainerAlternative::eastHit(bool directionUp)
             break;
     }
 }
+/*
+ Finger in north area
+ */
 void OperationContainerAlternative::northHit(bool directionUp)
 {
     float translatevalue = 5;
@@ -950,7 +956,9 @@ void OperationContainerAlternative::northHit(bool directionUp)
             break;
     }
 }
-
+/*
+ Finger in south area
+ */
 void OperationContainerAlternative::southHit(bool directionUp)
 {
     float translatevalue = 5;
@@ -1014,7 +1022,9 @@ void OperationContainerAlternative::southHit(bool directionUp)
             break;
     }
 }
-
+/*
+ Make boolean shape from 2 3D shapes
+ */
 void OperationContainerAlternative::makePreviews(Shape3D* objA, Shape3D * objB)
 {
     newComposite = new Composite3DObject();
@@ -1045,5 +1055,5 @@ void OperationContainerAlternative::makePreviews(Shape3D* objA, Shape3D * objB)
     newComposite->changeColor(new ofColor(CLAMP((int)((objA->color->r + objB->color->r)/2), 0,255),
                                           CLAMP((int)((objA->color->g + objB->color->g)/2), 0,255),
                                           CLAMP((int)((objA->color->b + objB->color->b)/2), 0,255)
-                                          ));
+                                          ));//boolean color is a mix of the original colors
 }

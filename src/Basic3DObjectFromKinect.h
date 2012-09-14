@@ -1,19 +1,14 @@
-//
-//  KinectDraw.h
-//  Carver
-//
-//  Created by paulobala on 14/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_KinectDraw_h
-#define Carver_KinectDraw_h
+#ifndef tCAD_KinectDraw_h
+#define tCAD_KinectDraw_h
 
 #include "ofEasyFingerCam.h"
 #include "ofxDelaunay.h"
 #include "kinectDrawVariables.h"
 #include "ofMeshtCAD.h"
 
+/*
+ Object from Kinect Mode. Based on source code at https://github.com/cibomahto/Makerbot-1/tree/master/KinectToStl
+ */
 class Basic3DObjectFromKinect : public Basic3DObject{
 protected:
     vector<ofVec3f> surface;

@@ -1,7 +1,5 @@
-
-
-#ifndef Carver_ofEasyCamerafinger_h
-#define Carver_ofEasyCamerafinger_h
+#ifndef tCAD_ofEasyCamerafinger_h
+#define tCAD_ofEasyCamerafinger_h
 
 #pragma once
 
@@ -16,6 +14,9 @@
 #include "Dash.h"
 #include "AxisPlane.h"
 
+/*
+ Camera Object. Based on source code for native ofEasyCam
+ */
 class ofEasyFingerCam : public ofCamera {
 protected:
   

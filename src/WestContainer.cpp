@@ -1,21 +1,17 @@
-//
-//  WestContainer.cpp
-//  Carver
-//
-//  Created by paulobala on 03/07/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
 #include <iostream>
 #include "WestContainer.h"
 #include "lineIntersection.h"
+/*
+ Constructor
+ */
 WestContainer::WestContainer(  ofVec2f nw_, ofVec2f ne_, ofVec2f sw_, ofVec2f se_ ){
     nw = nw_; ne = ne_; sw = sw_; se = se_;
     color = ofColor(ofColor::gray);
-    //startTime = ofGetElapsedTimeMillis();
     limitTime = 1000;
 } 
-
+/*
+ Update edges
+ */
 void WestContainer::update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_){
     nw = nw_; ne = ne_; sw = sw_; se = se_;
     path.clear();
@@ -25,7 +21,9 @@ void WestContainer::update( ofVec2f nw_, ofVec2f ne_, ofVec2f se_, ofVec2f sw_){
     path.lineTo(sw);
     path.close();
 }
-
+/*
+ Draw area with image
+ */
 void WestContainer::draw(ofImage img_){
     ofPushStyle();
     if(ofGetElapsedTimeMillis() - clickTime < limitTime){
@@ -64,7 +62,9 @@ void WestContainer::draw(ofImage img_){
 
     ofPopStyle();
 }
-
+/*
+ Draw area
+ */
 void WestContainer::draw(){
     ofPushStyle();
     if(ofGetElapsedTimeMillis() - clickTime < limitTime){
@@ -82,7 +82,9 @@ void WestContainer::draw(){
     path.draw();
     ofPopStyle();
 }
-
+/*
+ Is point inside area?
+ */
 bool WestContainer::inside(float x, float y){
     
     ofPolyline polyline;
@@ -119,8 +121,9 @@ bool WestContainer::inside(float x, float y){
     else return true;
     
 }
-
+/*
+ Finger was in area
+ */
 void WestContainer::action(){
-    // color = ofColor(ofRandom(0,255), ofRandom(0,255), ofRandom(0,255));
-    clickTime = ofGetElapsedTimeMillis();
+     clickTime = ofGetElapsedTimeMillis();
 }

@@ -1,13 +1,6 @@
-//
-//  PinkDraw.h
-//  Modeller
-//
-//  Created by paulobala on 17/04/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
 
-#ifndef Modeller_PinkDraw_h
-#define Modeller_PinkDraw_h
+#ifndef tCAD_PinkDraw_h
+#define tCAD_PinkDraw_h
 #include "IDrawable.h"
 
 class ParentDraw : public IDrawable{

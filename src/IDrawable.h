@@ -1,5 +1,5 @@
-#ifndef Modeller_IDrawable_h
-#define Modeller_IDrawable_h
+#ifndef tCAD_IDrawable_h
+#define tCAD_IDrawable_h
 #include "Shape3D.h"
 
 class IDrawable{

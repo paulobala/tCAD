@@ -1,21 +1,29 @@
-#ifndef Carver_kinectTouch_h
-#define Carver_kinectTouch_h
+#ifndef tCAD_kinectTouch_h
+#define tCAD_kinectTouch_h
 #include "KalmanPixel.h"
 
 #include "ExponentialMovingAverage.h"
 #include "Shape3D.h"
 #include "ColorScheme.h"
 
+/*
+ Represents finger above the tabletop.
+ */
 class Finger{
+    //Averages for stablizing values
     ExponentialMovingAverage * xavg;
     ExponentialMovingAverage * yavg;
     ExponentialMovingAverage * zForSurfacePlaneAvg;
     ExponentialMovingAverage * zForObjectPlaneAvg;
+    //timers
     unsigned long startTime;
     unsigned long lastUpdateTime;
+    //Images
     ofImage touchSurface, touchAbove, touchCamera, touchObject, touchAboveObject;
-    float x;
-    float y; 
+    
+    //parameters
+    float x;//x of fingertip
+    float y;//y of fingertip
     float zForSurfacePlane;
     float zForObjectPlane; 
     float startX;
@@ -38,7 +46,7 @@ public:
         PICKER, 
         CALIBRATION,
         UNUSABLE
-    };
+    };//Function
     
     enum TypeLevel{
         SURFACE,
@@ -47,13 +55,11 @@ public:
         OBJECT,
         ABOVEOBJECT,
         NOLEVEL
-    };
+    };//interaction level
     
     
     int getFingerID(){return fingerID;}
     void setFingerID(int value){fingerID = value;}
-    
-    
     float getX(){return x;}
     void setX(float value){x = value;}
     float getY(){return y;}
@@ -83,8 +89,10 @@ public:
     TypeLevel previousTypeLevel;
     
     vector<cv::Point> limbApproxCountour;
-    std::vector<Shape3D* > pickedShapes3D;
-    
+    std::vector<Shape3D* > pickedShapes3D;//holds selected shapes during linking procedure
+    /*
+     Constructor
+     */
     Finger(float x_, float y_, float zForSurfacePlane_,float zForObjectPlane_, int fingerID_, float limbCenterX_, float limbCenterY_, float fingerBaseX_, float fingerBaseY_, vector<cv::Point> limbApproxCountour_){
         startTime = ofGetElapsedTimeMillis();
         fingerID = fingerID_;
@@ -126,6 +134,9 @@ public:
         touchAboveObject.loadImage("images/fingerAboveObject.png");
     }
     
+    /*
+     update values
+     */
     bool checkFinger(float x_, float y_, float zForSurfacePlane_,float zForObjectPlane_, float limbCenterX_, float limbCenterY_, float fingerBaseX_, float fingerBaseY_, vector<cv::Point> limbApproxCountour_){
         xavg->addSample(x_);
         yavg->addSample(y_);
@@ -147,7 +158,9 @@ public:
         
     }
     
-    
+    /*
+     Update when moved
+     */
     void updateMoved(){
         if(hasBeenAdded){
             unsigned long currenttime = ofGetElapsedTimeMillis();
@@ -156,17 +169,23 @@ public:
         }
     }
     
+    /*
+     Update timers
+     */
     void update(){
         unsigned long currenttime =  ofGetElapsedTimeMillis();
         if(hasBeenAdded){
-            if(hasBeenRemoved){
-                if(currenttime - lastUpdateTime > 500){
+            if(hasBeenRemoved)
+            {
+                if(currenttime - lastUpdateTime > 500)//a finger is active until 0,5 s after being removed
+                {
                     markForRemoval = true;
                 }
             }
         }
         else{
-            if(currenttime - startTime > 500){
+            if(currenttime - startTime > 500)//a finger is active after spending 0,5 s
+            {
                 markForAdd = true;
                 hasBeenAdded = true;
                 lastUpdateTime = currenttime;
@@ -175,7 +194,9 @@ public:
         
     }
     
-    
+    /*
+     Draw shadow and draw indicator of level
+     */
     void draw(){
         string str = "ID  "+ofToString((int)fingerID);
         

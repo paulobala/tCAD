@@ -207,6 +207,7 @@
 		60308B8D15A48813002FF17C /* OnTokenContentCreationUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnTokenContentCreationUI.h; sourceTree = "<group>"; };
 		60308B8E15A490C5002FF17C /* OnTokenOption.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OnTokenOption.h; sourceTree = "<group>"; };
 		60308B9915A4EA25002FF17C /* InAirContentCreationUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InAirContentCreationUI.h; sourceTree = "<group>"; };
+		6030CA2E160336B700699CD0 /* ofxCarveCSGTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxCarveCSGTriangle.h; sourceTree = "<group>"; };
 		60334C9215B07A1D00B7E8E6 /* BasicDrawWithAxis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BasicDrawWithAxis.h; sourceTree = "<group>"; };
 		603E22DC15A360B300FFBE40 /* OperationContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OperationContainer.cpp; sourceTree = "<group>"; };
 		603E22DE15A360E800FFBE40 /* EastContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EastContainer.cpp; sourceTree = "<group>"; };
@@ -666,11 +667,11 @@
 			children = (
 				606AF1F6150E46F5006A3A59 /* lineGeom.h */,
 				606AF1EE150E45F8006A3A59 /* LineGeom.cpp */,
+				600BCE0B150F8775000885D9 /* lineIntersection.h */,
 				606AF1EF150E45F8006A3A59 /* plane.h */,
+				606AF1F2150E45F8006A3A59 /* plane.cpp */,
 				606AF1F0150E45F8006A3A59 /* Vector3d.h */,
 				606AF1F1150E45F8006A3A59 /* Vector3d.cpp */,
-				606AF1F2150E45F8006A3A59 /* plane.cpp */,
-				600BCE0B150F8775000885D9 /* lineIntersection.h */,
 			);
 			name = Geometry;
 			sourceTree = "<group>";
@@ -1487,6 +1488,7 @@
 		60DFAD5E1552828D0061D3AB /* src */ = {
 			isa = PBXGroup;
 			children = (
+				6030CA2E160336B700699CD0 /* ofxCarveCSGTriangle.h */,
 				60DFAD5F1552828D0061D3AB /* ofxCarve.h */,
 			);
 			name = src;

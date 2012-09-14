@@ -1,13 +1,5 @@
-//
-//  rotationTween.h
-//  Carver
-//
-//  Created by paulobala on 07/06/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_rotationTween_h
-#define Carver_rotationTween_h
+#ifndef tCAD_rotationTween_h
+#define tCAD_rotationTween_h
 
 class RotationTween {
 public: 

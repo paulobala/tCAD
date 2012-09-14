@@ -1,12 +1,3 @@
-/*
- *  Calibration.cpp
- *  
- *
- *  Created on 2/1/09.
- *  Copyright 2009 NUI Group. All rights reserved.
- *
- */
-
 #include "CalibrationFinger.h"
 
 /******************************************************************************
@@ -70,16 +61,10 @@ void CalibrationFinger::doCalibration()
 }
 
 void CalibrationFinger::drawCalibrationPointsAndBox()
-{
+{ 
+    ofPushStyle();
     //this all has to do with getting the angle for loading circle
     arcAngle = 0;
-    //	std::map<int, Blob> trackedBlobs;
-    //	std::map<int, Blob>::iterator iter;
-    //    trackedBlobs = tracker->getTrackedBlobs(); //get blobs from tracker
-    //	for(iter=trackedBlobs.begin(); iter!=trackedBlobs.end(); iter++)
-    //	{
-    //        if (iter->second.sitting > arcAngle) {arcAngle = iter->second.sitting;}
-    //    }//end loading circle angle
     
     //Get the screen points so we can make a grid
 	vector2df *screenpts = calibrate.getScreenPoints();
@@ -115,91 +100,10 @@ void CalibrationFinger::drawCalibrationPointsAndBox()
 	ofRect(calibrate.screenBB.upperLeftCorner.X * ofGetWidth(), calibrate.screenBB.upperLeftCorner.Y * ofGetHeight(),
 		   calibrate.screenBB.getWidth() * ofGetWidth(), calibrate.screenBB.getHeight() * ofGetHeight());
     
-    ofPushStyle();
-    
-    for (std::vector<pair<Finger *, unsigned long > >::iterator it = touches.begin() ; it < touches.end(); it++){
-        
-//        string str = "ID  "+ofToString((int)(*it).first->mainmarker);
-//        if( (*it).first->getZ() > 200){
-//            ofSetColor(0, 0, 0);
-//        }
-//        else if( (*it).first->getZ() > 15){
-//            ofSetColor(0, 0, 2550);
-//        }
-//        else{
-//            ofSetColor(0, 255, 0);
-//        }
-//        
-//        ofFill();
-//        float x = (*it).first->x;
-//        float y = (*it).first->y;
-//        // ofVec2f fool = applyCalibration(x,y);
-//        // std::pair<ofVec2f, bool > tempcalib = calibrate.cameraToScreenSpace(x,y);
-//        // cout << "fool " << fool << "  " << tempcalib.first;
-////        x = tempcalib.first.x;
-////        y = tempcalib.first.y;
-//        
-//        ofCircle(x*ofGetWidth(), y*ofGetHeight(), 5);
-//        bool sucess = false;
-//        calibrate.cameraToScreenPosition(x,y);
-//        
-//        ofCircle(x*ofGetWidth(), y*ofGetHeight(), 20);
-//        ofSetColor(0, 0, 150);
-//        ofCircle(x*ofGetWidth(), (*it).first->ycenter*ofGetHeight(), 2);
-//        
-//        ofSetColor(255, 255, 255);
-//        ofDrawBitmapString(str, (*it).first->x*ofGetWidth(), (*it).first->y*ofGetHeight());
-//        
-//        str = "DIST  "+ ofToString((*it).first->getZ());
-//        ofSetColor(255, 255, 255);
-//        
-//        ofDrawBitmapString(str, (*it).first->x*ofGetWidth(), (*it).first->y*ofGetHeight()+20);
-//        
-//        if( (*it).first->getZ() > 200){
-//            ofSetColor(0, 0, 0);
-//        }
-//        else
-//            if( (*it).first->getZ() > 15){
-//                ofSetColor(0, 0, 2550);
-//            }
-//            else{
-//                ofSetColor(0, 255, 0);
-//            }
-//        vector<cv::Point> approxCurve =  (*it).first->approxCurve;
-//        if( approxCurve.size() >0){
-//            ofPolyline p2; 
-//            for(int temp = 0; temp < approxCurve.size(); temp++){
-//                p2.addVertex(ofPoint(ofGetWidth() - approxCurve[temp].x/(float)640*ofGetWidth() , ofGetHeight() - approxCurve[temp].y/(float)480*ofGetHeight()));
-//            }
-//            p2.close();
-//            ofPushStyle();
-//            ofFill();
-//            p2 = p2.getSmoothed(5,1);
-//            p2.simplify();
-//            p2.draw();
-//        }
-//        ofPopStyle();
-    }
-    
     ofPopStyle();
 }
 
 ofVec2f CalibrationFinger::applyCalibration(float x, float y){
-
-//    if(!calibrate.bCalibrating){
-//        bool sucess = false;
-//        std::pair<ofVec2f, bool >  tempvec = calibrate.cameraToScreenSpace(x,y) ;
-//        
-//        if(tempvec.second){
-//            cout << "conv" << tempvec.first.x <<"     "<< tempvec.first.y << endl;
-//            return tempvec.first;
-//        }else{
-//         return tempvec.first;
-//        }
-//    
-//    }
-//    cout << "not conv"<< x <<"     " <<y<< endl;
-    //    return ofVec2f(x,y);
     
     return calibrate.cameraToScreenSpace(x,y).first;
 }
@@ -212,7 +116,7 @@ void CalibrationFinger::drawCalibrationBlobs()
 void CalibrationFinger::touchDown(Finger* touch){
     touches.push_back(std::pair<Finger *,unsigned long >(touch, ofGetElapsedTimeMillis()));
 }
-//----------------------------------------
+
 void CalibrationFinger::touchMoved(Finger* touch){
     
 }

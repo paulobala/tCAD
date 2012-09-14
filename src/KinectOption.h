@@ -1,19 +1,15 @@
-//
-//  KinectCircle.h
-//  Carver
-//
-//  Created by paulobala on 24/05/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
-
-#ifndef Carver_KinectCircle_h
-#define Carver_KinectCircle_h
-
+#ifndef tCAD_KinectCircle_h
+#define tCAD_KinectCircle_h
 #include "OnScreenOption.h"
-
+/*
+ Option was Kinect mode
+ */
 class KinectOption: public OnScreenOption
 {
 public:
+    /*
+     Constructor
+     */
     KinectOption(ofVec2f center_, float radius_, string name_, ofVec3f * point_, LockableVector<Shape3D* > * shapes_,ofColor color_)
     {
         center = center_;
@@ -25,7 +21,9 @@ public:
         font.loadFont("fonts/helveticaNeue.ttf", 16, true, true);
         img.loadImage("images/kinect.png");
     }
-    
+    /*
+     Draw option
+     */
     void draw()
     {
         ofPushStyle();
@@ -38,10 +36,15 @@ public:
         font.drawString(name, center.x -20,center.y-10);
         ofPopStyle();
     };
+    /*
+     Pressed option
+     */
     void action()
     {
     };
-    
+    /*
+     Pressed?
+     */
     bool checkHit(float x, float y)
     {
         if( ofVec2f(x,y).distance(center) < radius)
